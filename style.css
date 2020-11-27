@@ -144,6 +144,33 @@ a {
     padding-bottom: 40px;
 }
 
+.page_nav {
+    display: table;
+    width: 100%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.link_box {
+    display: table-cell;
+    width: 250px;
+    border-radius: 30px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: antiquewhite;
+    box-shadow: 10px 10px 10px 2px rgba(0,0,0,0.6);
+    
+}
+
+.link_box a {
+    font-size:22px;
+}
+
+
+
+
+
+
 .text_box {
     width: 60%;
     margin-left: auto;
