@@ -2,6 +2,8 @@
 	--gpi_table_txt_col: #2e5979;
 	--gpi_table_bkg_col: #ffffff;
 	--gpi_table_alt_col: #c4cfd5;
+	--gpi_button_bkg_col: #2e5979;
+	--gpi_button_txt_col: #ffffff;
 }
 
 .gpi_main {
@@ -12,6 +14,10 @@
 
 .gpi_body {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.gpi_lead_qu {
+	font-style:italic;
 }
 
 .gpi_surv_label {
@@ -79,8 +85,32 @@ div.gpi_surv_tr:nth-child(odd) {
 	vertical-align: bottom;
 }
 
-@media only screen and (max-width: 768px) {
+.gpi_surv_button_box {
 
+	text-align:center;
+}
+
+.gpi_button {
+	width: 200px;
+	background-color: var(--gpi_button_bkg_col);
+	color: var(--gpi_button_txt_col);
+	border: none;
+	margin: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+}
+
+.gpi_button:hover {
+	cursor:pointer;
+}
+
+@media only screen and (max-width: 768px) {
 	.gpi_surv_thead {
 		display: none;
 	}

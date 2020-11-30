@@ -74,13 +74,13 @@ class Dimension {
             }
             else {
 
-                throw "Sten score must be an integer 1 - 10";
+                throw "Sten score must be an integer 1 - 10  (not in range)";
             }
 
         }
         else {
 
-            throw "Sten score must be an integer 1 - 10";
+            throw "Sten score must be an integer 1 - 10 (not an integer)";
         }
     }
 
