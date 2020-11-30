@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>The GPI Survey</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="GPI/gpi.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul>
+                    <li><a href="about.html">About the GPI</a></li>
+                    <li><a href="survey.html">The Survey</a></li>
+                    <li><a href="report.html">The Report</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+
+        <div class="content_box">
+
+            <p>I am the sort of person who...</p>
+
+            <div class="gpi_surv_table">
+                <div class="gpi_surv_thead">
+                    <div class="gpi_surv_qu"></div>
+                    <div class="gpi_surv_th">Strongly disagree</div>
+                    <div class="gpi_surv_th">Disagree</div>
+                    <div class="gpi_surv_th">Neither agree nor disagree</div>
+                    <div class="gpi_surv_th">Agree</div>
+                    <div class="gpi_surv_th">Strongly agree</div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Tends to be 'laid back'</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q1' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q1' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q1' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q1' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q1' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Rarely feels tense</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q2' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q2' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q2' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q2' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q2' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Rarely feels anxiety when things go wrong</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q3' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q3' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q3' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q3' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q3' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Does not worry unduly</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q4' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q4' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q4' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q4' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q4' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Often feels tense</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q5' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q5' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q5' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q5' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q5' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Is obsessive about meeting deadlines</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q6' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q6' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q6' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q6' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q6' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Worries about all of the things that may go wrong</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q7' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q7' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q7' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q7' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q7' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Always feels a sense of urgency</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q8' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q8' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q8' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q8' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q8' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Is easy going</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q9' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q9' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q9' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q9' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q9' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+                <div class="gpi_surv_tr">
+                    <div class="gpi_surv_qu">Is tolerant of others</div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_disagree' name='Q10' value='1'><span class="gpi_surv_label">Strongly disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='disagree' name='Q10' value='2'><span class="gpi_surv_label">Disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='neither' name='Q10' value='3'><span class="gpi_surv_label">Neither agree nor disagree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='agree' name='Q10' value='4'><span class="gpi_surv_label">Agree</span></div>
+                    <div class="gpi_surv_td"><input type='radio' id='strong_agree' name='Q10' value='5'><span class="gpi_surv_label">Strongly agree</span></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>Footer</p>
+    </div>
+
+</body>
+</html>
