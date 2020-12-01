@@ -1,18 +1,61 @@
-/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GPI_Report.js</title>
 
-    Components for the GPI Report
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
 
-    Author:    M.P. Vaughan
-    Created:   18/11/2020
-    Modified:  27/11/2020
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GPI_Report.js</h1>
 
     
 
-*/
 
 
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview
+ * &lt;h3>JavaScript components for the GPI Report&lt;/h3>
+ * &lt;p>(Simulated API version)&lt;/p>
+ * &lt;p>Provides the functionality for rendering components of the
+ * GPI Talent Report on a web page&lt;/p>
+ * &lt;b>Key functionality:&lt;/b>
+ * &lt;ul>
+ *    &lt;li>Renders the quadrant model visualisations&lt;/li>
+ * &lt;/ul>
+ * @author M.P. Vaughan
+ * @version 1.01
+ * @copyright Glowinkowski International Limited (2020)
+ */
+
+/**
+ * Class representing a GPI Dimension
+ * @class
+ */
 class Dimension {
 
+    /**
+     * Creates a GPI Dimension
+     * @param {string} _UnipolarName - The unipolar name of the Dimension
+     * @param {string} _LeftBipolarName - The left bipolar name of the Dimension
+     * @param {string} _RightBipolarName - The right bipolar name of the Dimension
+     * @param {boolean} _isParent - Indicates if this is a parent Dimension
+     * @param {number} _StenScore - The sten score associated with this Dimension (integer between 1 and 10)
+     * @todo Need to provide validation for sten score
+     */
     constructor(_UnipolarName, _LeftBipolarName, _RightBipolarName, _isParent=false, _StenScore=0) {
 
         this._UnipolarName = _UnipolarName;
@@ -23,40 +66,66 @@ class Dimension {
         this._SubDimensions = [];
     }
 
-    // Getters
+    /**
+     * Get the unipolar name of the Dimension
+     * @returns {string} The unipolar name of the Dimension
+     */
     get UnipolarName() {
 
         return this._UnipolarName;
     }
 
+    /**
+     * Get the left bipolar name of the Dimension
+     * @returns {string} The left bipolar name of the Dimension
+     */
     get LeftBipolarName() {
 
         return this._LeftBipolarName;
     }
 
+    /**
+     * Get the right bipolar name of the Dimension
+     * @returns {string} The right bipolar name of the Dimension
+     */
     get RightBipolarName() {
 
         return this._RightBipolarName;
     }
 
+    /**
+    * Indicates if Dimension is a parent
+    * @returns {boolean} Indicates if Dimension is a parent
+    */
     get isParent() {
 
         return this._isParent;
     }
 
+    /**
+     * Get the sten score of the Dimension
+     * @returns {number} An integer between 1 and 5
+     */
     get StenScore() {
 
         return this._StenScore;
         
     }
 
+    /**
+     * Gets an array of sub-dimenions for the Dimension
+     * @returns {Dimension[]} An array of sub-dimenions for the Dimension
+     */
     get SubDimensions() {
 
         return this._SubDimensions;
 
     }
 
-    // Setters
+    /**
+     * Indicates if dimension is a parent
+     * @param {boolean} Indicates if dimension is a parent
+     */
     set isParent(bool) {
 
         // Anything not true will be taken to be false
@@ -64,11 +133,17 @@ class Dimension {
 
     }
 
+    /**
+     * Set the sten score for this Dimension
+     * @param {number}  An integer between 1 and 10
+     * @throws "Sten score must be an integer 1 - 10  (not in range)"
+     * @throws "Sten score must be an integer 1 - 10 (not an integer)"
+     */
     set StenScore(score) {
 
         if (Number.isInteger(score)) {
 
-            if (score >= 1 && score <= 10) {
+            if (score >= 1 &amp;&amp; score &lt;= 10) {
 
                 this._StenScore = score;
             }
@@ -84,6 +159,10 @@ class Dimension {
         }
     }
 
+    /**
+     * Sets the sub-Dimensions for a Dimension and calculates the compound score
+     * @param {Dimension[]} An array of Dimension objects
+     */
     set SubDimensions(dimensions) {
 
         try {
@@ -96,14 +175,14 @@ class Dimension {
 
                 var score = 0;
 
-                for (var i = 0; i < n; i++) {
+                for (var i = 0; i &lt; n; i++) {
 
                     score += dimensions[i].StenScore;
                 }
 
                 score = Math.round(score / n);
 
-                if (score < 1) score = 1;
+                if (score &lt; 1) score = 1;
                 if (score > 10) score = 10;
 
                 this._StenScore = score;
@@ -122,7 +201,7 @@ class QuadrantModel {
 
     constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label) {
 
-        if ((_xDimension instanceof Dimension) && (_yDimension instanceof Dimension)) {
+        if ((_xDimension instanceof Dimension) &amp;&amp; (_yDimension instanceof Dimension)) {
 
             this._xDimension = _xDimension;
             this._yDimension = _yDimension;
@@ -208,10 +287,10 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
-        textstr += "<div align='center'>";
-        textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
-        textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
-        textstr += "</div>";
+        textstr += "&lt;div align='center'>";
+        textstr += "&lt;canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'>&lt;/canvas>";
+        textstr += "&lt;img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
+        textstr += "&lt;/div>";
 
         // Write string to document
         document.getElementById("main").innerHTML = textstr;
@@ -316,7 +395,7 @@ function drawQuadrant(quadrant) {
         var xM;                 // x-coordinate of marker
         var yM;                 // y-coordinate of marker
 
-        if (xStenScore < 6) {
+        if (xStenScore &lt; 6) {
 
             xM = grid_space * (xStenScore - 6);
         }
@@ -325,7 +404,7 @@ function drawQuadrant(quadrant) {
             xM = grid_space * (xStenScore - 5);
         }
 
-        if (yStenScore < 6) {
+        if (yStenScore &lt; 6) {
 
             yM = grid_space * (6 - yStenScore);
         }
@@ -383,7 +462,7 @@ function drawQuadrant(quadrant) {
 
         // vertical
         
-        for (var i = 0; i < 13; i++) {
+        for (var i = 0; i &lt; 13; i++) {
 
             var x = -r2 + i * grid_space;
             ctx.beginPath();
@@ -394,7 +473,7 @@ function drawQuadrant(quadrant) {
         }
 
         // horizontal
-        for (var i = 0; i < 13; i++) {
+        for (var i = 0; i &lt; 13; i++) {
 
             var y = -r2 + i * grid_space;
             ctx.beginPath();
@@ -610,3 +689,26 @@ function initialize() {
     }
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Dec 01 2020 18:51:18 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
