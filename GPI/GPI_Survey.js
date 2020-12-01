@@ -337,7 +337,7 @@ function writeEndOfSurvey() {
     }
     catch (err) {
 
-        alert(err.message in " + writeEndOfSurvey()");
+        alert(err.message + " in writeEndOfSurvey()");
     }
 }
 
@@ -348,7 +348,11 @@ function writeQuestions() {
 
         textstr = "";
 
+        textstr += getProgressBar();
+
         textstr += "<p class=\"gpi_lead_qu\">I am the sort of person who...</p>";
+
+        textstr += "<form id='GPI_form' action=''>";
 
         textstr += "<div class=\"gpi_surv_table\">";
         textstr += "<div class=\"gpi_surv_thead\">";
@@ -382,13 +386,45 @@ function writeQuestions() {
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
         textstr += "</div>";
 
+        textstr += "</form>";
+
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
 
     }
     catch (err) {
 
-        alert(err.message in " + writeQuestions()");
+        alert(err.message + " in writeQuestions()");
+    }
+}
+
+function getProgressBar() {
+
+    try {
+
+        textstr = "";
+
+        var N = serverQuestionList.length;
+        var n = 0;
+
+        for (var i = 0; i < N; i++) {
+
+            if (serverQuestionList[i].Answer > 0) {
+                n++;
+            }
+        }
+
+        var completed = Math.floor(100 * n / N);
+
+        textstr += "<progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
+        textstr += "<label for=\"progress\"> " + completed + "%</label >";
+
+        return textstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in getProgressBar()");
     }
 }
 
@@ -396,11 +432,14 @@ function saveExit() {
 
     try {
 
-        alert("saveExit()");
+        saveQuestions();
+
+        writeInstructions();
+
     }
     catch (err) {
 
-        alert(err.message in " + saveExit()");
+        alert(err.message + " in saveExit()");
     }
 }
 
@@ -408,12 +447,74 @@ function saveContinue() {
 
     try {
 
-        alert("saveContinue()");
+        saveQuestions();
+
+        getQuestions();
+
     }
     catch (err) {
 
-        alert(err.message in " + saveContinue()");
+        alert(err.message + " in saveContinue()");
     }
+}
+
+function saveQuestions() {
+
+    try {
+
+        // Note that because assigment of objects is by reference,
+        // updating localQuestionList also updates serverQuestionList
+        // since these contain the same objects
+
+        var myform = document.getElementById("GPI_form");
+
+        // Loop through question list to look up answers
+        for (var i = 0; i < localQuestionList.length; i++) {
+
+            var id = localQuestionList[i].Id;
+            var score = getScore(myform, id);
+
+            if (score > 0) {
+
+                localQuestionList[i].Answer = score;
+
+            }
+        }   
+
+    }
+    catch (err) {
+
+        alert(err.message + " in saveQuestions()");
+    }
+}
+
+function getScore(myform, id) {
+
+    try {
+
+        var answer = myform.elements[id];
+        var len = answer.length;
+
+        var val = 0;
+
+        for (var i = 0; i < len; i++) {
+
+            if (answer[i].checked) {
+
+                val = i + 1;
+                break;
+
+            }
+        }
+
+        return val;
+    }
+    catch (err) {
+
+        alert(err.message + " in getScore(myform, id)");
+    }
+
+
 }
 
 function randomQuestions() {
