@@ -65,6 +65,7 @@ div.gpi_surv_tr:nth-child(odd) {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	vertical-align: middle;
+	text-align:left;
 }
 
 .gpi_surv_td {

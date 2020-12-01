@@ -286,6 +286,10 @@ function writeInstructions() {
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
 
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
     }
     catch (err) {
 
@@ -333,6 +337,10 @@ function writeEndOfSurvey() {
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
+
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
     }
     catch (err) {
@@ -390,6 +398,10 @@ function writeQuestions() {
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
+
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
     }
     catch (err) {
