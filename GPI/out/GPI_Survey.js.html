@@ -1,14 +1,42 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GPI_Survey.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GPI_Survey.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileoverview 
- * <h3>Javascript components for the GPI Survey</h3>
- * <p>(Simulated API version)</p>
- * <p>Provides the functionality for rendering the components of the 
- * GPI survey on a web page</p>
- * <b>Key functionality:</b>
- * <ul>
- *    <li>Gets lists of questions and creates survey pages</li>
- *    <li>Submits answered questions</li>
- * </ul>
+ * &lt;h3>Javascript components for the GPI Survey&lt;/h3>
+ * &lt;p>(Simulated API version)&lt;/p>
+ * &lt;p>Provides the functionality for rendering the components of the 
+ * GPI survey on a web page&lt;/p>
+ * &lt;b>Key functionality:&lt;/b>
+ * &lt;ul>
+ *    &lt;li>Gets lists of questions and creates survey pages&lt;/li>
+ *    &lt;li>Submits answered questions&lt;/li>
+ * &lt;/ul>
  * @author M.P. Vaughan
  * @version 1.01
  * @copyright Glowinkowski International Limited (2020)
@@ -70,7 +98,7 @@ class Question {
 
         if (Number.isInteger(score)) {
 
-            if (score >= 1 && score <= 5) {
+            if (score >= 1 &amp;&amp; score &lt;= 5) {
 
                 this._Answer = score;
             }
@@ -308,21 +336,21 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
-        textstr += "<h1>The GPI Survey</h1>";
-        textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
+        textstr += "&lt;h1>The GPI Survey&lt;/h1>";
+        textstr += "&lt;p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
-        textstr += "particular circumstances that you face. Hence you are answering it in the context of \"<i>I am the sort of person who...</i>\".</p>";
-        textstr += "<p>To generate an accurate profile, this inventory requires that your responses reflect how you prefer to behave rather than how, on some occasions, you may ";
+        textstr += "particular circumstances that you face. Hence you are answering it in the context of \"&lt;i>I am the sort of person who...&lt;/i>\".&lt;/p>";
+        textstr += "&lt;p>To generate an accurate profile, this inventory requires that your responses reflect how you prefer to behave rather than how, on some occasions, you may ";
         textstr += "actually behave. Therefore, in responding to each of the questions, please have in mind how you prefer to think and behave in general, independent of the ";
-        textstr += "demands and pressures of any particular circumstance or situation.</p>";
-        textstr += "<p>It is also important to recognise that there are no right or wrong answers, and to gain the most from completing the inventory it is only necessary that you be ";
+        textstr += "demands and pressures of any particular circumstance or situation.&lt;/p>";
+        textstr += "&lt;p>It is also important to recognise that there are no right or wrong answers, and to gain the most from completing the inventory it is only necessary that you be ";
         textstr += "frank and honest in your responses. The feedback you receive will then be accurate, enabling the development of your personal effectiveness across the many ";
-        textstr += "different situations that you may face.</p>";
-        textstr += "<p>Ideally, try not to be interrupted when completing the questionnaire. We recommend you try to complete it in one sitting.</p>";
-        textstr += "<p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
-        textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.</p>";
+        textstr += "different situations that you may face.&lt;/p>";
+        textstr += "&lt;p>Ideally, try not to be interrupted when completing the questionnaire. We recommend you try to complete it in one sitting.&lt;/p>";
+        textstr += "&lt;p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
+        textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.&lt;/p>";
 
-        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\"></div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">&lt;input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\">&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -380,10 +408,10 @@ function writeEndOfSurvey() {
 
         // Create instructions string
         textstr = "";
-        textstr += "<h1>Congratulations!</h1>";
-        textstr += "<h2>You have reached the end of the survey!</h2>";
+        textstr += "&lt;h1>Congratulations!&lt;/h1>";
+        textstr += "&lt;h2>You have reached the end of the survey!&lt;/h2>";
 
-        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"View Report\"></div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">&lt;input type=\"button\" class=\"gpi_button\" value=\"View Report\">&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -410,43 +438,43 @@ function writeQuestions() {
 
         textstr += getProgressBar();
 
-        textstr += "<p class=\"gpi_lead_qu\">I am the sort of person who...</p>";
+        textstr += "&lt;p class=\"gpi_lead_qu\">I am the sort of person who...&lt;/p>";
 
-        textstr += "<form id='GPI_form' action=''>";
+        textstr += "&lt;form id='GPI_form' action=''>";
 
-        textstr += "<div class=\"gpi_surv_table\">";
-        textstr += "<div class=\"gpi_surv_thead\">";
-        textstr += "<div class=\"gpi_surv_qu\"></div>";
-        textstr += "<div class=\"gpi_surv_th\">Strongly disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Neither agree nor disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Agree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Strongly agree</div>";
-        textstr += "</div>"; 
+        textstr += "&lt;div class=\"gpi_surv_table\">";
+        textstr += "&lt;div class=\"gpi_surv_thead\">";
+        textstr += "&lt;div class=\"gpi_surv_qu\">&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Strongly disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Neither agree nor disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Agree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Strongly agree&lt;/div>";
+        textstr += "&lt;/div>"; 
 
-        for (var i = 0; i < localQuestionList.length; i++) {
+        for (var i = 0; i &lt; localQuestionList.length; i++) {
 
             var name = localQuestionList[i].Id;
             var text = localQuestionList[i].Text;
 
-            textstr += "<div class=\"gpi_surv_tr\">";
-            textstr += "<div class=\"gpi_surv_qu\">" + text + "</div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_disagree' name='" + name + "' value='1'><span class=\"gpi_surv_label\">Strongly disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='disagree' name='" + name + "' value='2'><span class=\"gpi_surv_label\">Disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='neither' name='" + name + "' value='3'><span class=\"gpi_surv_label\">Neither agree nor disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='agree' name='" + name + "' value='4'><span class=\"gpi_surv_label\">Agree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_agree' name='" + name + "' value='5'><span class=\"gpi_surv_label\">Strongly agree</span></div>";
-            textstr += "</div>";
+            textstr += "&lt;div class=\"gpi_surv_tr\">";
+            textstr += "&lt;div class=\"gpi_surv_qu\">" + text + "&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='strong_disagree' name='" + name + "' value='1'>&lt;span class=\"gpi_surv_label\">Strongly disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='disagree' name='" + name + "' value='2'>&lt;span class=\"gpi_surv_label\">Disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='neither' name='" + name + "' value='3'>&lt;span class=\"gpi_surv_label\">Neither agree nor disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='agree' name='" + name + "' value='4'>&lt;span class=\"gpi_surv_label\">Agree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='strong_agree' name='" + name + "' value='5'>&lt;span class=\"gpi_surv_label\">Strongly agree&lt;/span>&lt;/div>";
+            textstr += "&lt;/div>";
         }
 
-        textstr += "</div>"; // End of table
+        textstr += "&lt;/div>"; // End of table
 
-        textstr += "<div class=\"gpi_surv_button_box\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Exit\"  onclick=\"saveExit()\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
-        textstr += "</div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Save and Exit\"  onclick=\"saveExit()\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
+        textstr += "&lt;/div>";
 
-        textstr += "</form>";
+        textstr += "&lt;/form>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -475,7 +503,7 @@ function getProgressBar() {
         var N = serverQuestionList.length;
         var n = 0;
 
-        for (var i = 0; i < N; i++) {
+        for (var i = 0; i &lt; N; i++) {
 
             if (serverQuestionList[i].Answer > 0) {
                 n++;
@@ -484,8 +512,8 @@ function getProgressBar() {
 
         var completed = Math.floor(100 * n / N);
 
-        textstr += "<progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
-        textstr += "<label for=\"progress\"> " + completed + "%</label >";
+        textstr += "&lt;progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\">&lt;/progress>";
+        textstr += "&lt;label for=\"progress\"> " + completed + "%&lt;/label >";
 
         return textstr;
 
@@ -550,7 +578,7 @@ function saveQuestions() {
         var myform = document.getElementById("GPI_form");
 
         // Loop through question list to look up answers
-        for (var i = 0; i < localQuestionList.length; i++) {
+        for (var i = 0; i &lt; localQuestionList.length; i++) {
 
             var id = localQuestionList[i].Id;
             var score = getScore(myform, id);
@@ -584,7 +612,7 @@ function getScore(myform, id) {
 
         var val = 0;
 
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i &lt; len; i++) {
 
             if (answer[i].checked) {
 
@@ -616,7 +644,7 @@ function randomQuestions() {
         var num_qu = 0;
         var q_list = [];
 
-        for (var i = 0; i < serverQuestionList.length; i++) {
+        for (var i = 0; i &lt; serverQuestionList.length; i++) {
 
             if (serverQuestionList[i].Answer == 0) {
 
@@ -642,3 +670,26 @@ function randomQuestions() {
 
 
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Dec 01 2020 17:44:11 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
