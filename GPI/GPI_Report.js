@@ -116,8 +116,8 @@ class Dimension {
     /**
      * Set the sten score for this Dimension
      * @param {number}  An integer between 1 and 10
-     * @throws "Sten score must be an integer 1 - 10  (not in range)"
-     * @throws "Sten score must be an integer 1 - 10 (not an integer)"
+     * @throws Sten score must be an integer 1 - 10  (not in range)
+     * @throws Sten score must be an integer 1 - 10 (not an integer)
      */
     set StenScore(score) {
 
@@ -183,6 +183,16 @@ class Dimension {
  */
 class QuadrantModel {
 
+    /**
+     * Creates a GPI Quadrant Model
+     * @param {Dimension} _xDimension - The Dimension associated with the x-axis
+     * @param {Dimension} _yDimension - The Dimension associated with the y-axis
+     * @param {string} _Q1label - Label for the 1st (upper right) quadrant
+     * @param {string} _Q2label - Label for the 2nd (upper left) quadrant
+     * @param {string} _Q3label - Label for the 3rd (lower left) quadrant
+     * @param {string} _Q4label - Label for the 4th (lower right) quadrant
+     * @throws Throws an error if either of the first two arguments are not Dimension objects
+     */
     constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label) {
 
         if ((_xDimension instanceof Dimension) && (_yDimension instanceof Dimension)) {
@@ -202,32 +212,55 @@ class QuadrantModel {
         this._Q4label = _Q4label;
     }
 
-    // Getters
+    /**
+     * Gets the Dimension associated with the x-axis
+     * @return {Dimension}
+     */
     get xDimension() {
 
         return this._xDimension;
     }
 
+    /**
+     * Gets the Dimension associated with the y-axis
+     * @return {Dimension}
+     */
     get yDimension() {
 
         return this._yDimension;
     }
 
+    /**
+     * Gets the label for the 1st (upper right) quadrant
+     * @returns {string}
+     */
     get Q1label() {
 
         return this._Q1label;
     }
 
+    /**
+    * Gets the label for the 2nd (upper left) quadrant
+    * @returns {string}
+    */
     get Q2label() {
 
         return this._Q2label;
     }
 
+    /**
+    * Gets the label for the 3rd (lower left) quadrant
+    * @returns {string}
+    */
     get Q3label() {
 
         return this._Q3label;
     }
 
+    /**
+    * Gets the label for the 4th (lower right) quadrant
+    * @returns {string}
+    */
     get Q4label() {
 
         return this._Q4label;
@@ -239,36 +272,125 @@ class QuadrantModel {
  * Quadrant element colours and fonts
  */
 
-
+/**
+ * Quadrant back cirle colour
+ * @type {string}
+ */
 var quad_circle_colour;
+
+/**
+ * Quadrant centre start colour for graph
+ * @type {string}
+ */
 var quad_start_colour;
+
+/**
+ * Quadrant outer end colour for graph
+ * @type {string}
+ */
 var quad_end_colour;
+
+/**
+ * Quadrant axis colour
+ * @type {string}
+ */
 var quad_axis_colour;
+
+/**
+ * Quadrant grid colour
+ * @type {string}
+ */
 var quad_grid_colour;
+
+/**
+ * Quadrant grid colour
+ * @type {string}
+ */
 var quad_marker_colour;
+
+/**
+ * Colour of text inside quadrants
+ * @type {string}
+ */
 var quad_text_colour;
+
+/**
+ * Size of text inside quadrants
+ * @type {number}
+ * @todo Make this configurable
+ */
 var quad_text_size;
+
+/**
+ * Font of text inside quadrants
+ * @type {string}
+ * @todo Make this configurable
+ */
 var quad_text_font;
+
+/**
+ * Colour of text on labels
+ * @type {string}
+ * @todo Make this configurable
+ */
 var quad_label_text_colour;
+
+/**
+ * Size of text on labels
+ * @type {number}
+ * @todo Make this configurable
+ */
 var quad_label_text_size;
+
+/**
+ * Font of text on labels
+ * @type {string}
+ * @todo Make this configurable
+ */
 var quad_label_text_font;
 
-
-// Quadrant models
-var probSolveImpStyle;
-var commInterperStyle;
-var feelSelfControl;
-
-// List of GPI dimensions (with scores)
-var dimensionList;
-
-// Canvas dimensions for quadrant diagrams
+/**
+ * Canvas width for Quadrant element
+ * @type {number}
+ */
 var quad_width;
+
+/**
+ * Canvas height for Quadrant element
+ * @type {number}
+ */
 var quad_height;
 
+
+/**
+ * Problem solving and implementation style model
+ * @type {QuadrantModel}
+ */
+var quadModel_probSolveImpStyle;
+
+/**
+ * Communication and interpersonal style model
+ * @type {QuadrantModel}
+ */
+var quadModel_commInterperStyle;
+
+/**
+ * Feelings and self-control model
+ * @type {QuadrantModel}
+ */
+var quadModel_feelSelfControl;
+
+/**
+ * Array of Dimensions (with scores)
+ * @type {Dimension[]}
+ */
+var dimensionList;
+
+
+// Set formating for quadrant element
 assignQuadFormating();
 
-
+// Initialize Dimensions
 if (initialize()) {
 
     // getPage("contents");
@@ -279,16 +401,19 @@ else {
 
 }
 
+/**
+ * @param {string} mystr String specifying the QuadrantModel to display
+ * @description <p>Writes the QuadrantModel element to the web page</p>
+ * <p>The possible values of 'mystr' are currently:</p>
+ * <ul>
+ * <li>'problem_quad'</li>
+ * <li>'communication_quad'</li>
+ * <li>'feelings_quad'</li>
+ * </ul>
+ */
 function writeElement(mystr) {
 
     try {
-
-        // Values of mystr:
-        // 
-        // 'problem_quad'
-        // 'communication_quad'
-        // 'feelings_quad'
-
 
         // Write contents
         textstr = "";
@@ -304,17 +429,17 @@ function writeElement(mystr) {
 
             case "problem_quad":
 
-                drawQuadrant(probSolveImpStyle);
+                drawQuadrant(quadModel_probSolveImpStyle);
                 break;
 
             case "communication_quad":
 
-                drawQuadrant(commInterperStyle);
+                drawQuadrant(quadModel_commInterperStyle);
                 break;
 
             case "feelings_quad":
 
-                drawQuadrant(feelSelfControl);
+                drawQuadrant(quadModel_feelSelfControl);
                 break;
 
             default:
@@ -331,17 +456,14 @@ function writeElement(mystr) {
     }
 }
 
-/*
- 
-    Draw quadrant diagrams
- 
+/**
+ * Attempts to assign quadrant colours and fonts from CSS file.
+ * If not found, default values are used.
+ * @todo Assign fonts from CSS. For now, use defaults
  */
-
 function assignQuadFormating() {
 
     try {
-
-        // Attempt to assign quadrant colours and font from CSS file
 
         // Get the root element
         var r = document.querySelector(':root');
@@ -398,9 +520,6 @@ function assignQuadFormating() {
             quad_text_colour = "#ffffff";
         }
 
-        /**
-         * @todo Assign fonts from CSS. For now, use defaults
-         */
         quad_text_size = 26;
         quad_text_font = quad_text_size + "px Arial";
 
@@ -420,7 +539,12 @@ function assignQuadFormating() {
     
 }
 
-
+/**
+ * Draw the Quadrant Model element on an HTML canvas.
+ * @param {QuadrantModel} quadrant - the QuadrantModel to display
+ * @see QuadrantModel
+ * @see writeElement
+ */
 function drawQuadrant(quadrant) {
 
     try {
@@ -655,7 +779,10 @@ function drawQuadrant(quadrant) {
     }
 }
 
-
+/**
+ * Initializes the Dimensions for GPI Report (simulated version)
+ * @todo Wire this up to API calls
+ */
 function initialize() {
 
     try {
@@ -722,7 +849,7 @@ function initialize() {
         ];
 
         // Initialise quadrant models
-        probSolveImpStyle = new QuadrantModel(
+        quadModel_probSolveImpStyle = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Cognition"), 
             dimensionList.find(y => y.UnipolarName === "Attainment"),
             "STRATEGIST",
@@ -731,7 +858,7 @@ function initialize() {
             "VISIONARY"
         );
 
-        commInterperStyle = new QuadrantModel(
+        quadModel_commInterperStyle = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Extraversion"),
             dimensionList.find(y => y.UnipolarName === "Agreeableness"),
             "SUPPORTER",
@@ -740,7 +867,7 @@ function initialize() {
             "INDEPENDENT"
         );
 
-        feelSelfControl = new QuadrantModel(
+        quadModel_feelSelfControl = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Emotionality"),
             dimensionList.find(y => y.UnipolarName === "Impulsivity"),
             "CONTAINED",

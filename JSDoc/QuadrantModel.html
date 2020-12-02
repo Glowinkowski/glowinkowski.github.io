@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>QuadrantModel<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>QuadrantModel<span class="signature">(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label)</span><span class="type-signature"></span></h2>
         
             <div class="class-description"><p>The GPI Quadrant model is a composite model based on and individuals GPI dimensions</p></div>
         
@@ -45,19 +45,187 @@
     
 
     
-    <h4 class="name" id="QuadrantModel"><span class="type-signature"></span>new QuadrantModel<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="QuadrantModel"><span class="type-signature"></span>new QuadrantModel<span class="signature">(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label)</span><span class="type-signature"></span></h4>
     
 
     
 
 
 
+<div class="description">
+    Creates a GPI Quadrant Model
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_xDimension</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Dimension.html">Dimension</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The Dimension associated with the x-axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_yDimension</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Dimension.html">Dimension</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The Dimension associated with the y-axis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_Q1label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Label for the 1st (upper right) quadrant</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_Q2label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Label for the 2nd (upper left) quadrant</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_Q3label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Label for the 3rd (lower left) quadrant</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_Q4label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Label for the 4th (lower right) quadrant</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -116,6 +284,18 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        Throws an error if either of the first two arguments are not Dimension objects
+    
+    </div>
+
+
+    
 
 
 
@@ -139,6 +319,382 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="Q1label"><span class="type-signature"></span>Q1label<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the label for the 1st (upper right) quadrant
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line237">line 237</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="Q2label"><span class="type-signature"></span>Q2label<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the label for the 2nd (upper left) quadrant
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line246">line 246</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="Q3label"><span class="type-signature"></span>Q3label<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the label for the 3rd (lower left) quadrant
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line255">line 255</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="Q4label"><span class="type-signature"></span>Q4label<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the label for the 4th (lower right) quadrant
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line264">line 264</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="xDimension"><span class="type-signature"></span>xDimension<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the Dimension associated with the x-axis
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line219">line 219</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="yDimension"><span class="type-signature"></span>yDimension<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Gets the Dimension associated with the y-axis
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GPI_Report.js.html">GPI_Report.js</a>, <a href="GPI_Report.js.html#line228">line 228</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
 
@@ -155,13 +711,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 12:49:46 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 14:01:38 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

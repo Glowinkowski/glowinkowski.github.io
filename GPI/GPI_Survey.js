@@ -64,8 +64,8 @@ class Question {
     /**
      * Set the survey question answer
      * @param {number}  An integer between 1 and 5
-     * @throws "Answer must be an integer 1 - 5 (not in range)"
-     * @throws "Answer must be an integer 1 - 5 (not an integer)"
+     * @throws Answer must be an integer 1 - 5 (not in range)
+     * @throws Answer must be an integer 1 - 5 (not an integer)
      */
     set Answer(score) {
 
