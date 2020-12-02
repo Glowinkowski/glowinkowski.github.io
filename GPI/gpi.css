@@ -1,9 +1,16 @@
 :root {
-	--gpi_table_txt_col: #2e5979;
-	--gpi_table_bkg_col: #ffffff;
-	--gpi_table_alt_col: #c4cfd5;
-	--gpi_button_bkg_col: #2e5979;
-	--gpi_button_txt_col: #ffffff;
+	--gpi_table_txt_col: #2e5979; /* Colour for the GPI survey table*/
+	--gpi_table_bkg_col: #ffffff; /* Colour for the GPI survey table background */
+	--gpi_table_alt_col: #c4cfd5; /* Alternating colour for GPI survey table background */
+	--gpi_button_bkg_col: #2e5979; /* Background colour for buttons */
+	--gpi_button_txt_col: #ffffff; /* Text colour for buttons */
+	--gpi_quad_circle_colour: #8bafc7; /* GPI default : #8bafc7 */
+	--gpi_quad_start_colour: #a9d5f5; /* GPI default : #a9d5f5 */
+	--gpi_quad_end_colour: #3277a8; /* GPI default : #3277a8 */
+	--gpi_quad_axis_colour: #253959; /* GPI default : #253959 */
+	--gpi_quad_grid_colour: #a9d5f5; /* GPI default : #a9d5f5 */
+	--gpi_quad_marker_colour: #f0210a; /* GPI default : #f0210a */
+	--gpi_quad_text_colour: #ffffff; /* GPI default : #ffffff */
 }
 
 .gpi_main {

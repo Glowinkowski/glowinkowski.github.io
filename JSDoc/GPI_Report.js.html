@@ -42,8 +42,16 @@
  */
 
 /**
- * Class representing a GPI Dimension
- * @class
+ * @classdesc &lt;p>The GPI is based on various factors or dimensions associated
+ * with personality predispositions. The dimension represents a spectrum of
+ * predispositions to behave in certain ways characterised by a particular
+ * personality factor, denoted by the unipolar name.&lt;/p>
+ * &lt;p>The polar opposite behaviours along a particular dimension are referred
+ * to by the 'left' and 'right' bipolar names.&lt;/p>
+ * &lt;p>Each individual has a sten score - an integer between 1 and 10 - associated
+ * with each dimension. Scores less or equal to 5 indicate the individual lies on
+ * the left-hand-side of the spectrum, whilst scores greater than 5 indicate the 
+ * right-hand-side&lt;/p>
  */
 class Dimension {
 
@@ -197,6 +205,10 @@ class Dimension {
     }
 }
 
+/**
+ * @classdesc &lt;p>The GPI Quadrant model is a composite model based on 
+ * and individuals GPI dimensions&lt;/p>
+ */
 class QuadrantModel {
 
     constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label) {
@@ -251,6 +263,24 @@ class QuadrantModel {
 
 }
 
+/**
+ * Quadrant element colours and fonts
+ */
+
+
+var quad_circle_colour;
+var quad_start_colour;
+var quad_end_colour;
+var quad_axis_colour;
+var quad_grid_colour;
+var quad_marker_colour;
+var quad_text_colour;
+var quad_text_size;
+var quad_text_font;
+var quad_label_text_colour;
+var quad_label_text_size;
+var quad_label_text_font;
+
 
 // Quadrant models
 var probSolveImpStyle;
@@ -263,6 +293,9 @@ var dimensionList;
 // Canvas dimensions for quadrant diagrams
 var quad_width;
 var quad_height;
+
+assignQuadFormating();
+
 
 if (initialize()) {
 
@@ -332,6 +365,89 @@ function writeElement(mystr) {
  
  */
 
+function assignQuadFormating() {
+
+    try {
+
+        // Attempt to assign quadrant colours and font from CSS file
+
+        // Get the root element
+        var r = document.querySelector(':root');
+
+        // Get the styles (properties and values) for the root
+        var rs = getComputedStyle(r);
+
+        quad_circle_colour = rs.getPropertyValue('--gpi_quad_circle_colour');
+
+        if (quad_circle_colour.length == 0) {
+
+            quad_circle_colour = "#8bafc7";
+        }
+
+        quad_start_colour = rs.getPropertyValue('--gpi_quad_start_colour');
+
+        if (quad_start_colour.length == 0) {
+
+            quad_start_colour = "#a9d5f5";
+        }
+
+        quad_end_colour = rs.getPropertyValue('--gpi_quad_end_colour');
+
+        if (quad_end_colour.length == 0) {
+
+            quad_end_colour = "#3277a8";
+        }
+
+        quad_axis_colour = rs.getPropertyValue('--gpi_quad_axis_colour');
+
+        if (quad_axis_colour.length == 0) {
+
+            quad_axis_colour = "#253959";
+        }
+
+        quad_grid_colour = rs.getPropertyValue('--gpi_quad_grid_colour');
+
+        if (quad_axis_colour.length == 0) {
+
+            quad_grid_colour = "#a9d5f5";
+        }
+
+        quad_marker_colour = rs.getPropertyValue('--gpi_quad_marker_colour');
+
+        if (quad_marker_colour.length == 0) {
+
+            quad_marker_colour = "#a9d5f5";
+        }
+
+        quad_text_colour = rs.getPropertyValue('--gpi_quad_text_colour');
+
+        if (quad_marker_colour.length == 0) {
+
+            quad_text_colour = "#ffffff";
+        }
+
+        /**
+         * @todo Assign fonts from CSS. For now, use defaults
+         */
+        quad_text_size = 26;
+        quad_text_font = quad_text_size + "px Arial";
+
+        quad_label_text_colour = "#ffffff";
+        quad_label_text_size = 24;
+        quad_label_text_font = quad_label_text_size + "px Arial";
+
+        // Canvas dimensions for quadrants
+        quad_width = 900; //1000;
+        quad_height = 700;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in assigning Quadrant element colours and font");
+    }
+    
+}
+
 
 function drawQuadrant(quadrant) {
 
@@ -343,21 +459,6 @@ function drawQuadrant(quadrant) {
         }
 
         // Draw quadrant
-        var circle_colour = "#8bafc7";
-        var start_colour = "#a9d5f5";
-        var end_colour = "#3277a8";
-        var axis_colour = "#253959";
-        var grid_colour = "#a9d5f5";
-        var marker_colour = "#f0210a";
-
-        var quad_text_colour = "#ffffff";
-        var quad_text_size = 26; //24;
-        var quad_text_font = quad_text_size + "px Arial";
-
-        var label_text_colour = "#ffffff";
-        var label_text_size = 24; //20;
-        var label_text_font = label_text_size + "px Arial";
-
         var aw = 10;                // axis width
 
         var c = document.getElementById("quadrant");
@@ -413,7 +514,7 @@ function drawQuadrant(quadrant) {
             yM = grid_space * (5 - yStenScore);
         }
 
-        ctx.font = label_text_font;
+        ctx.font = quad_label_text_font;
         var ltw = ctx.measureText(left_text).width;
         var rtw = ctx.measureText(right_text).width;
         var ttw = ctx.measureText(top_text).width;
@@ -424,7 +525,7 @@ function drawQuadrant(quadrant) {
         var tw;     // text width (for use with quadrant text)
 
         var lw;         // Width of axis labels
-        var lh = 2.0 * label_text_size;     // Height of axis labels
+        var lh = 2.0 * quad_label_text_size;     // Height of axis labels
 
         // Move origin to the centre of the canvas
         ctx.translate(x0, y0);
@@ -436,7 +537,7 @@ function drawQuadrant(quadrant) {
         ctx.shadowOffsetY = 10;
 
         // Circle definition
-        ctx.fillStyle = circle_colour; 
+        ctx.fillStyle = quad_circle_colour; 
         ctx.lineWidth = 2;
 
         // Draw circle
@@ -448,15 +549,15 @@ function drawQuadrant(quadrant) {
         // Radial gradient fill for square
         var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
 
-        grad.addColorStop(0, start_colour);
-        grad.addColorStop(1, end_colour);
+        grad.addColorStop(0, quad_start_colour);
+        grad.addColorStop(1, quad_end_colour);
 
         // Draw square
         ctx.fillStyle = grad;
         ctx.fillRect(-r2, -r2, 2 * r2, 2 * r2);
 
         // Draw gridlines
-        ctx.strokeStyle = grid_colour;
+        ctx.strokeStyle = quad_grid_colour;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
@@ -505,7 +606,7 @@ function drawQuadrant(quadrant) {
 
 
         // Draw axes and label boxes
-        ctx.fillStyle = axis_colour;
+        ctx.fillStyle = quad_axis_colour;
         ctx.shadowBlur = 20;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 10;
@@ -537,26 +638,26 @@ function drawQuadrant(quadrant) {
         lw = rtw + pad;
         ctx.fillRect(r3 - lw / 2, -lh / 2, lw, lh);
 
-        ctx.font = label_text_font;
-        ctx.fillStyle = label_text_colour;
+        ctx.font = quad_label_text_font;
+        ctx.fillStyle = quad_label_text_colour;
         ctx.shadowBlur = 4;
         ctx.shadowOffsetX = 4;
         ctx.shadowOffsetY = 4;
 
         // Top label text
-        ctx.fillText(top_text, -ttw / 2, -r1 + 0.4 * label_text_size);
+        ctx.fillText(top_text, -ttw / 2, -r1 + 0.4 * quad_label_text_size);
 
         // Bottom label text
-        ctx.fillText(bottom_text, -btw / 2, r1 + 0.4 * label_text_size);
+        ctx.fillText(bottom_text, -btw / 2, r1 + 0.4 * quad_label_text_size);
 
         // Left label text
-        ctx.fillText(left_text, -r3 - ltw / 2, 0.4 * label_text_size);
+        ctx.fillText(left_text, -r3 - ltw / 2, 0.4 * quad_label_text_size);
 
         // Right label text
-        ctx.fillText(right_text, r3 - rtw / 2, 0.4 * label_text_size);
+        ctx.fillText(right_text, r3 - rtw / 2, 0.4 * quad_label_text_size);
 
         // Plot marker
-        ctx.fillStyle = marker_colour;
+        ctx.fillStyle = quad_marker_colour;
         ctx.shadowBlur = 20;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 10;
@@ -586,10 +687,6 @@ function drawQuadrant(quadrant) {
 function initialize() {
 
     try {
-
-        // Canvas dimensions for quadrants
-        quad_width = 900; //1000;
-        quad_height = 700;
 
         // Initialize dimensions
         dimensionList = [
@@ -699,13 +796,13 @@ function initialize() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Dec 01 2020 18:51:18 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 12:49:45 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

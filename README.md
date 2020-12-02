@@ -4,5 +4,5 @@
 [https://glowinkowski.github.io/](https://glowinkowski.github.io/)
 
 ## JavaScript documentation
-[JS Docs](https://glowinkowski.github.io/GPI/out/)
+[JS Docs](https://glowinkowski.github.io/JSDoc/)
 
