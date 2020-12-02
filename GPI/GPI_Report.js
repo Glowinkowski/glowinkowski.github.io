@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview
  * <h3>JavaScript components for the GPI Report</h3>
  * <p>(Simulated API version)</p>
@@ -34,15 +34,17 @@ class Dimension {
      * @param {string} _RightBipolarName - The right bipolar name of the Dimension
      * @param {boolean} _isParent - Indicates if this is a parent Dimension
      * @param {number} _StenScore - The sten score associated with this Dimension (integer between 1 and 10)
+     * @param {string} _ScoreText - The text associated with the sten score of the Dimension
      * @todo Need to provide validation for sten score
      */
-    constructor(_UnipolarName, _LeftBipolarName, _RightBipolarName, _isParent=false, _StenScore=0) {
+    constructor(_UnipolarName, _LeftBipolarName, _RightBipolarName, _isParent=false, _StenScore=0, _ScoreText="") {
 
         this._UnipolarName = _UnipolarName;
         this._LeftBipolarName = _LeftBipolarName;
         this._RightBipolarName = _RightBipolarName;
         this._isParent = _isParent;
-        this._StenScore = _StenScore;   
+        this._StenScore = _StenScore;
+        this._ScoreText = _ScoreText;
         this._SubDimensions = [];
     }
 
@@ -93,6 +95,15 @@ class Dimension {
     }
 
     /**
+     * Get the text associated with the sten score of the Dimension
+     * @returns {string} An HTML-formatted string
+     */
+    get ScoreText() {
+
+        return this._ScoreText;
+    }
+
+    /**
      * Gets an array of sub-dimenions for the Dimension
      * @returns {Dimension[]} An array of sub-dimenions for the Dimension
      */
@@ -104,7 +115,7 @@ class Dimension {
 
     /**
      * Indicates if dimension is a parent
-     * @param {boolean} Indicates if dimension is a parent
+     * @param {boolean} bool Indicates if dimension is a parent
      */
     set isParent(bool) {
 
@@ -115,7 +126,7 @@ class Dimension {
 
     /**
      * Set the sten score for this Dimension
-     * @param {number}  An integer between 1 and 10
+     * @param {number}  score An integer between 1 and 10
      * @throws Sten score must be an integer 1 - 10  (not in range)
      * @throws Sten score must be an integer 1 - 10 (not an integer)
      */
@@ -140,8 +151,17 @@ class Dimension {
     }
 
     /**
+     * Set the text associated with the sten score of the Dimension
+     * @param {string} text Text associated with the sten score of the Dimension
+     */
+    set ScoreText(text) {
+
+        this._ScoreText = text;
+    }
+
+    /**
      * Sets the sub-Dimensions for a Dimension and calculates the compound score
-     * @param {Dimension[]} An array of Dimension objects
+     * @param {Dimension[]} dimensions An array of Dimension objects
      */
     set SubDimensions(dimensions) {
 
@@ -191,9 +211,10 @@ class QuadrantModel {
      * @param {string} _Q2label - Label for the 2nd (upper left) quadrant
      * @param {string} _Q3label - Label for the 3rd (lower left) quadrant
      * @param {string} _Q4label - Label for the 4th (lower right) quadrant
+     * @param {string} _QText - The text associated with this Quadrant Model
      * @throws Throws an error if either of the first two arguments are not Dimension objects
      */
-    constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label) {
+    constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label, _QText) {
 
         if ((_xDimension instanceof Dimension) && (_yDimension instanceof Dimension)) {
 
@@ -210,6 +231,7 @@ class QuadrantModel {
         this._Q2label = _Q2label;
         this._Q3label = _Q3label;
         this._Q4label = _Q4label;
+        this._QText = _QText;
     }
 
     /**
@@ -264,6 +286,24 @@ class QuadrantModel {
     get Q4label() {
 
         return this._Q4label;
+    }
+
+    /**
+    * Gets the text associated with this Quadrant Model
+    * @returns {string}
+    */
+    get QText() {
+
+        return this._QText;
+    }
+
+    /**
+    * Sets the text associated with this Quadrant Model
+    * @param {string} text The text associated with this Quadrant Model
+    */
+    set QText(text) {
+
+        this._QText = text;
     }
 
 }
@@ -415,6 +455,8 @@ function writeElement(mystr) {
 
     try {
 
+        var quadmodel;
+
         // Write contents
         textstr = "";
         textstr += "<div align='center'>";
@@ -422,31 +464,61 @@ function writeElement(mystr) {
         textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
         textstr += "</div>";
 
-        // Write string to document
-        document.getElementById("main").innerHTML = textstr;
-
         switch (mystr) {
 
             case "problem_quad":
 
-                drawQuadrant(quadModel_probSolveImpStyle);
+                quadmodel = quadModel_probSolveImpStyle;
+
+                //drawQuadrant(quadModel_probSolveImpStyle);
                 break;
 
             case "communication_quad":
 
-                drawQuadrant(quadModel_commInterperStyle);
+                quadmodel = quadModel_commInterperStyle;
+
+                //drawQuadrant(quadModel_commInterperStyle);
                 break;
 
             case "feelings_quad":
 
-                drawQuadrant(quadModel_feelSelfControl);
+                quadmodel = quadModel_feelSelfControl;
+
+                //drawQuadrant(quadModel_feelSelfControl);
                 break;
 
             default:
 
                 throw "Unknown element";
                 
-        }       
+        }  
+
+        textstr += quadmodel.QText;
+
+        textstr += "<h2>" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";
+
+        for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
+
+            textstr += "<h3>" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "</h3>";
+            textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
+        }
+
+        textstr += "<h2>" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</h2>";
+
+        for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
+
+            textstr += "<h3>" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "</h3>";
+            textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
+        }
+
+        // Write string to document
+        document.getElementById("main").innerHTML = textstr;
+
+        drawQuadrant(quadmodel);
+
+
 
     }
     catch (err) {
@@ -615,7 +687,6 @@ function drawQuadrant(quadrant) {
         var rtw = ctx.measureText(right_text).width;
         var ttw = ctx.measureText(top_text).width;
         var btw = ctx.measureText(bottom_text).width;
-        //var pad = ctx.measureText('XXXXXX').width;
         var pad = ctx.measureText('XXX').width;
 
         var tw;     // text width (for use with quadrant text)
@@ -763,7 +834,7 @@ function drawQuadrant(quadrant) {
 
         // Draw circle
         ctx.beginPath();
-        ctx.arc(xM, yM, rM, 0, 2 * Math.PI);
+        ctx.arc(xM, -yM, rM, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath();   
 
@@ -799,64 +870,140 @@ function initialize() {
         ];
 
         // Emotionality
+        anxiety = "";
+        hostility = "";
+        optimism = "";
+        selfesteem = "";
+
         dimensionList[0].SubDimensions = [
-            new Dimension("Anxiety", "Relaxed", "Tense", false, 5),
-            new Dimension("Hostility", "Placid", "Discontented", false, 3),
-            new Dimension("Optimism", "Optimistic", "Pessimistic", false, 7),
-            new Dimension("Self-Esteem", "Confident", "Self Conscious", false, 9)
+            new Dimension("Anxiety", "Relaxed", "Tense", false, 6, anxiety),
+            new Dimension("Hostility", "Placid", "Discontented", false, 6, hostility),
+            new Dimension("Optimism", "Optimistic", "Pessimistic", false, 8, optimism),
+            new Dimension("Self-Esteem", "Confident", "Self Conscious", false, 4, selfesteem)
         ];
 
         // Impulsivity
+        impulsivity = "";
+
         dimensionList[1].SubDimensions = [
-            new Dimension("Impulsivity", "Disciplined", "Impulsive", false, 5)
+            new Dimension("Impulsivity", "Disciplined", "Impulsive", false, 6, impulsivity)
         ];
 
         // Extraversion
+        sociability = "";
+        assertiveness = "";
+        hedonism = "";
+        socialpoise = "";
+
         dimensionList[2].SubDimensions = [
-            new Dimension("Sociability", "Outgoing", "Reserved", false, 5),
-            new Dimension("Assertiveness", "Asserting", "Accepting", false, 3),
-            new Dimension("Hedonism", "Fun Loving", "Serious Minded", false, 7),
-            new Dimension("Social Poise", "Socially Assured", "Socially Uncertain", false, 9)
+            new Dimension("Sociability", "Outgoing", "Reserved", false, 8, sociability),
+            new Dimension("Assertiveness", "Asserting", "Accepting", false, 5, assertiveness),
+            new Dimension("Hedonism", "Fun Loving", "Serious Minded", false, 4, hedonism),
+            new Dimension("Social Poise", "Socially Assured", "Socially Uncertain", false, 7, socialpoise)
         ];
 
         // Cognition
+        changeorientation = "<p>Specimen's profile shows a moderate preference towards the Revolutionary side of the dimension. This suggests that Specimen is more energized "
+            + "by radical / transformational change rather than by change in small controlled steps. She will have preference for more 'blue‐sky' thinking with a "
+            + "drive to generate novel ideas but still be able to appreciate the potential of using tried and tested approaches. In terms of their natural approach "
+            + "she is likely to focus more on change that transforms and creates new approaches and generate innovative and new ideas.</p>";
+
+        informationprocessing = "<p>Specimen has a moderate preference toward the Practical side of the dimension. This involves looking at the reality of the current situation, "
+            + "gathering data and considering strengths and weaknesses, with a view to accomplishing immediate goals and objectives. However, she will still be "
+            + "comfortable flexing into conceptual thinking in order to consider future trends and dynamics that are likely to be more ambiguous. Nevertheless, "
+            + "her tendency is to be orientated towards more practical tasks and today's delivery. Specimen can be comfortable in both the domains of "
+            + "planning and strategy but with more of an edge towards the planning. Specimen can be fairly comfortable in the world of theories and concepts "
+            + "but is likely to prefer for them to have a practical application.</p>";
+
+        decisionmaking = "<p>Specimen has a marginal preference towards the Intuitive. This suggests that she prefers to use an intuition based approach to solving problems "
+            + "and making decisions. In this context, decision making is driven by her own insight and gut feeling about a situation irrespective of what the data says. "
+            + "This is not to say that rational facts are not thought out to validate an approach it simply implies that the approach of the intuitive decision maker "
+            + "tends to be more gut feeling driven. The upside of intuitive decision making is that problems and decisions can be addressed quickly and without "
+            + "getting caught up in analysis by paralysis. The downside of course, is that sometimes important information can be missed. Specimen's profile "
+            + "does show a balance and so she will be comfortable flexing towards the Rational when required.</p>";
+
         dimensionList[3].SubDimensions = [
-            new Dimension("Change Orientation", "Evolutionary", "Revolutionary", false, 5),
-            new Dimension("Information Processing", "Practical", "Conceptual", false, 3),
-            new Dimension("Decision Making", "Rational", "Intuitive", false, 7)
+            new Dimension("Change Orientation", "Evolutionary", "Revolutionary", false, 7, changeorientation),
+            new Dimension("Information Processing", "Practical", "Conceptual", false, 4, informationprocessing),
+            new Dimension("Decision Making", "Rational", "Intuitive", false, 6, decisionmaking)
         ];
 
         // Agreeableness
+        affiliation = "";
+        trust = "";
+        conformity = "";
+        modesty = "";
+
         dimensionList[4].SubDimensions = [
-            new Dimension("Affiliation", "Affiliative", "Unaffiliative", false, 5),
-            new Dimension("Trust", "Trusting", "Questioning", false, 3),
-            new Dimension("Conformity", "Conforming", "Dissenting", false, 7),
-            new Dimension("Modesty", "Modest", "Assuming", false, 9)
+            new Dimension("Affiliation", "Affiliative", "Unaffiliative", false, 4, affiliation),
+            new Dimension("Trust", "Trusting", "Questioning", false, 6, trust),
+            new Dimension("Conformity", "Conforming", "Dissenting", false, 9, conformity),
+            new Dimension("Modesty", "Modest", "Assuming", false, 7, modesty)
         ];
 
         // Attainment
+        implementationstyle = "<p>The Outcome/Spontaneous dimension relates to an individual's preference for a structured/organised as opposed to a flexible approach for the "
+            + "delivery of outcomes and results. Specimen shows a marginal preference for being Spontaneous. This means she brings a flexibility to their "
+            + "approach but also likely to be able to plan for the end goal bearing it in mind as she experiments with the process. She is likely to enjoy balancing "
+            + "multiple tasks simultaneously but will be able to focus on each sufficiently to get it completed. She enjoys keeping their options open for as long "
+            + "as possible and can sometimes enjoy the experience more than the outcome. Specimen's natural approach to delivery is to be flexible in approach "
+            + "keeping options open and retaining the capacity to change course if required.The profile does show a balance, however, and so Specimen can be "
+            + "comfortable flexing towards the Outcome side of the scale.</p>";
+
+        conscientiousness = "<p>Specimen shows a strong preference for evaluating the main points and overall idea of an issue rather than getting into the full detail of a task. "
+            + "She is likely to be able to move quickly through information and detail, picking out the main relevant points and should, therefore, be able to "
+            + "handle a volume of information without getting overwhelmed. She is likely to feel frustrated when required to focus in and concentrate on the "
+            + "details: as a result she may sometimes miss important information or fail to make thorough preparations. Specimen's natural approach is Cursory "
+            + "rather than Conscientious and therefore prefers the overview and bigger picture rather than the nuts and bolts of the detail. This of course has its "
+            + "advantages and disadvantages.</p>";
+
+        achievementorientation = "<p>Specimen shows a clear preference towards the Pragmatist. This suggests that she prefers an approach which involves delivering the appropriate "
+            + "level of quality to get the job done or meet the expectations of others (e.g.customers).This 'fit for purpose' approach for standards involves "
+            + "flexibly adjusting the standards of work which is done in order to, for instance, meet a deadline or keep down costs. Specimen may feel impatient "
+            + "with standards, or procedures, that she judges to be inefficient or wasteful and she may occasionally feel the need to cut corners in the pursuit of a "
+            + "goal. The upside of being Pragmatic is an ability to deliver on time and cost together with more of a willingness to delegate and thus use their time "
+            + "more effectively. The downside of course is sometimes a lack of focus in terms of standards of excellence.</p>";
+
         dimensionList[5].SubDimensions = [
-            new Dimension("Implementation Style", "Outcome", "Spontaneous", false, 5),
-            new Dimension("Conscientiousness", "Conscientious", "Cursory", false, 3),
-            new Dimension("Achievement Orientation", "Perfectionist", "Pragmatic", false, 7)
+            new Dimension("Implementation Style", "Outcome", "Spontaneous", false, 6, implementationstyle),
+            new Dimension("Conscientiousness", "Conscientious", "Cursory", false, 9, conscientiousness),
+            new Dimension("Achievement Orientation", "Perfectionist", "Pragmatic", false, 8, achievementorientation)
         ];
 
         // Drive
+        influence = "";
+        ambitiousness = "";
+        energy = "";
+
         dimensionList[6].SubDimensions = [
-            new Dimension("Influence", "Persuasive", "Consensual", false, 5),
-            new Dimension("Ambitiousness", "Ambitious", "Contented", false, 3),
-            new Dimension("Energy", "Energetic", "Paced", false, 7)
+            new Dimension("Influence", "Persuasive", "Consensual", false, 5, influence),
+            new Dimension("Ambitiousness", "Ambitious", "Contented", false, 3, ambitiousness),
+            new Dimension("Energy", "Energetic", "Paced", false, 7, energy)
         ];
 
         // Initialise quadrant models
+        probSolveImpStyle = "<p>Specimen's profile is positioned within the Visionary style. Visionaries are predisposed to look at situations in terms of the bigger picture and "
+            + "consider all the future possibilities that exist. They will tend to generate radically different ideas, enjoy strategy, and be more interested in this than "
+            + "in dealing with the practical details of turning ideas into reality. Visionaries enjoy big change with more of a Focus on making things different than "
+            + "improving what already exists. They have a tendency to enjoy a multiple of activities rather than a focus on singular tasks. Decision Making is often "
+            + "intuitive rather than entirely fact based and their approach to standards tends to be more pragmatic than perfectionist. The essence of a Visionary "
+            + "is new ideas with a multiple of activities on the go.</p>"
+            + "<p>On occasions, the Visionaries can get caught up with all of the possibilities of change, and may move from one idea to the next. While this has a "
+            + "wide range of advantages, one downside is that they can find it difficult to select a focus and stick with it through to Implementation.</p>"
+            + "<p>Specimen's position in the Visionary style is marginal and this suggests she will relate to only part of the above description. She will feel "
+            + "comfortable with elements of the other three types and in this context will retain a degree of flexibility.</p>";
+
         quadModel_probSolveImpStyle = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Cognition"), 
             dimensionList.find(y => y.UnipolarName === "Attainment"),
             "STRATEGIST",
             "PLANNER",
             "PRACTITIONER",
-            "VISIONARY"
+            "VISIONARY",
+            probSolveImpStyle
         );
+
+        commInterperStyle = "";
 
         quadModel_commInterperStyle = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Extraversion"),
@@ -864,8 +1011,11 @@ function initialize() {
             "SUPPORTER",
             "ENCOURAGER",
             "CHALLENGER",
-            "INDEPENDENT"
+            "INDEPENDENT",
+            commInterperStyle
         );
+
+        feelSelfControl = "";
 
         quadModel_feelSelfControl = new QuadrantModel(
             dimensionList.find(x => x.UnipolarName === "Emotionality"),
@@ -873,7 +1023,8 @@ function initialize() {
             "CONTAINED",
             "COMPOSED",
             "ENERGISED",
-            "EXPRESSIVE"
+            "EXPRESSIVE",
+            feelSelfControl
         );
 
         return true;
