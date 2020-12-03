@@ -526,8 +526,18 @@ function writeElement(mystr) {
 
         for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
 
+            id_str = quadmodel.yDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
+            id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
+            image_id = "image" + id_str;
+
             textstr += "<h3>" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
             textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "</h3>";
+
+            textstr += "<div align='center'>";
+            textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
+            textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
+            textstr += "</div>";
+
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
         }
 
@@ -539,6 +549,12 @@ function writeElement(mystr) {
         for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
 
             drawSten(quadmodel.xDimension.SubDimensions[i]);
+
+        }
+
+        for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
+
+            drawSten(quadmodel.yDimension.SubDimensions[i]);
 
         }
 
