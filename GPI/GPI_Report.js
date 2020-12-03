@@ -7,6 +7,8 @@
  * <b>Key functionality:</b>
  * <ul>
  *    <li>Renders the quadrant model visualisations</li>
+ *    <li>Renders the sten score visualisations</li>
+ *    <li>Automatically selects report text from model</li>
  * </ul>
  * @author M.P. Vaughan
  * @version 1.01
