@@ -309,10 +309,6 @@ class QuadrantModel {
 }
 
 /**
- * Quadrant element colours and fonts
- */
-
-/**
  * Quadrant back cirle colour
  * @type {string}
  */
@@ -400,6 +396,18 @@ var quad_width;
  * @type {number}
  */
 var quad_height;
+
+/**
+ * Canvas width for sten score element
+ * @type {number}
+ */
+var sten_width;
+
+/**
+ * Canvas height for sten score element
+ * @type {number}
+ */
+var sten_height;
 
 
 /**
@@ -499,8 +507,18 @@ function writeElement(mystr) {
 
         for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
 
+            id_str = quadmodel.xDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
+            id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
+            image_id = "image" + id_str;
+
             textstr += "<h3>" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
             textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "</h3>";
+
+            textstr += "<div align='center'>";
+            textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
+            textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
+            textstr += "</div>";
+
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
         }
 
@@ -517,6 +535,12 @@ function writeElement(mystr) {
         document.getElementById("main").innerHTML = textstr;
 
         drawQuadrant(quadmodel);
+
+        for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
+
+            drawSten(quadmodel.xDimension.SubDimensions[i]);
+
+        }
 
 
 
@@ -602,6 +626,10 @@ function assignQuadFormating() {
         // Canvas dimensions for quadrants
         quad_width = 900; //1000;
         quad_height = 700;
+
+        // Canvas dimensions for sten scores
+        sten_width = 900; //1000;
+        sten_height = 220;
 
     }
     catch (err) {
@@ -841,6 +869,212 @@ function drawQuadrant(quadrant) {
         // Write canvas to image (c is canvas object)
         var domstr = c.toDataURL("image/png");
         document.getElementById("quadrant_image").src = domstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in drawQuadrant()");
+
+    }
+}
+
+/**
+ * Draw the Sten Score element on an HTML canvas.
+ * @param {Dimension} dimension - the Dimesion of the score to display
+ * @see Dimension
+ * @see writeElement
+ */
+function drawSten(dimension) {
+
+    try {
+
+        if (!(dimension instanceof Dimension)) {
+
+            throw "Object is not a Dimension";
+        }
+
+        // Draw quadrant
+        var aw = 10;                // axis width
+
+        var id_str = dimension.UnipolarName;    // used to identify HTML element
+        id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
+        var image_id = "image" + id_str;
+
+        var c = document.getElementById(id_str);
+        var ctx = c.getContext("2d");
+        var w = c.width;            // width of canvas
+        var h = c.height;           // height of canvas
+
+        var max_span = 0.62 * w;    // Span of circle image 
+
+        var r1 = max_span / 2;      // Radius of circle
+        var r2 = 0.8 * r1;          // Half width of rectangle
+        var r3 = 1.2 * r1;          // Radius of x-label centres
+
+        var x0 = w / 2.0;           // x origin
+        var y0 = h / 2.0;           // y origin
+
+        var grid_space = 2 * r2 / 12;   // Grid spacing
+        var rM = 0.5 * grid_space;        // Radius of marker
+
+        var r4 = 1.5 * grid_space;    // Radius and half height of background stadium
+
+        // Label text
+        var left_text = dimension.LeftBipolarName;
+        var right_text = dimension.RightBipolarName;
+
+        var stenScore = dimension.StenScore;     
+
+        var xM;                 // x-coordinate of marker
+        var yM;             // y-coordinate of marker
+
+        if (stenScore < 6) {
+
+            xM = grid_space * (stenScore - 6);
+        }
+        else {
+
+            xM = grid_space * (stenScore - 5);
+        }
+
+        yM = 0;
+
+        ctx.font = quad_label_text_font;
+        var ltw = ctx.measureText(left_text).width;
+        var rtw = ctx.measureText(right_text).width;
+        var pad = ctx.measureText('XXX').width;
+
+        var lw;         // Width of axis labels
+        var lh = 2.0 * quad_label_text_size;     // Height of axis labels
+
+        var sw = 0.5*lh;     // Width of square y-axis stops
+
+        // Move origin to the centre of the canvas
+        ctx.translate(x0, y0);
+
+        // Shadow definition
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "black";
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+
+        // Circle definition
+        ctx.fillStyle = quad_circle_colour;
+
+        // Draw circles
+        // Syntax: arc(x, y, r, sAngle, eAngle, counterclockwise)
+
+        ctx.beginPath();
+        ctx.arc(r4 - r1, 0, r4, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(r1 - r4, 0, r4, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        // Radial gradient fill for square
+        var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
+
+        grad.addColorStop(0, quad_start_colour);
+        grad.addColorStop(1, quad_end_colour);
+
+        // Draw rectamgle
+        ctx.fillStyle = grad;
+        ctx.fillRect(-r2, -grid_space, 2 * r2, 2 * grid_space);
+
+        // Draw gridlines
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = quad_grid_colour;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        // vertical
+
+        for (var i = 0; i < 13; i++) {
+
+            var x = -r2 + i * grid_space;
+            ctx.beginPath();
+            ctx.moveTo(x, -grid_space);
+            ctx.lineTo(x, grid_space);
+            ctx.stroke();
+
+        }
+
+        // horizontal
+        for (var i = 0; i < 3; i++) {
+
+            var y = -grid_space + i * grid_space;
+            ctx.beginPath();
+            ctx.moveTo(-r2, y);
+            ctx.lineTo(r2, y);
+            ctx.stroke();
+
+        }
+
+        // Draw axes and label boxes
+        ctx.fillStyle = quad_axis_colour;
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+
+        // Note order important to get shadows right
+        // Syntax: fillRect(x, y, width, height)
+
+        // +y-axis 
+        ctx.fillRect(-aw / 2, -2*grid_space, aw, 2*grid_space - aw / 2);
+
+        // x-axis
+        ctx.fillRect(-r1, -aw / 2, 2 * r1, aw);
+
+        // -y-axis
+        ctx.fillRect(-aw / 2, aw / 2, aw, 2 * grid_space - aw / 2);
+
+        // y-axis square stops - top
+        ctx.fillRect(-sw / 2, -2 * grid_space - sw / 2, sw, sw);
+
+        // y-axis square stops - bottom
+        ctx.fillRect(-sw / 2, 2 * grid_space - sw / 2, sw, sw);
+
+        // left label box
+        lw = ltw + pad;
+        ctx.fillRect(-r3 - lw / 2, -lh / 2, lw, lh);
+
+        // right label box
+        lw = rtw + pad;
+        ctx.fillRect(r3 - lw / 2, -lh / 2, lw, lh);
+
+        ctx.font = quad_label_text_font;
+        ctx.fillStyle = quad_label_text_colour;
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
+
+        // Left label text
+        ctx.fillText(left_text, -r3 - ltw / 2, 0.4 * quad_label_text_size);
+
+        // Right label text
+        ctx.fillText(right_text, r3 - rtw / 2, 0.4 * quad_label_text_size);
+
+        // Plot marker
+        ctx.fillStyle = quad_marker_colour;
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+
+        // Turn on transparency
+        ctx.globalAlpha = 0.8;
+
+        // Draw circle
+        ctx.beginPath();
+        ctx.arc(xM, -yM, rM, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        // Write canvas to image (c is canvas object)
+        var domstr = c.toDataURL("image/png");
+        document.getElementById(image_id).src = domstr;
 
     }
     catch (err) {
