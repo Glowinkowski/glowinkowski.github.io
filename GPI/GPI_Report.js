@@ -207,6 +207,7 @@ class QuadrantModel {
 
     /**
      * Creates a GPI Quadrant Model
+     * @param {string} Name - The name of the Quadrant Model
      * @param {Dimension} _xDimension - The Dimension associated with the x-axis
      * @param {Dimension} _yDimension - The Dimension associated with the y-axis
      * @param {string} _Q1label - Label for the 1st (upper right) quadrant
@@ -216,7 +217,7 @@ class QuadrantModel {
      * @param {string} _QText - The text associated with this Quadrant Model
      * @throws Throws an error if either of the first two arguments are not Dimension objects
      */
-    constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label, _QText) {
+    constructor(_Name, _xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label, _QText) {
 
         if ((_xDimension instanceof Dimension) && (_yDimension instanceof Dimension)) {
 
@@ -229,6 +230,7 @@ class QuadrantModel {
 
         }
 
+        this._Name = _Name;
         this._Q1label = _Q1label;
         this._Q2label = _Q2label;
         this._Q3label = _Q3label;
@@ -237,8 +239,17 @@ class QuadrantModel {
     }
 
     /**
+     * Gets the name of the Quadrant Model
+     * @returns {string}
+     */
+    get Name() {
+
+        return this._Name;
+    }
+
+    /**
      * Gets the Dimension associated with the x-axis
-     * @return {Dimension}
+     * @returns {Dimension}
      */
     get xDimension() {
 
@@ -308,6 +319,80 @@ class QuadrantModel {
         this._QText = text;
     }
 
+}
+
+/**
+ * @classdesc <p>Encapsulates the GPI Talent Report</p>
+ */
+class Report {
+
+    /**
+     * Creates a GPI Talent Report
+     * @param {string} _FirstName - First name of report subject
+     * @param {string} _LastName - Last name of report subject
+     */
+    constructor(_FirstName, _LastName) {
+
+        this._FirstName = _FirstName;
+        this._LastName = _LastName;
+        this._Dimensions = [];
+        this._Models = [];
+
+    }
+
+    /**
+     * Gets the first name of the report subject
+     * @returns {string}
+     */
+    get FirstName() {
+
+        return this._FirstName;
+    }
+
+    /**
+     * Gets the last name of the report subject
+     * @returns {string}
+     */
+    get LastName() {
+
+        return this._LastName;
+    }
+
+    /**
+     * Gets the array of GPI Dimensions for this report
+     * @returns {Dimension[]}
+     */
+    get Dimensions() {
+
+        return this._Dimensions;
+    }
+
+    /**
+     * Gets the array of Quadrant Models for this report
+     * @returns {QuadrantModel[]}
+     */
+    get Models() {
+
+        return this._Models;
+    }
+
+    /**
+     * Sets the array of GPI Dimensions for this report
+     * @param {Dimension[]} dimensions Array of GPI Dimensions for this report
+     */
+    set Dimensions(dimensions) {
+
+        this._Dimensions = dimensions;
+    }
+
+    /**
+     * Sets the array of Quadrant Models for this report
+     * @param {QuadrantModel[]} models Array of Quadrant Models for this report
+     */
+    set Models(models) {
+
+        this._Models = models;
+    }
 }
 
 /**
@@ -436,20 +521,30 @@ var quadModel_feelSelfControl;
  */
 var dimensionList;
 
-
 // Set formating for quadrant element
 assignQuadFormating();
 
 // Initialize Dimensions
 if (initialize()) {
 
-    // getPage("contents");
+    
 }
 else {
 
     alert("Unable to show GPI report");
 
 }
+
+/*
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
+*/
+   
 
 /**
  * @param {string} mystr String specifying the QuadrantModel to display
@@ -466,13 +561,6 @@ function writeElement(mystr) {
     try {
 
         var quadmodel;
-
-        // Write contents
-        textstr = "";
-        textstr += "<div align='center'>";
-        textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
-        textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
-        textstr += "</div>";
 
         switch (mystr) {
 
@@ -502,6 +590,14 @@ function writeElement(mystr) {
                 throw "Unknown element";
                 
         }  
+
+        // Write contents
+        textstr = "";
+        textstr += "<h2>" + quadmodel.Name + "</h2>";
+        textstr += "<div align='center'>";
+        textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
+        textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
+        textstr += "</div>";
 
         textstr += quadmodel.QText;
 
@@ -1122,10 +1218,10 @@ function initialize() {
         ];
 
         // Emotionality
-        anxiety = "";
-        hostility = "";
-        optimism = "";
-        selfesteem = "";
+        anxiety = "<p>Test paragraph</p>";
+        hostility = "<p>Test paragraph</p>";
+        optimism = "<p>Test paragraph</p>";
+        selfesteem = "<p>Test paragraph</p>";
 
         dimensionList[0].SubDimensions = [
             new Dimension("Anxiety", "Relaxed", "Tense", false, 6, anxiety),
@@ -1135,17 +1231,17 @@ function initialize() {
         ];
 
         // Impulsivity
-        impulsivity = "";
+        impulsivity = "<p>Test paragraph</p>";
 
         dimensionList[1].SubDimensions = [
             new Dimension("Impulsivity", "Disciplined", "Impulsive", false, 6, impulsivity)
         ];
 
         // Extraversion
-        sociability = "";
-        assertiveness = "";
-        hedonism = "";
-        socialpoise = "";
+        sociability = "<p>Test paragraph</p>";
+        assertiveness = "<p>Test paragraph</p>";
+        hedonism = "<p>Test paragraph</p>";
+        socialpoise = "<p>Test paragraph</p>";
 
         dimensionList[2].SubDimensions = [
             new Dimension("Sociability", "Outgoing", "Reserved", false, 8, sociability),
@@ -1181,10 +1277,10 @@ function initialize() {
         ];
 
         // Agreeableness
-        affiliation = "";
-        trust = "";
-        conformity = "";
-        modesty = "";
+        affiliation = "<p>Test paragraph</p>";
+        trust = "<p>Test paragraph</p>";
+        conformity = "<p>Test paragraph</p>";
+        modesty = "<p>Test paragraph</p>";
 
         dimensionList[4].SubDimensions = [
             new Dimension("Affiliation", "Affiliative", "Unaffiliative", false, 4, affiliation),
@@ -1223,9 +1319,9 @@ function initialize() {
         ];
 
         // Drive
-        influence = "";
-        ambitiousness = "";
-        energy = "";
+        influence = "<p>Test paragraph</p>";
+        ambitiousness = "<p>Test paragraph</p>";
+        energy = "<p>Test paragraph</p>";
 
         dimensionList[6].SubDimensions = [
             new Dimension("Influence", "Persuasive", "Consensual", false, 5, influence),
@@ -1246,6 +1342,7 @@ function initialize() {
             + "comfortable with elements of the other three types and in this context will retain a degree of flexibility.</p>";
 
         quadModel_probSolveImpStyle = new QuadrantModel(
+            "Problem Solving & Implementation Style",
             dimensionList.find(x => x.UnipolarName === "Cognition"), 
             dimensionList.find(y => y.UnipolarName === "Attainment"),
             "STRATEGIST",
@@ -1255,9 +1352,10 @@ function initialize() {
             probSolveImpStyle
         );
 
-        commInterperStyle = "";
+        commInterperStyle = "<p>Test paragraph</p>";
 
         quadModel_commInterperStyle = new QuadrantModel(
+            "Communication & Interpersonal Style",
             dimensionList.find(x => x.UnipolarName === "Extraversion"),
             dimensionList.find(y => y.UnipolarName === "Agreeableness"),
             "SUPPORTER",
@@ -1267,9 +1365,10 @@ function initialize() {
             commInterperStyle
         );
 
-        feelSelfControl = "";
+        feelSelfControl = "<p>Test paragraph</p>";
 
         quadModel_feelSelfControl = new QuadrantModel(
+            "Feelings & Self-Control",
             dimensionList.find(x => x.UnipolarName === "Emotionality"),
             dimensionList.find(y => y.UnipolarName === "Impulsivity"),
             "CONTAINED",

@@ -235,6 +235,7 @@ class QuadrantModel {
 
     /**
      * Creates a GPI Quadrant Model
+     * @param {string} Name - The name of the Quadrant Model
      * @param {Dimension} _xDimension - The Dimension associated with the x-axis
      * @param {Dimension} _yDimension - The Dimension associated with the y-axis
      * @param {string} _Q1label - Label for the 1st (upper right) quadrant
@@ -244,7 +245,7 @@ class QuadrantModel {
      * @param {string} _QText - The text associated with this Quadrant Model
      * @throws Throws an error if either of the first two arguments are not Dimension objects
      */
-    constructor(_xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label, _QText) {
+    constructor(_Name, _xDimension, _yDimension, _Q1label, _Q2label, _Q3label, _Q4label, _QText) {
 
         if ((_xDimension instanceof Dimension) &amp;&amp; (_yDimension instanceof Dimension)) {
 
@@ -257,6 +258,7 @@ class QuadrantModel {
 
         }
 
+        this._Name = _Name;
         this._Q1label = _Q1label;
         this._Q2label = _Q2label;
         this._Q3label = _Q3label;
@@ -265,8 +267,17 @@ class QuadrantModel {
     }
 
     /**
+     * Gets the name of the Quadrant Model
+     * @returns {string}
+     */
+    get Name() {
+
+        return this._Name;
+    }
+
+    /**
      * Gets the Dimension associated with the x-axis
-     * @return {Dimension}
+     * @returns {Dimension}
      */
     get xDimension() {
 
@@ -336,6 +347,80 @@ class QuadrantModel {
         this._QText = text;
     }
 
+}
+
+/**
+ * @classdesc &lt;p>Encapsulates the GPI Talent Report&lt;/p>
+ */
+class Report {
+
+    /**
+     * Creates a GPI Talent Report
+     * @param {string} _FirstName - First name of report subject
+     * @param {string} _LastName - Last name of report subject
+     */
+    constructor(_FirstName, _LastName) {
+
+        this._FirstName = _FirstName;
+        this._LastName = _LastName;
+        this._Dimensions = [];
+        this._Models = [];
+
+    }
+
+    /**
+     * Gets the first name of the report subject
+     * @returns {string}
+     */
+    get FirstName() {
+
+        return this._FirstName;
+    }
+
+    /**
+     * Gets the last name of the report subject
+     * @returns {string}
+     */
+    get LastName() {
+
+        return this._LastName;
+    }
+
+    /**
+     * Gets the array of GPI Dimensions for this report
+     * @returns {Dimension[]}
+     */
+    get Dimensions() {
+
+        return this._Dimensions;
+    }
+
+    /**
+     * Gets the array of Quadrant Models for this report
+     * @returns {QuadrantModel[]}
+     */
+    get Models() {
+
+        return this._Models;
+    }
+
+    /**
+     * Sets the array of GPI Dimensions for this report
+     * @param {Dimension[]} dimensions Array of GPI Dimensions for this report
+     */
+    set Dimensions(dimensions) {
+
+        this._Dimensions = dimensions;
+    }
+
+    /**
+     * Sets the array of Quadrant Models for this report
+     * @param {QuadrantModel[]} models Array of Quadrant Models for this report
+     */
+    set Models(models) {
+
+        this._Models = models;
+    }
 }
 
 /**
@@ -464,20 +549,30 @@ var quadModel_feelSelfControl;
  */
 var dimensionList;
 
-
 // Set formating for quadrant element
 assignQuadFormating();
 
 // Initialize Dimensions
 if (initialize()) {
 
-    // getPage("contents");
+    
 }
 else {
 
     alert("Unable to show GPI report");
 
 }
+
+/*
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
+*/
+   
 
 /**
  * @param {string} mystr String specifying the QuadrantModel to display
@@ -494,13 +589,6 @@ function writeElement(mystr) {
     try {
 
         var quadmodel;
-
-        // Write contents
-        textstr = "";
-        textstr += "&lt;div align='center'>";
-        textstr += "&lt;canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'>&lt;/canvas>";
-        textstr += "&lt;img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
-        textstr += "&lt;/div>";
 
         switch (mystr) {
 
@@ -530,6 +618,14 @@ function writeElement(mystr) {
                 throw "Unknown element";
                 
         }  
+
+        // Write contents
+        textstr = "";
+        textstr += "&lt;h2>" + quadmodel.Name + "&lt;/h2>";
+        textstr += "&lt;div align='center'>";
+        textstr += "&lt;canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'>&lt;/canvas>";
+        textstr += "&lt;img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
+        textstr += "&lt;/div>";
 
         textstr += quadmodel.QText;
 
@@ -1150,10 +1246,10 @@ function initialize() {
         ];
 
         // Emotionality
-        anxiety = "";
-        hostility = "";
-        optimism = "";
-        selfesteem = "";
+        anxiety = "&lt;p>Test paragraph&lt;/p>";
+        hostility = "&lt;p>Test paragraph&lt;/p>";
+        optimism = "&lt;p>Test paragraph&lt;/p>";
+        selfesteem = "&lt;p>Test paragraph&lt;/p>";
 
         dimensionList[0].SubDimensions = [
             new Dimension("Anxiety", "Relaxed", "Tense", false, 6, anxiety),
@@ -1163,17 +1259,17 @@ function initialize() {
         ];
 
         // Impulsivity
-        impulsivity = "";
+        impulsivity = "&lt;p>Test paragraph&lt;/p>";
 
         dimensionList[1].SubDimensions = [
             new Dimension("Impulsivity", "Disciplined", "Impulsive", false, 6, impulsivity)
         ];
 
         // Extraversion
-        sociability = "";
-        assertiveness = "";
-        hedonism = "";
-        socialpoise = "";
+        sociability = "&lt;p>Test paragraph&lt;/p>";
+        assertiveness = "&lt;p>Test paragraph&lt;/p>";
+        hedonism = "&lt;p>Test paragraph&lt;/p>";
+        socialpoise = "&lt;p>Test paragraph&lt;/p>";
 
         dimensionList[2].SubDimensions = [
             new Dimension("Sociability", "Outgoing", "Reserved", false, 8, sociability),
@@ -1209,10 +1305,10 @@ function initialize() {
         ];
 
         // Agreeableness
-        affiliation = "";
-        trust = "";
-        conformity = "";
-        modesty = "";
+        affiliation = "&lt;p>Test paragraph&lt;/p>";
+        trust = "&lt;p>Test paragraph&lt;/p>";
+        conformity = "&lt;p>Test paragraph&lt;/p>";
+        modesty = "&lt;p>Test paragraph&lt;/p>";
 
         dimensionList[4].SubDimensions = [
             new Dimension("Affiliation", "Affiliative", "Unaffiliative", false, 4, affiliation),
@@ -1251,9 +1347,9 @@ function initialize() {
         ];
 
         // Drive
-        influence = "";
-        ambitiousness = "";
-        energy = "";
+        influence = "&lt;p>Test paragraph&lt;/p>";
+        ambitiousness = "&lt;p>Test paragraph&lt;/p>";
+        energy = "&lt;p>Test paragraph&lt;/p>";
 
         dimensionList[6].SubDimensions = [
             new Dimension("Influence", "Persuasive", "Consensual", false, 5, influence),
@@ -1274,6 +1370,7 @@ function initialize() {
             + "comfortable with elements of the other three types and in this context will retain a degree of flexibility.&lt;/p>";
 
         quadModel_probSolveImpStyle = new QuadrantModel(
+            "Problem Solving &amp; Implementation Style",
             dimensionList.find(x => x.UnipolarName === "Cognition"), 
             dimensionList.find(y => y.UnipolarName === "Attainment"),
             "STRATEGIST",
@@ -1283,9 +1380,10 @@ function initialize() {
             probSolveImpStyle
         );
 
-        commInterperStyle = "";
+        commInterperStyle = "&lt;p>Test paragraph&lt;/p>";
 
         quadModel_commInterperStyle = new QuadrantModel(
+            "Communication &amp; Interpersonal Style",
             dimensionList.find(x => x.UnipolarName === "Extraversion"),
             dimensionList.find(y => y.UnipolarName === "Agreeableness"),
             "SUPPORTER",
@@ -1295,9 +1393,10 @@ function initialize() {
             commInterperStyle
         );
 
-        feelSelfControl = "";
+        feelSelfControl = "&lt;p>Test paragraph&lt;/p>";
 
         quadModel_feelSelfControl = new QuadrantModel(
+            "Feelings &amp; Self-Control",
             dimensionList.find(x => x.UnipolarName === "Emotionality"),
             dimensionList.find(y => y.UnipolarName === "Impulsivity"),
             "CONTAINED",
@@ -1326,13 +1425,13 @@ function initialize() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Report.html">Report</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#orderedList">orderedList</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeEndOfSurvey">writeEndOfSurvey</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Dec 03 2020 12:21:01 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Dec 03 2020 17:53:43 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
