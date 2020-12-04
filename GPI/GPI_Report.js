@@ -15,6 +15,11 @@
  * @copyright Glowinkowski International Limited (2020)
  */
 
+/*=================================================
+ *          CLASS DEFINITIONS
+ * ================================================
+ */
+
 /**
  * @classdesc <p>The GPI is based on various factors or dimensions associated
  * with personality predispositions. The dimension represents a spectrum of
@@ -335,8 +340,7 @@ class Report {
 
         this._FirstName = _FirstName;
         this._LastName = _LastName;
-        this._Dimensions = [];
-        this._Models = [];
+        this._QuadrantModels = [];
 
     }
 
@@ -359,41 +363,28 @@ class Report {
     }
 
     /**
-     * Gets the array of GPI Dimensions for this report
-     * @returns {Dimension[]}
-     */
-    get Dimensions() {
-
-        return this._Dimensions;
-    }
-
-    /**
      * Gets the array of Quadrant Models for this report
      * @returns {QuadrantModel[]}
      */
-    get Models() {
+    get QuadrantModels() {
 
-        return this._Models;
-    }
-
-    /**
-     * Sets the array of GPI Dimensions for this report
-     * @param {Dimension[]} dimensions Array of GPI Dimensions for this report
-     */
-    set Dimensions(dimensions) {
-
-        this._Dimensions = dimensions;
+        return this._QuadrantModels;
     }
 
     /**
      * Sets the array of Quadrant Models for this report
      * @param {QuadrantModel[]} models Array of Quadrant Models for this report
      */
-    set Models(models) {
+    set QuadrantModels(models) {
 
-        this._Models = models;
+        this._QuadrantModels = models;
     }
 }
+
+/*=================================================
+ *          GLOBAL VARIABLES
+ * ================================================
+ */
 
 /**
  * Quadrant back cirle colour
@@ -521,6 +512,17 @@ var quadModel_feelSelfControl;
  */
 var dimensionList;
 
+/**
+ * Report object
+ * @type {Report}
+ */
+var myReport;
+
+/*=================================================
+ *          INITIALIZATION CODE
+ * ================================================
+ */
+
 // Set formating for quadrant element
 assignQuadFormating();
 
@@ -534,6 +536,11 @@ else {
     alert("Unable to show GPI report");
 
 }
+
+/*=================================================
+ *          FUNCTIONS
+ * ================================================
+ */
 
 /**
  * @param {string} mystr String specifying the QuadrantModel to display
@@ -1466,6 +1473,16 @@ function initialize() {
             "EXPRESSIVE",
             feelSelfControl
         );
+
+        myReport = new Report("Specimen", "Client");
+
+        myReport.QuadrantModels = [
+
+            quadModel_probSolveImpStyle,
+            quadModel_commInterperStyle,
+            quadModel_feelSelfControl
+
+        ];
 
         return true;
 
