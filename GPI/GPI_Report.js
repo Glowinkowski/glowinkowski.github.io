@@ -535,17 +535,6 @@ else {
 
 }
 
-/*
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
-*/
-   
-
 /**
  * @param {string} mystr String specifying the QuadrantModel to display
  * @description <p>Writes the QuadrantModel element to the web page</p>
@@ -1218,10 +1207,38 @@ function initialize() {
         ];
 
         // Emotionality
-        anxiety = "<p>Test paragraph</p>";
-        hostility = "<p>Test paragraph</p>";
-        optimism = "<p>Test paragraph</p>";
-        selfesteem = "<p>Test paragraph</p>";
+        anxiety = "<p>Specimen is marginally towards the Tense end of the dimension. This suggests that she has a tendency to focus on things that may go wrong and "
+            + "could, accordingly, feel an enhanced degree of anxiety. This implies that she may tend to feel a certain degree of tension / edginess about achieving "
+            + "performance outcomes and be alert to changing circumstances and therefore responding quickly if things do start to go wrong. This kind of "
+            + "tension or energy can reflect the upside of Specimen's position on the dimension in terms of reflecting drive. The potential downside, however, is "
+            + "the possible tendency to experience an unnecessarily high degree of tension and come over as permanently on edge. This risks being seen by "
+            + "others as not taking things in one's stride. Specimen's position on this dimension is quite balanced suggesting she is able to flex into the Relaxed "
+            + "mode when appropriate.</p>";
+
+        hostility = "<p>Specimen is marginally towards the Discontented side of the dimension. This suggests that she has a tendency to view their experience and her "
+            + "'life journey' to date in a moderately negative light. In this context she may experience a degree of frustration or discontentment when reflecting "
+            + "upon what she has achieved either in a professional or personal context. The essence of Discontented is the idea of regret and feeling a degree of "
+            + "dissatisfaction about what one has achieved to date. This is not necessarily an absolute measure of achievement, more a kind of self‐imposed "
+            + "bench mark and extent to which a person feels comfortable with themselves. The downside can be the fact that many people with enormous "
+            + "achievements still feel a sense of dissatisfaction. The upside, however, is that it can often drive and motivate people to achieve more. Specimen's "
+            + "position on this profile is clearly balanced suggesting a tendency to flex into the Placid side with only a marginal orientation towards Discontented.</p>";
+
+        optimism = "<p>Specimen is clearly orientated towards the Pessimistic end of the scale. This suggests she will have a tendency to bring a Pessimistic perspective "
+            + "viewing the future possibilities and their prospects relatively negatively. It implies she will tend to be likely to look ahead and consider the possible "
+            + "problems and things that might go wrong. The essence of Pessimistic is the idea of the 'glass half empty' rather than 'half full'. Although this may "
+            + "come across to others as unenthusiastic and doubtful, it does have the advantage that ensuring threats have been considered before taking action. "
+            + "This of course is the upside of pessimism, the downside is the fact that others can be put off and demotivated together with potential "
+            + "opportunities not being realised due to a kind of risk aversion. Specimen’'s position on the dimension is quite strongly towards the Pessimistic "
+            + "side. This suggests a lack of tendency to feel comfortable flexing into the optimistic side of the dimension.</p>";
+
+        selfesteem = "<p>Specimen is moderately on the Self Confident side of the dimension. This suggests that she feels within themselves a positive degree of "
+            + "confidence holding a comfortable view of themselves and maintaining a healthy sense of positive self‐esteem. This is likely to come across in their "
+            + "behaviour and interaction with others. Specimen is likely to be realistic and indeed comfortable with their abilities but still feeling open to learn "
+            + "and improve. She is likely to feel comfortable in the face of criticism from others and able to rationally make up their own mind as to whether to "
+            + "take that criticism on board or not. The essence of self‐confidence relates to the individuals degree of comfort and acceptance of who they are. The "
+            + "upside of confident is about self‐belief in achieving successful outcomes. The downside however can sometimes be a level of contentedness which "
+            + "can actually undermine achievement. Specimen's position on the profile suggests that she may that she may occasionally flex into the Self‐Conscious "
+            + "side but is nevertheless orientated towards Confident.</p>";
 
         dimensionList[0].SubDimensions = [
             new Dimension("Anxiety", "Relaxed", "Tense", false, 6, anxiety),
@@ -1231,17 +1248,48 @@ function initialize() {
         ];
 
         // Impulsivity
-        impulsivity = "<p>Test paragraph</p>";
+        impulsivity = "<p>Specimen is marginally towards the Impulsive end of the dimension. This suggests she will be aware of their emotional reactions and will tend to "
+            + "express them relatively freely. She may sometimes struggle to exercise control over their emotions and thus behaving impulsively as a result. This "
+            + "might include feelings of impatience, particularly with the delay of the fulfilment of a desire and the possibility of being distracted by their "
+            + "impulses. Specimen is likely to come across as open and willing to share their feelings with others but may not always be selective about what she "
+            + "shares or with whom. The upside of Impulsive is the idea of an individual who is open and makes decisions quickly. The downside of Impulsive is a "
+            + "tendency to react too quickly and show their hand when not appropriate. Specimen's position on this dimension is quite balanced suggesting their "
+            + "ability to flex into the Disciplined side of the dimension.</p>";
 
         dimensionList[1].SubDimensions = [
             new Dimension("Impulsivity", "Disciplined", "Impulsive", false, 6, impulsivity)
         ];
 
         // Extraversion
-        sociability = "<p>Test paragraph</p>";
-        assertiveness = "<p>Test paragraph</p>";
-        hedonism = "<p>Test paragraph</p>";
-        socialpoise = "<p>Test paragraph</p>";
+        sociability = "<p>Specimen shows a clear preference towards Reserved. This suggests she is energised by their own company with the opportunity to reflect. While "
+            + "she can enjoy a degree of social interaction and the company of others, she nevertheless, mainly draws their energy from personal reflection and "
+            + "the opportunity to focus on the internal world of ideas and concepts. She is often capable of working for extended periods alone enjoying the "
+            + "opportunity to think through their ideas. A feature of reserved introverts is the idea of 'thinking by thinking' as opposed to 'thinking by talking'. In "
+            + "this sense, Specimen will have a strong tendency to formulate her thinking and ideas through personal reflection rather than dialogue with "
+            + "others. The upside of being reserved is the capacity for reflection and introspection. The downside can be a lack of energy for social engagement "
+            + "and connection with others.</p>";
+
+        assertiveness = "<p>Specimen shows a marginal preference for Asserting. This suggests a tendency to feel comfortable sharing and asserting their views with others "
+            + "and providing direction. At the same time, she will have the capacity to also keep their own counsel. Nevertheless, their preference is to assert and "
+            + "in this context, Specimen will be comfortable pushing themselves forward, stating what she thinks, and in a leadership context articulating what "
+            + "needs to be done and the direction required. This upside of asserting is clear in terms of an individual's capacity to be open with their views and "
+            + "deliver direction setting input. The downside however, can sometimes involve a lack of listening and empathy towards others with the risk of "
+            + "being overly dominant. In Specimen's case however, given their more balanced profile this may be less likely suggesting their capacity to flex, "
+            + "when appropriate, into Accepting.</p>";
+
+        hedonism = "<p>Specimen shows a moderate preference towards Fun Loving. This suggests that social activities inside and outside of the work place are important "
+            + "to them. While she will prioritise the importance of their responsibilities and to that extent flex into Serious Minded, socialising and relaxation "
+            + "remains an important priority. The essence of Fun Loving is the idea that socialising, relaxation and leisure time etc. is a dominant priority. From a "
+            + "work perspective, the upside of this relates to an ability to be engaging and recognise the social needs of people in the work place. The downside, "
+            + "however, is the risk of sometimes not being taken seriously. Specimen's profile on this dimension, albeit towards the Fun Loving end of the scale, "
+            + "is nevertheless relatively balanced and thus suggests their ability to flex into Serious Minded when appropriate.</p>";
+
+        socialpoise = "<p>Specimen's Profile shows that she is moderately towards the Socially Uncertain end of the dimension. This implies that she will have a preference "
+            + "for engaging with smaller groups and furthermore where she is already familiar with the individuals. While she may feel confident in large groups "
+            + "and meeting new people, their comfort zone is much more socially selective. The essence of being Socially Uncertain gives the idea of "
+            + "emphasising and developing existing relationships rather than new ones. The upside is of course the facility to maintain existing relationships but "
+            + "the downside is sometimes a reluctance to proactively network and practice broader influencing behaviour.The balance in Specimen's profile "
+            + "suggests she may be able to flex towards the Socially Assured end of the dimension.</p>";
 
         dimensionList[2].SubDimensions = [
             new Dimension("Sociability", "Outgoing", "Reserved", false, 8, sociability),
@@ -1277,10 +1325,38 @@ function initialize() {
         ];
 
         // Agreeableness
-        affiliation = "<p>Test paragraph</p>";
-        trust = "<p>Test paragraph</p>";
-        conformity = "<p>Test paragraph</p>";
-        modesty = "<p>Test paragraph</p>";
+        affiliation = "<p>Specimen shows a moderate preference towards the Affiliative end of the dimension. This suggests she has a more tender minded and warm "
+            + "engagement style with others rather than tough minded and detached. There is a preference for maintaining harmony and warm connections with "
+            + "others. Affiliative individuals are often aware of the needs and feelings of others and will accommodate them if possible, avoiding being hurtful or "
+            + "creating disharmony. Affiliative types enjoy liking and being liked by others with an emphasis on the needs of people rather than the task. The "
+            + "upside of Affiliation is about relationships and engagement style together with the capacity to influence and network. The downside however "
+            + "relates to the individual's ability to address difficult issues and focus on the needs of the task over and above the needs of people. Specimen's "
+            + "profile although relatively balanced and suggesting the ability to flex into the Unaffiliative side of the dimension is nevertheless orientated towards "
+            + "Affiliative.</p>";
+
+        trust = "<p>Specimen shows a moderate preference towards Questioning. This implies a tendency for them to be more cautious when dealing with others in "
+            + "the first instance and more readily question what other people's motives might actually be. She is likely to suspend judgement over where "
+            + "someone may be coming from until they prove themselves worthy of the task. The upside of Questioning is that sometimes caution of others can "
+            + "be well placed in that you need some evidence to be sure about someone. The downside however, can be lack of openness and engagement on "
+            + "initial meeting thus risking openness and trust in the earlier stages of the relationship. Specimen's position on this dimension is relatively "
+            + "balanced suggesting she can flex into Trusting. Nevertheless their orientation is towards the more Questioning.</p>";
+
+        conformity = "<p>Specimen's profile indicates a strong preference towards Dissenting. This implies she has a tendency to focus on what she disagrees with, or "
+            + "thinks is wrong, with an idea, finding it fairly easy to find an opposing view. The essence of Dissenting is the idea of the individual being quite "
+            + "independently minded with more of a tendency to disagree and see the downsides of the group view than to feel agreeable and collaborative. "
+            + "Dissenting types feel more comfortable and able to ask tough probing questions about how the group is performing. The upside of Dissenting is "
+            + "the opportunity for challenge and a different perspective, while the downside can sometimes be disruptive behaviour when collaboration is "
+            + "needed. Specimen's profile is firmly towards the Dissenting end of the scale, the upside being their capacity to challenge colleagues and think "
+            + "differently, the downside being the need to sometimes adopt a more collaborate team orientated approach. The extent to which a 'dissenter' "
+            + "actually articulates their views will be strongly influenced by how assertive and confident they feel.</p>"
+
+        modesty = "<p>Specimen shows a moderate preference towards Assuming. This suggests their tendency for an Assuming approach where she will like to receive "
+            + "acknowledgement for their own individual contribution and feel comfortable about promoting and talking about those accomplishments with "
+            + "others. The essence of Assuming is an individual's preparedness to talk about what they have achieved rather than holding their 'light under a "
+            + "bushel'. The upside of Assuming is of course the capacity to establish a broader personal profile together with an ability to promote the broader "
+            + "accomplishments of the team and / or organisation and this can have a positive leadership impact.The downside can be the risk of being perceived "
+            + "as boastful or arrogant. Specimen's position on the profile suggests she can flex into the Modest end of this dimension. She is however orientated "
+            + "towards the Assuming side.</p>";
 
         dimensionList[4].SubDimensions = [
             new Dimension("Affiliation", "Affiliative", "Unaffiliative", false, 4, affiliation),
@@ -1306,7 +1382,7 @@ function initialize() {
             + "advantages and disadvantages.</p>";
 
         achievementorientation = "<p>Specimen shows a clear preference towards the Pragmatist. This suggests that she prefers an approach which involves delivering the appropriate "
-            + "level of quality to get the job done or meet the expectations of others (e.g.customers).This 'fit for purpose' approach for standards involves "
+            + "level of quality to get the job done or meet the expectations of others (e.g.customers). This 'fit for purpose' approach for standards involves "
             + "flexibly adjusting the standards of work which is done in order to, for instance, meet a deadline or keep down costs. Specimen may feel impatient "
             + "with standards, or procedures, that she judges to be inefficient or wasteful and she may occasionally feel the need to cut corners in the pursuit of a "
             + "goal. The upside of being Pragmatic is an ability to deliver on time and cost together with more of a willingness to delegate and thus use their time "
@@ -1319,9 +1395,9 @@ function initialize() {
         ];
 
         // Drive
-        influence = "<p>Test paragraph</p>";
-        ambitiousness = "<p>Test paragraph</p>";
-        energy = "<p>Test paragraph</p>";
+        influence = "<p>Influence paragraph</p>";
+        ambitiousness = "<p>Ambitiousness paragraph</p>";
+        energy = "<p>Energy paragraph</p>";
 
         dimensionList[6].SubDimensions = [
             new Dimension("Influence", "Persuasive", "Consensual", false, 5, influence),
@@ -1352,7 +1428,15 @@ function initialize() {
             probSolveImpStyle
         );
 
-        commInterperStyle = "<p>Test paragraph</p>";
+        commInterperStyle = "<p>Specimen's profile is positioned within the Independent style. Independence combines Introversion and Individualist. Independents will often be "
+            + "seen by others as rational, reserved and perhaps even detached from the rest of the group.They are task focused and tend to be comfortable "
+            + "pursuing their own interests. Although they will tend to keep their views to themselves, they often have great insights into the issues faced by the "
+            + "group but not necessarily surfaced. It is likely that the Independent will be predisposed to speak when the situation requires it. They will however, "
+            + "feel entirely comfortable expressing their views irrespective of whether they are different of that of the group. The upside of the Independent can "
+            + "be the ability to see things differently from the group and retain an appropriate level of attachment in order to make that critical input. The "
+            + "downside and perhaps the development area relates to the need to develop a warmer and more engaging style with others.</p>"
+            + "<p>Specimen's position in the Independent style is marginal and this suggests she will relate to only part of the above description. She will feel "
+            + "comfortable with elements of the other three types and in this context will retain a degree of flexibility.</p>";
 
         quadModel_commInterperStyle = new QuadrantModel(
             "Communication & Interpersonal Style",
@@ -1365,7 +1449,12 @@ function initialize() {
             commInterperStyle
         );
 
-        feelSelfControl = "<p>Test paragraph</p>";
+        feelSelfControl = "<p>Specimen's profile is positioned within the Expressive quadrant. Expressive combines Ill‐At‐Ease with Disciplined. Expressive individuals have a "
+            + "tendency to be very open in their thoughts and showing of their emotions. They will often react quickly in situations and Problem Solving contexts. "
+            + "This combines with a tendency to lack confidence in themselves and feel positive about situations. People in this category are often seen as "
+            + "'wearing their emotions on their sleeve'. Depending upon the extent of self‐confidence they may sometimes be described as 'temperamental'.</p>"
+            + "Specimen's position in the Expressive style is marginal and this suggests she will relate to only part of the above description. She will relate with "
+            + "elements of the other three types. In this context other aspects of the Feelings and Self Control Framework, may resonate with them more effectively.</p>";
 
         quadModel_feelSelfControl = new QuadrantModel(
             "Feelings & Self-Control",
