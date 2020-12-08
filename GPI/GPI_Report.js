@@ -731,7 +731,9 @@ var myReport;
 
 /**
  * Calls the API to get the GPI report
- * (currently the API call is simulated)
+ * Currently the API call is simulated by requesting a JSON file
+ * from the server (API/getReport.json), which contains the data for
+ * constructing the report from JSON objects.
  */
 function getReport() {
 
@@ -822,7 +824,11 @@ function getReport() {
     }
 }
 
-
+/**
+ * Utility function for extracting and creating a QuadrantModel 
+ * object from JSON data
+ * @param {JSON} qmjson
+ */
 function extractQuadrantModel(qmjson) {
 
     try {
@@ -861,6 +867,12 @@ function extractQuadrantModel(qmjson) {
     }
 }
 
+/**
+ * Utility function for extracting and creating a Dimension
+ * object from JSON data. This is used specifically for parent 
+ * Dimension objects.
+ * @param {JSON} dimjson
+ */
 function extractDimension(dimjson) {
 
     try {
@@ -912,7 +924,12 @@ function extractDimension(dimjson) {
     }
 }
 
-
+/**
+ * Utility function for extracting and creating a Dimension
+ * object from JSON data. This is used specifically for child
+ * Dimension objects.
+ * @param {JSON} subdimjson
+ */
 function extractSubDimension(subdimjson) {
 
     try {
@@ -947,6 +964,11 @@ function extractSubDimension(subdimjson) {
     }
 }
 
+/**
+ * Utility function for extracting and creating a Blue4
+ * (Leadership style) object from JSON data.
+ * @param {JSON} b4json
+ */
 function extractBlue4Model(b4json) {
 
     try {
