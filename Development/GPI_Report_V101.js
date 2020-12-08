@@ -354,7 +354,7 @@ class Blue4Model {
      * @param {number} _RiskArea - a number between 0 and 3
      * @param {number} _RiskLevel - a number between 0 and 5
      */
-    constructor(_RiskArea = 0, _RiskLevel = 0, _ScoreText = "") {
+    constructor(_RiskArea = 0, _RiskLevel = 0) {
 
         if (Number.isInteger(_RiskArea)) {
 
@@ -390,7 +390,7 @@ class Blue4Model {
             throw "Risk level must be an integer 0 - 5 (not an integer)";
         }
 
-        this._ScoreText = _ScoreText;
+        this._ScoreText = "";
 
     }
 
@@ -723,257 +723,25 @@ var myReport;
  * ================================================
  */
 
+// Set formating for quadrant element
+assignQuadFormating();
+
+// Initialize Dimensions
+if (initialize()) {
+
+ 
+}
+else {
+
+    alert("Unable to show GPI report");
+
+}
+
 
 /*=================================================
  *          FUNCTIONS
  * ================================================
  */
-
-/**
- * Calls the API to get the GPI report
- * (currently the API call is simulated)
- */
-function getReport() {
-
-    try {
-
-        // TODO: Change the url in the live version
-        var url = "API/getReport.json";
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-
-            try {
-
-                if (this.readyState == 4) {
-
-                    if (this.status == 200) {
-
-                        // The text from the API call
-                        jsontext = this.responseText;
-
-                        // Parse this into JSON
-                        var reportObj = JSON.parse(jsontext);
-
-                        /* 
-                         * Assumed structure of JSON object
-                         * _FirstName: string
-                         * _LastName: string
-                         * _QuadrantModels: Array of QuadrantModel
-                         * _LeadershipModel: Blue4Model
-                         */
-
-                        var keys = Object.keys(reportObj);
-
-                        // Test for correct fields
-                        if (keys[0] !== "_FirstName") throw "Error: no _FirstName field found JSON object";
-                        if (keys[1] !== "_LastName") throw "Error: no _LastName field found JSON object";
-                        if (keys[2] !== "_QuadrantModels") throw "Error: no _QuadrantModels field found JSON object";
-                        if (keys[3] !== "_LeadershipModel") throw "Error: no _LeadershipModel field found JSON object";
-
-                        myReport = new Report(reportObj._FirstName, reportObj._LastName);
-
-                        var qmarray = reportObj._QuadrantModels;
-                        var len = qmarray.length;
-
-                        if (len < 1) throw "Error: Expected an array of QuadrantModels in JSON object";
-
-                        myReport.QuadrantModels = [];
-
-                        for (var i = 0; i < len; i++) {
-
-                            myReport.QuadrantModels[i] = extractQuadrantModel(qmarray[i]);
-                        }
-
-                        myReport.LeadershipModel = extractBlue4Model(reportObj._LeadershipModel);
-
-                        quadModel_probSolveImpStyle = myReport.QuadrantModels.find(x => x.Name === "Problem Solving & Implementation Style");
-                        quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication & Interpersonal Style");
-                        quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings & Self-Control");                       
-                        
-                        // Set formating for quadrant element
-                        assignQuadFormating();
-
-                        writeElement("problem_quad");
-
-                    }
-                    else {
-
-                        alert("Status: " + this.status);
-                    }
-
-                }
-
-            }
-            catch (err) {
-
-                alert(err.message + " in xhttp.onreadystatechange()");
-            }
-
-
-        };
-        xhttp.open("GET", url, true);
-        xhttp.send();
-
-    }
-    catch (err) {
-
-        alert(err.message + " in getReport()");
-    }
-}
-
-
-function extractQuadrantModel(qmjson) {
-
-    try {
-
-        /*
-         * qmjson is expected to be the JSON representation of a QuadrantModel object
-         * 
-         * It should therefore have the fields:
-         * _Name : string
-         * _xDimension : Dimension
-         * _yDimension : Dimension
-         * _Q1label : string
-         * _Q2label : string
-         * _Q3label : string
-         * _Q4label : string
-         * _QText : string
-         */
-
-        qModel = new QuadrantModel(
-            qmjson._Name,
-            extractDimension(qmjson._xDimension),
-            extractDimension(qmjson._yDimension),
-            qmjson._Q1label,
-            qmjson._Q2label,
-            qmjson._Q3label,
-            qmjson._Q4label,
-            qmjson._QText
-        );
-
-        return qModel;
-
-    }
-    catch (err) {
-
-        alert(err.message + " in extractQuadrantModel(qmjson)");
-    }
-}
-
-function extractDimension(dimjson) {
-
-    try {
-
-        /*
-         * dimjson is expected to be the JSON representation of a Dimension object
-         *
-         * It should therefore have the fields:
-         * _UnipolarName : string
-         * _LeftBipolarName : string
-         * _RightBipolarName : string
-         * _isParent : boolean
-         * _StenScore : number
-         * _ScoreText : string
-         */
-
-        var dimension = new Dimension(
-            dimjson._UnipolarName,
-            dimjson._LeftBipolarName,
-            dimjson._RightBipolarName,
-            dimjson._isParent
-        );
-       
-        if (dimension.isParent) { 
-
-            
-            var dimarray = dimjson._SubDimensions;
-            dimension.SubDimensions = [];
-
-            var len = dimarray.length;
-
-            for (var i = 0; i < len; i++) {
-
-                dimension.SubDimensions[i] = extractSubDimension(dimarray[i]);
-            }
-
-            // Automatic calculation will not work using the scheme of sub-dimension 
-            // assignment above, so get the score from the JSON
-            dimension.StenScore = dimjson._StenScore;
-
-        }        
-
-        return dimension;
-
-    }
-    catch (err) {
-
-        alert(err.message + " in extractDimension(dimjson)");
-    }
-}
-
-
-function extractSubDimension(subdimjson) {
-
-    try {
-
-        /*
-         * subdimjson is expected to be the JSON representation of a Dimension object
-         *
-         * It should therefore have the fields:
-         * _UnipolarName : string
-         * _LeftBipolarName : string
-         * _RightBipolarName : string
-         * _isParent : boolean
-         * _StenScore : number
-         * _ScoreText : string
-         */
-
-        var subdimension = new Dimension(
-            subdimjson._UnipolarName,
-            subdimjson._LeftBipolarName,
-            subdimjson._RightBipolarName,
-            false,
-            subdimjson._StenScore,
-            subdimjson._ScoreText
-        );
-
-        return subdimension;
-
-    }
-    catch (err) {
-
-        alert(err.message + " in extractSubDimension(dimjson)");
-    }
-}
-
-function extractBlue4Model(b4json) {
-
-    try {
-
-        /*
-         * b4json is expected to be the JSON representation of a Blue4Model object
-         *
-         * It should therefore have the fields:
-         * _RiskArea : number
-         * _RiskLevel : number
-         * _ScoreText : string
-         */
-
-        var blue4 = new Blue4Model(
-            b4json._RiskArea,
-            b4json._RiskLevel,
-            b4json._ScoreText
-        );
-
-        return blue4;
-
-    }
-    catch (err) {
-
-        alert(err.message + " in extractBlue4Model(b4json)");
-    }
-}
 
 /**
  * @param {string} mystr String specifying the QuadrantModel to display
@@ -990,8 +758,6 @@ function writeElement(mystr) {
     try {
 
         var quadmodel;
-        var prev;
-        var next;
 
         switch (mystr) {
 
@@ -999,27 +765,21 @@ function writeElement(mystr) {
 
                 quadmodel = quadModel_probSolveImpStyle;
 
-                prev = "feelings_quad";
-                next = "communication_quad";
-
+                //drawQuadrant(quadModel_probSolveImpStyle);
                 break;
 
             case "communication_quad":
 
                 quadmodel = quadModel_commInterperStyle;
 
-                prev = "problem_quad";
-                next = "feelings_quad";
-
+                //drawQuadrant(quadModel_commInterperStyle);
                 break;
 
             case "feelings_quad":
 
                 quadmodel = quadModel_feelSelfControl;
 
-                prev = "communication_quad";
-                next = "problem_quad";
-
+                //drawQuadrant(quadModel_feelSelfControl);
                 break;
 
             case "leadership":
@@ -1035,19 +795,6 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
-        textstr += "<h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h1>";
-
-        // Navigation
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
-
-
         textstr += "<h2>" + quadmodel.Name + "</h2>";
         textstr += "<div align='center'>";
         textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
@@ -1094,18 +841,8 @@ function writeElement(mystr) {
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
         }
 
-        // Navigation
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
-
         // Write string to document
-        document.getElementById("GPI_content").innerHTML = textstr;
+        document.getElementById("main").innerHTML = textstr;
 
         drawQuadrant(quadmodel);
 
@@ -1121,9 +858,6 @@ function writeElement(mystr) {
 
         }
 
-        // Scroll to top
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
 
     }

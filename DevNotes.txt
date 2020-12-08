@@ -1,0 +1,4 @@
+Implementing report from JSON
+
+- need to wait for JSON to load, so need to structure report on SPA basis.
+

@@ -4,6 +4,11 @@
     <title>The GPI Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
 </head>
 <body>
 
@@ -24,16 +29,18 @@
 
     <div class="pagecontent">
 
-        <div class="content_box">
+        <!-- INCLUDE THIS IN YOUR PAGE-->
+        <div id="GPI_content" class="content_box">
             <h1>The GPI Report</h1>
-            <div style="text-align:center;">
-                <a href="report.problem.html">Click here for test version of report</a>
-            </div>
+            <p style="text-align:center">Click on the button below to see a sample GPI talent report</p>
 
-            <div>&nbsp;</div>
+            <div class="gpi_surv_button_box"><input type="button" class="gpi_button" value="View report" onclick="getReport()"></div>
 
         </div>
+        <script type="text/javascript" src="GPI/GPI_Report.js"></script>
+        <!-- END INCLUDE-->
 
+    </div>
 
     <div class="footer">
         <p>Footer</p>
