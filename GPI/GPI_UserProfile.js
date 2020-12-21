@@ -14,12 +14,13 @@
 
 class UserProfile {
 
-    constructor(_Email, _Password, _FirstName, _LastName, _GenderId = 1, _AgeRangeId = 1, _EthnicityId = 1) {
+    constructor(_Email, _Password, _FirstName="", _LastName="", _AccessCode="", _GenderId = 1, _AgeRangeId = 1, _EthnicityId = 1) {
 
         this.Email = _Email;
         this.Password = _Password;
         this.FirstName = _FirstName;
         this.LastName = _LastName;
+        this.AccessCode = _AccessCode;
         this.GenderId = _GenderId;
         this.AgeRangeId = _AgeRangeId;
         this.EthnicityId = _EthnicityId;
@@ -40,6 +41,7 @@ function submitUserProfile() {
             document.getElementById("pwd").value,
             document.getElementById("first_name").value,
             document.getElementById("last_name").value,
+            document.getElementById("access_code").value,
             document.getElementById("gender").value,
             document.getElementById("age_range").value,
             document.getElementById("ethnicity").value
