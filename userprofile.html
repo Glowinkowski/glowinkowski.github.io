@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>The GPI Survey</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul>
+                    <li><a href="about.html">About the GPI</a></li>
+                    <li><a href="survey.html">The Survey</a></li>
+                    <li><a href="report.html">The Report</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+        <script type="text/javascript" src="GPI/GPI_UserProfile.js"></script>
+        <!-- INCLUDE THIS IN YOUR PAGE-->
+        <div id="GPI_content" class="content_box">
+
+            <form>
+                <label for="email">Email:</label><br>
+                <input type="text" id="email"><br>
+                <label for="pwd">Password:</label><br>
+                <input type="password" id="pwd"><br>
+                <label for="first_name">First name:</label><br>
+                <input type="text" id="first_name"><br>
+                <label for="last_name">Last name:</label><br>
+                <input type="text" id="last_name"><br>
+                Profile information:<br>
+                <label for="gender">Gender:</label><br>
+                <select id="gender">
+                    <option value="1">Prefer not to say</option>
+                    <option value="2">Male</option>
+                    <option value="3">Female</option>
+                </select><br>
+                <label for="age_range">Age range:</label><br>
+                <select id="age_range">
+                    <option value="1">Prefer not to say</option>
+                    <option value="8">Under 21</option>
+                    <option value="9">21-30</option>
+                    <option value="10">31-40</option>
+                    <option value="11">41-50</option>
+                    <option value="12">51-60</option>
+                    <option value="13">61-65</option>
+                    <option value="14">Over 65</option>
+                </select><br>
+                <label for="ethnicity">Ethnicity:</label><br>
+                <select id="ethnicity">
+                    <option value="1">Prefer not to say</option>
+                    <option value="2">White British</option>
+                    <option value="3">White Irish</option>
+                    <option value="4">Other White background</option>
+                    <option value="5">White and Black Caribbean</option>
+                    <option value="6">White and Black African</option>
+                    <option value="7">White and Asian</option>
+                    <option value="8">Asian British</option>
+                    <option value="9">Indian</option>
+                    <option value="10">Pakistani</option>
+                    <option value="11">Bangladeshi</option>
+                    <option value="12">Other Asian background</option>
+                    <option value="13">Black British</option>
+                    <option value="14">Black Caribbean</option>
+                    <option value="15">African</option>
+                    <option value="16">Other Black background</option>
+                    <option value="17">Chinese</option>
+                    <option value="18">Other ethnic group</option>
+                </select><br>
+                <input type="button" onclick="submitUserProfile()" value="Submit">
+            </form>
+        </div>
+
+        <!-- END INCLUDE-->
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>Footer</p>
+    </div>
+
+</body>
+</html>
