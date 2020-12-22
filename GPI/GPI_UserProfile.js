@@ -62,7 +62,7 @@ function postUserProfile(user_profile) {
     try {
 
         // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/";
+        var url = "https://localhost:44369/api/user/signup/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -71,6 +71,8 @@ function postUserProfile(user_profile) {
 
                 // readyState == 4 : The operation is complete.
                 if (this.readyState == 4) {
+
+                    document.body.style.cursor = 'default';
 
                     if (this.status == 200) {
 
@@ -84,7 +86,24 @@ function postUserProfile(user_profile) {
                     }
                     else {
 
-                        alert("Unable to get a response from " + url);
+                        switch (this.status) {
+                            case 0:
+                                alert("Could not contact server");
+                                break;
+                            case 401:
+                                // Unauthorized
+                                alert("Authorization error: " + this.responseText);
+                                break;
+                            case 500:
+                                // InternalServerError
+                                alert("A server error occurred");
+                                break;
+                            default:
+                                msg = "Status: " + this.status;
+                                msg = msg + "; Response: " + this.responseText;
+                                alert(msg);
+                        }
+                        
                     }
 
                 }
@@ -97,6 +116,7 @@ function postUserProfile(user_profile) {
             
             
         };
+        document.body.style.cursor = 'wait';
         xhttp.open("POST", url, true);
         xhttp.setRequestHeader('Content-Type', 'application/json');
         xhttp.send(JSON.stringify(user_profile));
