@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul>
+                    <li><a href="about.html">About the GPI</a></li>
+                    <li><a href="survey.html">The Survey</a></li>
+                    <li><a href="report.html">The Report</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+        <script type="text/javascript" src="GPI/GPI_UserProfile.js"></script>
+        <!-- INCLUDE THIS IN YOUR PAGE-->
+        <div id="GPI_content" class="content_box">
+
+            <form>
+                <label for="email">Email:</label><br>
+                <input type="text" id="email"><br>
+                <label for="pwd">Password:</label><br>
+                <input type="password" id="pwd"><br>
+                <input type="button" onclick="submitUserProfile()" value="Submit">
+            </form>
+        </div>
+
+        <!-- END INCLUDE-->
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>Footer</p>
+    </div>
+
+</body>
+</html>
