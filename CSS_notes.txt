@@ -1,0 +1,22 @@
+CSS classes:
+
+/* Hidden list for errors */
+validation-summary-valid 
+text-danger
+
+/* div wrapping label / input */
+form-group
+
+/* label */
+col-md-2 
+control-label
+
+/* div wrapping control */
+col-md-10
+
+/* control (input) */
+form-control
+
+/* button */
+btn 
+btn-default

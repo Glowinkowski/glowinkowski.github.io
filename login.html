@@ -32,12 +32,29 @@
         <!-- INCLUDE THIS IN YOUR PAGE-->
         <div id="GPI_content" class="content_box">
 
-            <form>
-                <label for="email">Email:</label><br>
-                <input type="text" id="email"><br>
-                <label for="pwd">Password:</label><br>
-                <input type="password" id="pwd"><br>
-                <input type="button" onclick="submitUserProfile()" value="Submit">
+            <h2>Login</h2>
+
+            <form class="form-horizontal">
+                <h4>Log in to your account</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="email">Email</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="email" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="pwd">Password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="pwd" type="password" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" class="btn btn-default" value="Login" onclick="submitLoginForm()"/>
+                    </div>
+                </div>
             </form>
         </div>
 

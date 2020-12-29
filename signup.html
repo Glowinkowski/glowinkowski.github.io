@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign-up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul>
+                    <li><a href="about.html">About the GPI</a></li>
+                    <li><a href="survey.html">The Survey</a></li>
+                    <li><a href="report.html">The Report</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+        <script type="text/javascript" src="GPI/GPI_UserProfile.js"></script>
+        <!-- INCLUDE THIS IN YOUR PAGE-->
+        <div id="GPI_content" class="content_box">
+
+            <h2>Sign-up</h2>
+
+            <form class="form-horizontal">
+                <h4>Create a new account</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="email">Email</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="email" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="pwd">Password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="pwd" type="password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="confirm_pwd">Confirm password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="confirm_pwd" type="password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="first_name">First name</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="first_name" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="last_name">Last name</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="last_name" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="access_code">Access Token</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="access_code" type="text" value="XXXXXXXXXXXX" />
+                    </div>
+                </div>
+                <h4>Profile information</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="gender">Gender</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="gender">
+                            <option value="1">Prefer not to say</option>
+                            <option value="2">Male</option>
+                            <option value="3">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="age_range">Age range</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="age_range">
+                            <option value="1">Prefer not to say</option>
+                            <option value="8">Under 21</option>
+                            <option value="9">21-30</option>
+                            <option value="10">31-40</option>
+                            <option value="11">41-50</option>
+                            <option value="12">51-60</option>
+                            <option value="13">61-65</option>
+                            <option value="14">Over 65</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="ethnicity">Ethnicity</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="ethnicity">
+                            <option value="1">Prefer not to say</option>
+                            <option value="2">White British</option>
+                            <option value="3">White Irish</option>
+                            <option value="4">Other White background</option>
+                            <option value="5">White and Black Caribbean</option>
+                            <option value="6">White and Black African</option>
+                            <option value="7">White and Asian</option>
+                            <option value="8">Asian British</option>
+                            <option value="9">Indian</option>
+                            <option value="10">Pakistani</option>
+                            <option value="11">Bangladeshi</option>
+                            <option value="12">Other Asian background</option>
+                            <option value="13">Black British</option>
+                            <option value="14">Black Caribbean</option>
+                            <option value="15">African</option>
+                            <option value="16">Other Black background</option>
+                            <option value="17">Chinese</option>
+                            <option value="18">Other ethnic group</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" class="btn btn-default" value="Sign-up" onclick="submitSignUpForm()"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- END INCLUDE-->
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>Footer</p>
+    </div>
+
+</body>
+</html>

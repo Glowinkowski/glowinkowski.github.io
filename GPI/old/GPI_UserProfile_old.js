@@ -46,15 +46,85 @@ class Question {
      */
     constructor(_Id, _Text) {
 
-        this.Id = _Id;
-        this.Text = _Text;
-        this.ShortText = "";
-        this.Score = 0;
-        //this.Sort = Math.random();
+        this._Id = _Id;
+        this._Text = _Text;
+        this._ShortText = "";
+        this._Score = 0;
+        this._Sort = Math.random();
 
     }
 
-    
+    /**
+     * Get the survey question identifier
+     * @returns {string} The survey question identifier
+     */
+    get Id() {
+
+        return this._Id;
+    }
+
+    /**
+     * Get the survey question text
+     * @returns {string} The survey question text
+     */
+    get Text() {
+
+        return this._Text;
+    }
+
+    /**
+     * Get the short text question identifier
+     * @returns {string} The survey question text
+     */
+    get ShortText() {
+
+        return this._ShortText;
+    }
+
+    /**
+     * Get the survey question answer
+     * @returns {number} An integer between 1 and 5
+     */
+    get Score() {
+
+        return this._Score;
+    }
+
+    /**
+     * Set the short text question identifier
+     * @param {short_text} The short text question identifier
+     */
+    set ShortText(short_text) {
+
+        this._ShortText = short_text;
+    }
+
+    /**
+     * Set the survey question answer
+     * @param {number}  An integer between 1 and 5
+     * @throws Score must be an integer 1 - 5 or 0 (not in range) 
+     * @throws Score must be an integer 1 - 5 or 0 (not an integer)
+     */
+    set Score(score) {
+
+        if (Number.isInteger(score)) {
+
+            if (score >= 0 && score <= 5) {
+
+                this._Score = score;
+            }
+            else {
+
+                throw "Score must be an integer 1 - 5 or 0 (not in range)";
+            }
+
+        }
+        else {
+
+            throw "Score must be an integer 1 - 5 or 0 (not an integer)";
+        }
+
+    }
 }
 
 /**
@@ -252,8 +322,14 @@ function login(user_profile) {
                                 user_profile_json.Password
                             );
 
+                            alert(userProfile.Email + ", " + userProfile.Password);
+
                             writeInstructions();
                         }
+
+
+                        
+
                     }
                     else {
 
@@ -299,7 +375,7 @@ function login(user_profile) {
     }
 }
 
-function updateAnswers(user_profile, continue_survey=true) {
+function updateAnswers(user_profile) {
 
     try {
 
@@ -323,25 +399,11 @@ function updateAnswers(user_profile, continue_survey=true) {
                         // The text from the API call
                         var jsontext = this.responseText;
 
-                        // jsontext should be a string representing the number of questions updated
-                        var num_updated = parseInt(jsontext, 10);
-
-                        if (num_updated <= 0) {
-
-                            alert("Could not save questions - possible server error");
-                        }
+                        // TEST
+                        alert(jsontext);
 
                         // Get next set of questions
-                        if (continue_survey) {
-
-                            getQuestions();
-
-                        }
-                        else {
-
-                            writeInstructions();
-                        }
-                        
+                        getQuestions();
 
                     }
                     else {
@@ -376,11 +438,11 @@ function updateAnswers(user_profile, continue_survey=true) {
 
 
         };
-        document.body.style.cursor = 'wait';
-        xhttp.open("POST", url, true);
-        xhttp.setRequestHeader('Content-Type', 'application/json');
-        xhttp.send(JSON.stringify(user_profile));
-        //alert(JSON.stringify(user_profile));
+        //document.body.style.cursor = 'wait';
+        //xhttp.open("POST", url, true);
+        //xhttp.setRequestHeader('Content-Type', 'application/json');
+        //xhttp.send(JSON.stringify(user_profile));
+        alert(JSON.stringify(user_profile));
 
     }
     catch (err) {
@@ -428,9 +490,7 @@ function loadQuestions(qarray) {
         }
 
         // Randomize the question order and assign to global variable serverQuestionList
-        //serverQuestionList = qlist.sort(function (a, b) { return a._Sort - b._Sort });
-
-        serverQuestionList = qlist;
+        serverQuestionList = qlist.sort(function (a, b) { return a._Sort - b._Sort });
 
         return true;
     }
@@ -500,13 +560,8 @@ function getQuestions() {
         }
         else {
 
-            // Set question list to null to save on traffic
-            userProfile.Questions = null;
-
             // Call API here to check that survey is complete and saved
-            // (login again - returns either questions or report in userProfile)
-            login(userProfile);
-
+            writeEndOfSurvey();
         }
 
 
@@ -514,6 +569,34 @@ function getQuestions() {
     catch (err) {
 
         alert(err.message + " in getQuestions()");
+    }
+}
+
+/**
+ * Writes the end of survey message to the page
+ */
+function writeEndOfSurvey() {
+
+    try {
+
+        // Create instructions string
+        textstr = "";
+        textstr += "<h1>Congratulations!</h1>";
+        textstr += "<h2>You have reached the end of the survey!</h2>";
+
+        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"View Report\"></div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
+
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeEndOfSurvey()");
     }
 }
 
@@ -676,11 +759,18 @@ function saveQuestions(continue_survey=true) {
             }
         }
 
-        // Attach question list
-        userProfile.Questions = localQuestionList;
+        if (continue_survey) {
 
-        // Call API to update questions
-        updateAnswers(userProfile, continue_survey);
+            userProfile.Questions = localQuestionList;
+
+            updateAnswers(userProfile);
+
+        }
+        else {
+
+            writeInstructions();
+
+        }
         
     }
     catch (err) {

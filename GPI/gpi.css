@@ -18,13 +18,8 @@
 	width: 90%;
 }
 
-
-.gpi_body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 .gpi_lead_qu {
-	font-style:italic;
+	font-style: italic;
 }
 
 .gpi_surv_label {
@@ -117,6 +112,9 @@ div.gpi_surv_tr:nth-child(odd) {
 .gpi_button:hover {
 	cursor:pointer;
 }
+
+
+
 
 @media only screen and (max-width: 768px) {
 	.gpi_surv_thead {

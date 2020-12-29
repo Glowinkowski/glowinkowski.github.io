@@ -472,6 +472,8 @@ function getScore(myform, id) {
 
     try {
 
+        alert(myform + "; " + id);
+
         var answer = myform.elements[id];
         var len = answer.length;
 
