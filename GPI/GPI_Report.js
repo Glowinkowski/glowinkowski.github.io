@@ -206,7 +206,7 @@ class Dimension {
 
 /**
  * @classdesc <p>The GPI Quadrant model is a composite model based on 
- * and individual's GPI dimensions</p>
+ * an individual's GPI dimensions</p>
  */
 class QuadrantModel {
 
@@ -328,7 +328,7 @@ class QuadrantModel {
 
 
 /**
- * @classdesc <p>The GPI Blue model is a derivative model based on
+ * @classdesc <p>The GPI Blue model is a composite model based on
  * and individual's GPI dimensions</p>
  * <p>The risk area is a colour, which is mapped to a number code via</p>
  * <ul>
