@@ -196,7 +196,7 @@ class Blue4Model {
             }
 
         }
-        else { 
+        else {
 
             throw "Risk level must be an integer 0 - 5 (not an integer)";
         }
@@ -484,34 +484,6 @@ var myReport;
 
 /*
  * ===========================================================
- *                  INITIALIZATION
- * ===========================================================
- */
-
-function init() {
-
-    try {
-
-        // TODO add code so that answered questions are not lost
-
-        jsontext = sessionStorage.getItem("GPIStoredProfile");
-
-        if (jsontext !== null) {
-
-            processJSON(jsontext);
-
-        }
-        
-    }
-    catch (err) {
-
-        alert(err.message + " in init()");
-    }
-
-}
-
-/*
- * ===========================================================
  *          USER SIGN-UP / LOGIN FUNCTIONS
  * ===========================================================
  */
@@ -657,8 +629,48 @@ function login(user_profile) {
                         // The text from the API call
                         var jsontext = this.responseText;
 
-                        processJSON(jsontext);
-                        
+                        var user_profile_json = JSON.parse(jsontext);
+
+                        // Check for correct properties
+                        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
+                        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
+
+                        if (user_profile_json.SurveyCompleted) {
+
+                            // Get report
+                            // TEMP
+                            // var json_str = JSON.stringify(user_profile_json, null, 4);
+                            // document.getElementById("GPI_content").innerHTML = json_str;
+
+                            // JSON object should have a field 'Report' containing the report data
+                            if (!getReport(user_profile_json.Report)) throw "Could not load report";
+
+                            // If all OK
+                            userProfile = new UserProfile(
+                                user_profile_json.Email,
+                                user_profile_json.Password
+                            );
+
+                            userProfile.SurveyCompleted = true;
+
+                            writeElement("problem_quad");
+
+                        }
+                        else {
+
+                            // Get survey questions
+                            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
+
+                            // If all OK
+                            userProfile = new UserProfile(
+                                user_profile_json.Email,
+                                user_profile_json.Password
+                            );
+
+                            userProfile.SurveyCompleted = false;
+
+                            writeInstructions();
+                        }
                     }
                     else {
 
@@ -704,61 +716,11 @@ function login(user_profile) {
     }
 }
 
-/**
- * @function
- * @name processJSON
- * @description <p>Processes the JSON text from the server (or stored in session)</p>
- * @param {string} jsontext
- */
-function processJSON(jsontext) {
+function processReportJSON(jsontext) {
 
     try {
 
-        var user_profile_json = JSON.parse(jsontext);
 
-        // Check for correct properties
-        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
-        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
-
-        if (user_profile_json.SurveyCompleted) {
-
-            // Get report
-            // TEMP
-            // var json_str = JSON.stringify(user_profile_json, null, 4);
-            // document.getElementById("GPI_content").innerHTML = json_str;
-
-            // JSON object should have a field 'Report' containing the report data
-            if (!getReport(user_profile_json.Report)) throw "Could not load report";
-
-            // If all OK
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                user_profile_json.Password
-            );
-
-            userProfile.SurveyCompleted = true;
-
-            writeElement("problem_quad");
-
-        }
-        else {
-
-            // Get survey questions
-            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
-
-            // If all OK
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                user_profile_json.Password
-            );
-
-            userProfile.SurveyCompleted = false;
-
-            writeInstructions();
-        }
-
-        // Store JSON string
-        sessionStorage.setItem("GPIStoredProfile", jsontext);
     }
 
     catch (err) {

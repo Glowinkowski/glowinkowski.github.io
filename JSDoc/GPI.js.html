@@ -1,12 +1,40 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GPI.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GPI.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileoverview 
- * <h3>Javascript components for GPI user / profiles</h3>
- * <p>Provides the functionality for rendering the components of the 
- * GPI survey on a web page</p>
- * <b>Key functionality:</b>
- * <ul>
- *    <li>Signs up a new user</li>
- * </ul>
+ * &lt;h3>Javascript components for GPI user / profiles&lt;/h3>
+ * &lt;p>Provides the functionality for rendering the components of the 
+ * GPI survey on a web page&lt;/p>
+ * &lt;b>Key functionality:&lt;/b>
+ * &lt;ul>
+ *    &lt;li>Signs up a new user&lt;/li>
+ * &lt;/ul>
  * @author M.P. Vaughan
  * @version 1.01
  * @copyright Glowinkowski International Limited (2020)
@@ -31,10 +59,13 @@ class UserProfile {
         this.GenderId = _GenderId;
         this.AgeRangeId = _AgeRangeId;
         this.EthnicityId = _EthnicityId;
-        this.SurveyCompleted = false;
-        this.Questions = null; // Used for returning answered questions to server
+        this.Questions = null;
     }
 
+    isValid() {
+
+        return true;
+    }
 }
 
 /**
@@ -62,16 +93,16 @@ class Question {
 }
 
 /**
- * @classdesc <p>The GPI is based on various factors or dimensions associated
+ * @classdesc &lt;p>The GPI is based on various factors or dimensions associated
  * with personality predispositions. The dimension represents a spectrum of
  * predispositions to behave in certain ways characterised by a particular
- * personality factor, denoted by the unipolar name.</p>
- * <p>The polar opposite behaviours along a particular dimension are referred
- * to by the 'left' and 'right' bipolar names.</p>
- * <p>Each individual has a sten score - an integer between 1 and 10 - associated
+ * personality factor, denoted by the unipolar name.&lt;/p>
+ * &lt;p>The polar opposite behaviours along a particular dimension are referred
+ * to by the 'left' and 'right' bipolar names.&lt;/p>
+ * &lt;p>Each individual has a sten score - an integer between 1 and 10 - associated
  * with each dimension. Scores less or equal to 5 indicate the individual lies on
  * the left-hand-side of the spectrum, whilst scores greater than 5 indicate the 
- * right-hand-side</p>
+ * right-hand-side&lt;/p>
  */
 class Dimension {
 
@@ -98,8 +129,8 @@ class Dimension {
 }
 
 /**
- * @classdesc <p>The GPI Quadrant model is a composite model based on 
- * an individual's GPI dimensions</p>
+ * @classdesc &lt;p>The GPI Quadrant model is a composite model based on 
+ * an individual's GPI dimensions&lt;/p>
  */
 class QuadrantModel {
 
@@ -117,7 +148,7 @@ class QuadrantModel {
      */
     constructor(Name, xDimension, yDimension, Q1label, Q2label, Q3label, Q4label, QText) {
 
-        if ((xDimension instanceof Dimension) && (yDimension instanceof Dimension)) {
+        if ((xDimension instanceof Dimension) &amp;&amp; (yDimension instanceof Dimension)) {
 
             this.xDimension = xDimension;
             this.yDimension = yDimension;
@@ -139,24 +170,24 @@ class QuadrantModel {
 
 
 /**
- * @classdesc <p>The GPI Blue model is a composite model based on
- * and individual's GPI dimensions</p>
- * <p>The risk area is a colour, which is mapped to a number code via</p>
- * <ul>
- *    <li> 'Undefined' = 0</li>
- *    <li> 'Red' = 1</li>
- *    <li> 'Amber' = 2</li>
- *    <li> 'Green' = 3</li>
- * </ul>
- * <p>Each risk area is given a risk level, mapped to a number code via</p>
- * <ul>
- *    <li> 'undefined' = 0</li>
- *    <li> 'very low' = 1</li>
- *    <li> 'low' = 2</li>
- *    <li> 'moderate' = 3</li>
- *    <li> 'high' = 4</li>
- *    <li> 'very high' = 5</li>
- * </ul>
+ * @classdesc &lt;p>The GPI Blue model is a composite model based on
+ * and individual's GPI dimensions&lt;/p>
+ * &lt;p>The risk area is a colour, which is mapped to a number code via&lt;/p>
+ * &lt;ul>
+ *    &lt;li> 'Undefined' = 0&lt;/li>
+ *    &lt;li> 'Red' = 1&lt;/li>
+ *    &lt;li> 'Amber' = 2&lt;/li>
+ *    &lt;li> 'Green' = 3&lt;/li>
+ * &lt;/ul>
+ * &lt;p>Each risk area is given a risk level, mapped to a number code via&lt;/p>
+ * &lt;ul>
+ *    &lt;li> 'undefined' = 0&lt;/li>
+ *    &lt;li> 'very low' = 1&lt;/li>
+ *    &lt;li> 'low' = 2&lt;/li>
+ *    &lt;li> 'moderate' = 3&lt;/li>
+ *    &lt;li> 'high' = 4&lt;/li>
+ *    &lt;li> 'very high' = 5&lt;/li>
+ * &lt;/ul>
  */
 class Blue4Model {
 
@@ -169,7 +200,7 @@ class Blue4Model {
 
         if (Number.isInteger(RiskArea)) {
 
-            if (RiskArea >= 0 && RiskArea <= 3) {
+            if (RiskArea >= 0 &amp;&amp; RiskArea &lt;= 3) {
 
                 this.RiskArea = RiskArea;
             }
@@ -186,7 +217,7 @@ class Blue4Model {
 
         if (Number.isInteger(RiskLevel)) {
 
-            if (RiskLevel >= 0 && RiskLevel <= 5) {
+            if (RiskLevel >= 0 &amp;&amp; RiskLevel &lt;= 5) {
 
                 this.RiskLevel = RiskLevel;
             }
@@ -196,7 +227,7 @@ class Blue4Model {
             }
 
         }
-        else { 
+        else {
 
             throw "Risk level must be an integer 0 - 5 (not an integer)";
         }
@@ -253,7 +284,7 @@ class Blue4Model {
 
         if (Number.isInteger(RiskArea)) {
 
-            if (RiskArea >= 1 && RiskArea <= 3) {
+            if (RiskArea >= 1 &amp;&amp; RiskArea &lt;= 3) {
 
                 this.RiskArea = RiskArea;
             }
@@ -277,7 +308,7 @@ class Blue4Model {
 
         if (Number.isInteger(RiskLevel)) {
 
-            if (RiskLevel >= 1 && RiskLevel <= 5) {
+            if (RiskLevel >= 1 &amp;&amp; RiskLevel &lt;= 5) {
 
                 this.RiskLevel = RiskLevel;
             }
@@ -295,7 +326,7 @@ class Blue4Model {
 }
 
 /**
- * @classdesc <p>Encapsulates the GPI Talent Report</p>
+ * @classdesc &lt;p>Encapsulates the GPI Talent Report&lt;/p>
  */
 class Report {
 
@@ -484,34 +515,6 @@ var myReport;
 
 /*
  * ===========================================================
- *                  INITIALIZATION
- * ===========================================================
- */
-
-function init() {
-
-    try {
-
-        // TODO add code so that answered questions are not lost
-
-        jsontext = sessionStorage.getItem("GPIStoredProfile");
-
-        if (jsontext !== null) {
-
-            processJSON(jsontext);
-
-        }
-        
-    }
-    catch (err) {
-
-        alert(err.message + " in init()");
-    }
-
-}
-
-/*
- * ===========================================================
  *          USER SIGN-UP / LOGIN FUNCTIONS
  * ===========================================================
  */
@@ -657,8 +660,36 @@ function login(user_profile) {
                         // The text from the API call
                         var jsontext = this.responseText;
 
-                        processJSON(jsontext);
-                        
+                        var user_profile_json = JSON.parse(jsontext);
+
+                        // Check for correct properties
+                        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
+                        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
+
+                        if (user_profile_json.SurveyCompleted) {
+
+                            // Get report
+                            // TEMP
+                            var json_str = JSON.stringify(user_profile_json, null, 4);
+                            document.getElementById("GPI_content").innerHTML = json_str;
+
+                            // JSON object should have a field 'Report' containing the report data
+                            getReport(user_profile_json.Report);
+
+                        }
+                        else {
+
+                            // Get survey questions
+                            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
+
+                            // If all OK
+                            userProfile = new UserProfile(
+                                user_profile_json.Email,
+                                user_profile_json.Password
+                            );
+
+                            writeInstructions();
+                        }
                     }
                     else {
 
@@ -704,70 +735,6 @@ function login(user_profile) {
     }
 }
 
-/**
- * @function
- * @name processJSON
- * @description <p>Processes the JSON text from the server (or stored in session)</p>
- * @param {string} jsontext
- */
-function processJSON(jsontext) {
-
-    try {
-
-        var user_profile_json = JSON.parse(jsontext);
-
-        // Check for correct properties
-        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
-        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
-
-        if (user_profile_json.SurveyCompleted) {
-
-            // Get report
-            // TEMP
-            // var json_str = JSON.stringify(user_profile_json, null, 4);
-            // document.getElementById("GPI_content").innerHTML = json_str;
-
-            // JSON object should have a field 'Report' containing the report data
-            if (!getReport(user_profile_json.Report)) throw "Could not load report";
-
-            // If all OK
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                user_profile_json.Password
-            );
-
-            userProfile.SurveyCompleted = true;
-
-            writeElement("problem_quad");
-
-        }
-        else {
-
-            // Get survey questions
-            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
-
-            // If all OK
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                user_profile_json.Password
-            );
-
-            userProfile.SurveyCompleted = false;
-
-            writeInstructions();
-        }
-
-        // Store JSON string
-        sessionStorage.setItem("GPIStoredProfile", jsontext);
-    }
-
-    catch (err) {
-
-        alert(err.message + " in processReportJSON()");
-
-    }
-}
-
 function updateAnswers(user_profile, continue_survey=true) {
 
     try {
@@ -795,7 +762,7 @@ function updateAnswers(user_profile, continue_survey=true) {
                         // jsontext should be a string representing the number of questions updated
                         var num_updated = parseInt(jsontext, 10);
 
-                        if (num_updated <= 0) {
+                        if (num_updated &lt;= 0) {
 
                             alert("Could not save questions - possible server error");
                         }
@@ -873,12 +840,12 @@ function loadQuestions(qarray) {
         // This should be an array, so check the length
         var len = qarray.length;
 
-        if (len < 1) return false;
+        if (len &lt; 1) return false;
 
         // Initialise temporary list
         qlist = [];
 
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i &lt; len; i++) {
 
             if (!('Id' in qarray[i])) return false;
             if (!('ShortText' in qarray[i])) return false;
@@ -919,21 +886,21 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
-        textstr += "<h1>The GPI Survey</h1>";
-        textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
+        textstr += "&lt;h1>The GPI Survey&lt;/h1>";
+        textstr += "&lt;p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
-        textstr += "particular circumstances that you face. Hence you are answering it in the context of \"<i>I am the sort of person who...</i>\".</p>";
-        textstr += "<p>To generate an accurate profile, this inventory requires that your responses reflect how you prefer to behave rather than how, on some occasions, you may ";
+        textstr += "particular circumstances that you face. Hence you are answering it in the context of \"&lt;i>I am the sort of person who...&lt;/i>\".&lt;/p>";
+        textstr += "&lt;p>To generate an accurate profile, this inventory requires that your responses reflect how you prefer to behave rather than how, on some occasions, you may ";
         textstr += "actually behave. Therefore, in responding to each of the questions, please have in mind how you prefer to think and behave in general, independent of the ";
-        textstr += "demands and pressures of any particular circumstance or situation.</p>";
-        textstr += "<p>It is also important to recognise that there are no right or wrong answers, and to gain the most from completing the inventory it is only necessary that you be ";
+        textstr += "demands and pressures of any particular circumstance or situation.&lt;/p>";
+        textstr += "&lt;p>It is also important to recognise that there are no right or wrong answers, and to gain the most from completing the inventory it is only necessary that you be ";
         textstr += "frank and honest in your responses. The feedback you receive will then be accurate, enabling the development of your personal effectiveness across the many ";
-        textstr += "different situations that you may face.</p>";
-        textstr += "<p>Ideally, try not to be interrupted when completing the questionnaire. We recommend you try to complete it in one sitting.</p>";
-        textstr += "<p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
-        textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.</p>";
+        textstr += "different situations that you may face.&lt;/p>";
+        textstr += "&lt;p>Ideally, try not to be interrupted when completing the questionnaire. We recommend you try to complete it in one sitting.&lt;/p>";
+        textstr += "&lt;p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
+        textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.&lt;/p>";
 
-        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\"></div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">&lt;input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\">&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -997,43 +964,43 @@ function writeQuestions() {
 
         textstr += getProgressBar();
 
-        textstr += "<p class=\"gpi_lead_qu\">I am the sort of person who...</p>";
+        textstr += "&lt;p class=\"gpi_lead_qu\">I am the sort of person who...&lt;/p>";
 
-        textstr += "<form id='GPI_form' action=''>";
+        textstr += "&lt;form id='GPI_form' action=''>";
 
-        textstr += "<div class=\"gpi_surv_table\">";
-        textstr += "<div class=\"gpi_surv_thead\">";
-        textstr += "<div class=\"gpi_surv_qu\"></div>";
-        textstr += "<div class=\"gpi_surv_th\">Strongly disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Neither agree nor disagree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Agree</div>";
-        textstr += "<div class=\"gpi_surv_th\">Strongly agree</div>";
-        textstr += "</div>";
+        textstr += "&lt;div class=\"gpi_surv_table\">";
+        textstr += "&lt;div class=\"gpi_surv_thead\">";
+        textstr += "&lt;div class=\"gpi_surv_qu\">&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Strongly disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Neither agree nor disagree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Agree&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_th\">Strongly agree&lt;/div>";
+        textstr += "&lt;/div>";
 
-        for (var i = 0; i < localQuestionList.length; i++) {
+        for (var i = 0; i &lt; localQuestionList.length; i++) {
 
             var name = localQuestionList[i].ShortText;
             var text = localQuestionList[i].Text;
 
-            textstr += "<div class=\"gpi_surv_tr\">";
-            textstr += "<div class=\"gpi_surv_qu\">" + text + "</div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_disagree' name='" + name + "' value='1'><span class=\"gpi_surv_label\">Strongly disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='disagree' name='" + name + "' value='2'><span class=\"gpi_surv_label\">Disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='neither' name='" + name + "' value='3'><span class=\"gpi_surv_label\">Neither agree nor disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='agree' name='" + name + "' value='4'><span class=\"gpi_surv_label\">Agree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_agree' name='" + name + "' value='5'><span class=\"gpi_surv_label\">Strongly agree</span></div>";
-            textstr += "</div>";
+            textstr += "&lt;div class=\"gpi_surv_tr\">";
+            textstr += "&lt;div class=\"gpi_surv_qu\">" + text + "&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='strong_disagree' name='" + name + "' value='1'>&lt;span class=\"gpi_surv_label\">Strongly disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='disagree' name='" + name + "' value='2'>&lt;span class=\"gpi_surv_label\">Disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='neither' name='" + name + "' value='3'>&lt;span class=\"gpi_surv_label\">Neither agree nor disagree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='agree' name='" + name + "' value='4'>&lt;span class=\"gpi_surv_label\">Agree&lt;/span>&lt;/div>";
+            textstr += "&lt;div class=\"gpi_surv_td\">&lt;input type='radio' id='strong_agree' name='" + name + "' value='5'>&lt;span class=\"gpi_surv_label\">Strongly agree&lt;/span>&lt;/div>";
+            textstr += "&lt;/div>";
         }
 
-        textstr += "</div>"; // End of table
+        textstr += "&lt;/div>"; // End of table
 
-        textstr += "<div class=\"gpi_surv_button_box\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Exit\"  onclick=\"saveExit()\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
-        textstr += "</div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Save and Exit\"  onclick=\"saveExit()\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
+        textstr += "&lt;/div>";
 
-        textstr += "</form>";
+        textstr += "&lt;/form>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -1062,7 +1029,7 @@ function getProgressBar() {
         var N = serverQuestionList.length;
         var n = 0;
 
-        for (var i = 0; i < N; i++) {
+        for (var i = 0; i &lt; N; i++) {
 
             if (serverQuestionList[i].Score > 0) {
                 n++;
@@ -1071,8 +1038,8 @@ function getProgressBar() {
 
         var completed = Math.floor(100 * n / N);
 
-        textstr += "<progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
-        textstr += "<label for=\"progress\"> " + completed + "%</label >";
+        textstr += "&lt;progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\">&lt;/progress>";
+        textstr += "&lt;label for=\"progress\"> " + completed + "%&lt;/label >";
 
         return textstr;
 
@@ -1133,7 +1100,7 @@ function saveQuestions(continue_survey=true) {
         var myform = document.getElementById("GPI_form");
 
         // Loop through question list to look up answers
-        for (var i = 0; i < localQuestionList.length; i++) {
+        for (var i = 0; i &lt; localQuestionList.length; i++) {
 
             var id = localQuestionList[i].ShortText;
             var score = getScore(myform, id);
@@ -1174,7 +1141,7 @@ function getScore(myform, id) {
 
         var val = 0;
 
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i &lt; len; i++) {
 
             if (answer[i].checked) {
 
@@ -1206,7 +1173,7 @@ function randomQuestions() {
         var num_qu = 0;
         var q_list = [];
 
-        for (var i = 0; i < serverQuestionList.length; i++) {
+        for (var i = 0; i &lt; serverQuestionList.length; i++) {
 
             if (serverQuestionList[i].Score == 0) {
 
@@ -1252,34 +1219,32 @@ function getReport(reportObj) {
         var qmarray = reportObj.QuadrantModels;
         var len = qmarray.length;
 
-        if (len < 1) return false;
+        if (len &lt; 1) throw "Error: Expected an array of QuadrantModels in JSON object";
 
         myReport.QuadrantModels = [];
 
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i &lt; len; i++) {
 
             myReport.QuadrantModels[i] = extractQuadrantModel(qmarray[i]);
         }
 
         // myReport.LeadershipModel = extractBlue4Model(reportObj.LeadershipModel);
 
-        quadModel_probSolveImpStyle = myReport.QuadrantModels.find(x => x.Name === "Problem Solving & Implementation Style");
-        quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication & Interpersonal Style");
-        quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings & Self-Control");
+        quadModel_probSolveImpStyle = myReport.QuadrantModels.find(x => x.Name === "Problem Solving &amp; Implementation Style");
+        quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication &amp; Interpersonal Style");
+        quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings &amp; Self-Control");
+
+        //alert(quadModel_feelSelfControl.Name);
 
         // Set formating for quadrant element
         assignQuadFormating();
 
-        return true;
-
-        //writeElement("problem_quad");
+        writeElement("problem_quad");
 
     }
     catch (err) {
 
         alert(err.message + " in getReport()");
-        return false;
-
     }
 }
 
@@ -1363,7 +1328,7 @@ function extractDimension(dimjson) {
 
             var len = dimarray.length;
 
-            for (var i = 0; i < len; i++) {
+            for (var i = 0; i &lt; len; i++) {
 
                 dimension.SubDimensions[i] = extractSubDimension(dimarray[i]);
             }
@@ -1464,14 +1429,14 @@ function extractBlue4Model(b4json) {
  * @function
  * @name writeElement
  * @param {string} mystr String specifying the QuadrantModel to display
- * @description <p>Writes the QuadrantModel element to the web page</p>
- * <p>The possible values of 'mystr' are currently:</p>
- * <ul>
- * <li>'problem_quad'</li>
- * <li>'communication_quad'</li>
- * <li>'feelings_quad'</li>
- * </ul>
- * <p>Global variables accessed:</p>
+ * @description &lt;p>Writes the QuadrantModel element to the web page&lt;/p>
+ * &lt;p>The possible values of 'mystr' are currently:&lt;/p>
+ * &lt;ul>
+ * &lt;li>'problem_quad'&lt;/li>
+ * &lt;li>'communication_quad'&lt;/li>
+ * &lt;li>'feelings_quad'&lt;/li>
+ * &lt;/ul>
+ * &lt;p>Global variables accessed:&lt;/p>
  * @see quadModel_probSolveImpStyle
  * @see quadModel_commInterperStyle
  * @see quadModel_feelSelfControl
@@ -1531,87 +1496,87 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
-        textstr += "<h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h1>";
+        textstr += "&lt;h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report&lt;/h1>";
 
         // Navigation
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
+        textstr += "&lt;div class=\"page_nav\">"
+            + "&lt;div class=\"link_box\">"
+            + "&lt;a onclick=\"writeElement('" + prev + "')\">&lt;img src=\"images/prev.png\" class=\"nav_arrow\"/>&lt;/a>"
+            + "&lt;/div>"
+            + "&lt;div class=\"link_box\">"
+            + "&lt;a onclick=\"writeElement('" + next + "')\">&lt;img src=\"images/next.png\" class=\"nav_arrow\"/>&lt;/a>"
+            + "&lt;/div>"
+            + "&lt;/div>";
 
 
-        textstr += "<h2>" + quadmodel.Name + "</h2>";
-        textstr += "<div align='center'>";
-        textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
-        textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
-        textstr += "</div>";
+        textstr += "&lt;h2>" + quadmodel.Name + "&lt;/h2>";
+        textstr += "&lt;div align='center'>";
+        textstr += "&lt;canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'>&lt;/canvas>";
+        textstr += "&lt;img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
+        textstr += "&lt;/div>";
 
         textstr += quadmodel.QText;
 
-        textstr += "<h2>" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";
+        textstr += "&lt;h2>" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions&lt;/h2>";
 
-        for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
+        for (var i = 0; i &lt; quadmodel.xDimension.SubDimensions.length; i++) {
 
             id_str = quadmodel.xDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "<h3>" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
-            textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "</h3>";
+            textstr += "&lt;h3>" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "&lt;/h3>";
 
-            textstr += "<div align='center'>";
-            textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
-            textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
-            textstr += "</div>";
+            textstr += "&lt;div align='center'>";
+            textstr += "&lt;canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'>&lt;/canvas>";
+            textstr += "&lt;img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
+            textstr += "&lt;/div>";
 
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
         }
 
-        textstr += "<h2>" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</h2>";
+        textstr += "&lt;h2>" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions&lt;/h2>";
 
-        for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
+        for (var i = 0; i &lt; quadmodel.yDimension.SubDimensions.length; i++) {
 
             id_str = quadmodel.yDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "<h3>" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
-            textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "</h3>";
+            textstr += "&lt;h3>" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "&lt;/h3>";
 
-            textstr += "<div align='center'>";
-            textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
-            textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
-            textstr += "</div>";
+            textstr += "&lt;div align='center'>";
+            textstr += "&lt;canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'>&lt;/canvas>";
+            textstr += "&lt;img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
+            textstr += "&lt;/div>";
 
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
         }
 
         // Navigation
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
+        textstr += "&lt;div class=\"page_nav\">"
+            + "&lt;div class=\"link_box\">"
+            + "&lt;a onclick=\"writeElement('" + prev + "')\">&lt;img src=\"images/prev.png\" class=\"nav_arrow\"/>&lt;/a>"
+            + "&lt;/div>"
+            + "&lt;div class=\"link_box\">"
+            + "&lt;a onclick=\"writeElement('" + next + "')\">&lt;img src=\"images/next.png\" class=\"nav_arrow\"/>&lt;/a>"
+            + "&lt;/div>"
+            + "&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
 
         drawQuadrant(quadmodel);
 
-        for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
+        for (var i = 0; i &lt; quadmodel.xDimension.SubDimensions.length; i++) {
 
             drawSten(quadmodel.xDimension.SubDimensions[i]);
 
         }
 
-        for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
+        for (var i = 0; i &lt; quadmodel.yDimension.SubDimensions.length; i++) {
 
             drawSten(quadmodel.yDimension.SubDimensions[i]);
 
@@ -1633,7 +1598,7 @@ function writeElement(mystr) {
 /**
  * @function
  * @name writeLeadership
- * @description <p>Writes the leadership model element</p>
+ * @description &lt;p>Writes the leadership model element&lt;/p>
  * @see myReport
  * @todo Still needs to be implemented
  */
@@ -1643,9 +1608,9 @@ function writeLeadership() {
 
         // Write contents
         textstr = "";
-        textstr += "<h2>Leadership Style</h2>";
+        textstr += "&lt;h2>Leadership Style&lt;/h2>";
         textstr += myReport.LeadershipModel.ScoreText;
-        textstr += "<p>Specimen has bad-day behaviour '" + myReport.LeadershipModel.RiskArea + "' with a " + myReport.LeadershipModel.RiskLevel + " risk level</p>";
+        textstr += "&lt;p>Specimen has bad-day behaviour '" + myReport.LeadershipModel.RiskArea + "' with a " + myReport.LeadershipModel.RiskLevel + " risk level&lt;/p>";
 
         // Write string to document
         document.getElementById("main").innerHTML = textstr;
@@ -1661,9 +1626,9 @@ function writeLeadership() {
  * @function
  * @name assignQuadFormating
  * @description
- * <p>Assigns quadrant colours and fonts from CSS.
- * If CSS definitions are not found, default values are used.</p>
- * <p>Global variables accessed:</p>
+ * &lt;p>Assigns quadrant colours and fonts from CSS.
+ * If CSS definitions are not found, default values are used.&lt;/p>
+ * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -1768,8 +1733,8 @@ function assignQuadFormating() {
  * @name drawQuadrant
  * @param {QuadrantModel} quadrant - the QuadrantModel to display
  * @description
- * <p>Draws the Quadrant model visualisation</p>
- * <p>Global variables accessed:</p>
+ * &lt;p>Draws the Quadrant model visualisation&lt;/p>
+ * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -1832,7 +1797,7 @@ function drawQuadrant(quadrant) {
         var xM;                 // x-coordinate of marker
         var yM;                 // y-coordinate of marker
 
-        if (xStenScore < 6) {
+        if (xStenScore &lt; 6) {
 
             xM = grid_space * (xStenScore - 6);
         }
@@ -1841,7 +1806,7 @@ function drawQuadrant(quadrant) {
             xM = grid_space * (xStenScore - 5);
         }
 
-        if (yStenScore < 6) {
+        if (yStenScore &lt; 6) {
 
             yM = grid_space * (6 - yStenScore);
         }
@@ -1898,7 +1863,7 @@ function drawQuadrant(quadrant) {
 
         // vertical
 
-        for (var i = 0; i < 13; i++) {
+        for (var i = 0; i &lt; 13; i++) {
 
             var x = -r2 + i * grid_space;
             ctx.beginPath();
@@ -1909,7 +1874,7 @@ function drawQuadrant(quadrant) {
         }
 
         // horizontal
-        for (var i = 0; i < 13; i++) {
+        for (var i = 0; i &lt; 13; i++) {
 
             var y = -r2 + i * grid_space;
             ctx.beginPath();
@@ -2022,8 +1987,8 @@ function drawQuadrant(quadrant) {
  * @function
  * @name drawSten
  * @param {Dimension} dimension - the Dimesion of the score to display
- * @description <p>Draws the sten score visualisation</p>
- * <p>Global variables accessed:</p>
+ * @description &lt;p>Draws the sten score visualisation&lt;/p>
+ * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2083,7 +2048,7 @@ function drawSten(dimension) {
         var xM;                 // x-coordinate of marker
         var yM;             // y-coordinate of marker
 
-        if (stenScore < 6) {
+        if (stenScore &lt; 6) {
 
             xM = grid_space * (stenScore - 6);
         }
@@ -2147,7 +2112,7 @@ function drawSten(dimension) {
 
         // vertical
 
-        for (var i = 0; i < 13; i++) {
+        for (var i = 0; i &lt; 13; i++) {
 
             var x = -r2 + i * grid_space;
             ctx.beginPath();
@@ -2158,7 +2123,7 @@ function drawSten(dimension) {
         }
 
         // horizontal
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i &lt; 3; i++) {
 
             var y = -grid_space + i * grid_space;
             ctx.beginPath();
@@ -2237,4 +2202,26 @@ function drawSten(dimension) {
         alert(err.message + " in drawQuadrant()");
 
     }
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blue4Model.html">Blue4Model</a></li><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Report.html">Report</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#extractBlue4Model">extractBlue4Model</a></li><li><a href="global.html#extractDimension">extractDimension</a></li><li><a href="global.html#extractQuadrantModel">extractQuadrantModel</a></li><li><a href="global.html#extractSubDimension">extractSubDimension</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#myReport">myReport</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#submitSignUpForm">submitSignUpForm</a></li><li><a href="global.html#userProfile">userProfile</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeLeadership">writeLeadership</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 08 2021 11:30:42 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
