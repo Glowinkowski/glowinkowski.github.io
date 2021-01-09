@@ -113,8 +113,13 @@ div.gpi_surv_tr:nth-child(odd) {
 	cursor:pointer;
 }
 
+input[type='radio'] {
+	transform: scale(1.5);
+}
 
-
+input:hover {
+	cursor:pointer;
+}
 
 @media only screen and (max-width: 768px) {
 	.gpi_surv_thead {

@@ -6,6 +6,9 @@
  * <b>Key functionality:</b>
  * <ul>
  *    <li>Signs up a new user</li>
+ *    <li>Logs in an existing user</li>
+ *    <li>Renders the GPI survey questionnaire</li>
+ *    <li>Renders the GPI talent report</li>
  * </ul>
  * @author M.P. Vaughan
  * @version 1.01
@@ -18,7 +21,9 @@
  * ===========================================================                 
  */
 
-
+/**
+ * @classdesc <p>Represents a user/profile for passing data to and from the API</p>
+ */
 class UserProfile {
 
     constructor(_Email, _Password, _FirstName="", _LastName="", _AccessCode="", _GenderId = 1, _AgeRangeId = 1, _EthnicityId = 1) {
@@ -38,8 +43,7 @@ class UserProfile {
 }
 
 /**
- * Class representing a GPI survey question
- * @class
+ * @classdesc <p>Represents a GPI survey question</p>
  */
 class Question {
 
@@ -488,12 +492,20 @@ var myReport;
  * ===========================================================
  */
 
+/**
+ * @function
+ * @name init
+ * @description
+ * <p>This function is intended to be called when a page loads (after any required HTML
+ * components have been loaded) and checks whether user/profile data has been stored locally
+ * in session variables (i.e. the user is 'logged in'). If so, it loads this data so that 
+ * no further calls to the API are required.</p>
+ */
 function init() {
 
     try {
 
-        // TODO add code so that answered questions are not lost
-
+        // Check if profile has have been saved
         jsontext = sessionStorage.getItem("GPIStoredProfile");
 
         if (jsontext !== null) {
@@ -523,12 +535,106 @@ function submitSignUpForm() {
 
     try {
 
+        var errors = false;
+
+        var error_msg = "There were problems with your submission:";
+
+        var email = document.getElementById("email").value;
+
+        var pwd = document.getElementById("pwd").value;
+
+        var confirm_pwd = document.getElementById("confirm_pwd").value;
+
+        var first_name = document.getElementById("first_name").value;
+
+        var last_name = document.getElementById("last_name").value;
+
+        var access_code = document.getElementById("access_code").value;
+
+        if (email == null) {
+            errors = true;
+            error_msg += "\n - Email required.";
+        }
+        else {
+            
+            if (email.length == 0) {
+                errors = true;
+                error_msg += "\n - Email required.";
+            }
+            else {
+                if (!isValidEmail(email)) {
+
+                    error_msg += "\n - Invalid email format.";
+                }
+            }
+        }
+
+        if (pwd == null) {
+            errors = true;
+            error_msg += "\n - Password required.";
+        }
+        else {
+            
+            if (pwd.length == 0) {
+                errors = true;
+                error_msg += "\n - Password required.";
+            }
+            else {
+
+                if (pwd !== confirm_pwd) {
+
+                    errors = true;
+                    error_msg += "\n - Passwords do not match.";
+
+                }
+            }
+        }
+
+        if (first_name == null) {
+            errors = true;
+            error_msg += "\n - First name required.";
+        }
+        else {
+            errors = true;
+            if (first_name.length == 0) {
+                error_msg += "\n - First name required.";
+            }
+        }
+
+        if (last_name == null) {
+            errors = true;
+            error_msg += "\n - Last name required.";
+        }
+        else {
+            errors = true;
+            if (last_name.length == 0) {
+                error_msg += "\n - Last name required.";
+            }
+        }
+
+        if (access_code == null) {
+            errors = true;
+            error_msg += "\n - Access code required.";
+        }
+        else {
+            errors = true;
+            if (access_code.length == 0) {
+                error_msg += "\n - Access code required.";
+            }
+        }
+
+        if (errors) {
+
+            alert(error_msg);
+            return;
+        }
+
         var user_profile = new UserProfile(
-            document.getElementById("email").value,
-            document.getElementById("pwd").value,
-            document.getElementById("first_name").value,
-            document.getElementById("last_name").value,
-            document.getElementById("access_code").value,
+            email,
+            pwd,
+            first_name,
+            last_name,
+            access_code,
             document.getElementById("gender").value,
             document.getElementById("age_range").value,
             document.getElementById("ethnicity").value
@@ -547,9 +653,53 @@ function submitLoginForm() {
 
     try {
 
+        var errors = false;
+
+        var error_msg = "There were problems with your submission:";
+
+        var email = document.getElementById("email").value;
+
+        var pwd = document.getElementById("pwd").value;
+
+        if (email == null) {
+            errors = true;
+            error_msg += "\n - Email required.";
+        }
+        else {
+
+            if (email.length == 0) {
+                errors = true;
+                error_msg += "\n - Email required.";
+            }
+            else {
+                if (!isValidEmail(email)) {
+
+                    error_msg += "\n - Invalid email format.";
+                }
+            }
+        }
+
+        if (pwd == null) {
+            errors = true;
+            error_msg += "\n - Password required.";
+        }
+        else {
+
+            if (pwd.length == 0) {
+                errors = true;
+                error_msg += "\n - Password required.";
+            }
+        }
+
+        if (errors) {
+
+            alert(error_msg);
+            return;
+        }
+
         var user_profile = new UserProfile(
-            document.getElementById("email").value,
-            document.getElementById("pwd").value
+            email,
+            pwd
         )
 
         login(user_profile);
@@ -558,6 +708,40 @@ function submitLoginForm() {
     catch (err) {
 
         alert(err.message + " in submitLoginForm()");
+    }
+}
+
+function isValidEmail(email) {
+    try {
+
+        if (email == null) return false;
+
+        if (email.length == 0) return false;
+
+        // Check for '@'
+        at = email.indexOf('@');
+
+        // If '@' does not exist or is first character
+        if (at < 1) return false;
+
+        // Check for '.' after '@'
+        dot = email.indexOf('.', at);
+
+        // There should be at least one character after '@' before '.'
+        if (dot - at < 2) return false;
+
+        // Get domain
+        domain = email.substring(dot + 1);
+
+        // Domain should be at least one character long
+        if (domain.length == 0) return false;
+
+        return true;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in isValidEmail()");
     }
 }
 
@@ -581,14 +765,10 @@ function signup(user_profile) {
 
                     if (this.status == 200) {  
 
-                        // TODO load survey
-
                         // The text from the API call
-                        var responseText = this.responseText;
-                        var textstr = responseText;
+                        var jsontext = this.responseText;
 
-                        // Write string to document
-                        document.getElementById("GPI_content").innerHTML = textstr;
+                        processJSON(jsontext);
 
                     }
                     else {
@@ -754,7 +934,22 @@ function processJSON(jsontext) {
 
             userProfile.SurveyCompleted = false;
 
-            writeInstructions();
+            // Check if questions have been saved
+            jsontext = sessionStorage.getItem("GPIStoredQuestions");
+
+            if (jsontext !== null) {
+
+                // Survey has been started
+                serverQuestionList = JSON.parse(jsontext);
+                getQuestions();
+            }
+            else {
+
+                // This is start of survey
+                writeInstructions();
+
+            }
+            
         }
 
         // Store JSON string
@@ -1144,6 +1339,9 @@ function saveQuestions(continue_survey=true) {
 
             }
         }
+
+        // Save questions locally to session variable
+        sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
 
         // Attach question list
         userProfile.Questions = localQuestionList;
