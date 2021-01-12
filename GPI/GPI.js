@@ -522,6 +522,12 @@ function init() {
 
 }
 
+/**
+ * @function
+ * @name logout
+ * @description
+ * <p>Logs the user out by deleting session variables and reloading page</p>
+ */
 function logout() {
 
     try {
@@ -553,7 +559,10 @@ function logout() {
  */
 
 /**
- * Processes sign-up form and calls signup API
+ * @function
+ * @name submitSignUpForm
+ * @description
+ * <p>Processes sign-up form and calls signup API.</p>
  */
 function submitSignUpForm() {
 
@@ -682,6 +691,12 @@ function submitSignUpForm() {
     }
 }
 
+/**
+ * @function
+ * @name submitLoginForm
+ * @description
+ * <p>Processes login form and calls login API.</p>
+ */
 function submitLoginForm() {
 
     try {
@@ -749,6 +764,14 @@ function submitLoginForm() {
     }
 }
 
+/**
+ * @function
+ * @name isValidEmail
+ * @description
+ * <p>Validates a user email</p>
+ * @param {string} email String representing a user email
+ * @returns {boolean} True if the argument represents a valid email
+ */
 function isValidEmail(email) {
     try {
 
@@ -783,12 +806,18 @@ function isValidEmail(email) {
     }
 }
 
-
+/**
+ * @function
+ * @name signup
+ * @description <p>Calls the signup API and then calls the routines to 
+ * deserialize the returned JSON string</p>
+ * @param {UserProfile} user_profile Object representing a user/profile
+ */
 function signup(user_profile) {
 
     try {
 
-        // TODO: Change the url in the live version
+        // URL changed to the live version
         //var url = "https://localhost:44369/api/user/signup/";
         var url = "https://gi-api.azurewebsites.net/api/user/signup/";
 
@@ -857,11 +886,18 @@ function signup(user_profile) {
     }
 }
 
+/**
+ * @function
+ * @name login
+ * @description <p>Calls the login API and then calls the routines to
+ * deserialize the returned JSON string</p>
+ * @param {UserProfile} user_profile Object representing a user/profile
+ */
 function login(user_profile) {
 
     try {
 
-        // TODO: Change the url in the live version
+        // URL changed to the live version
         //var url = "https://localhost:44369/api/user/login/";
         var url = "https://gi-api.azurewebsites.net/api/user/login/";
 
@@ -1012,6 +1048,13 @@ function processJSON(jsontext) {
     }
 }
 
+/**
+ * @function
+ * @name updateAnswer
+ * @description <p>Calls the API to submit a list of answered questions</p>
+ * @param {UserProfile} user_profile User/profile object
+ * @param {boolean} continue_survey Signals that the survey should be continued after submitting answers
+ */
 function updateAnswers(user_profile, continue_survey=true) {
 
     try {
@@ -1108,7 +1151,15 @@ function updateAnswers(user_profile, continue_survey=true) {
  *                USER SURVEY FUNCTIONS
  * ===========================================================
  */
- 
+
+/**
+ * @function
+ * @name loadQuestions
+ * @description <p>Creates the serverQuestionList array from deserialized JSON</p>
+ * @param {Question[]} qarray Array of survey questions
+ * @returns {boolean} True if questions successfully loaded, false otherwise
+ * @see serverQuestionList
+ */
 function loadQuestions(qarray) {
 
     try {
@@ -1156,7 +1207,10 @@ function loadQuestions(qarray) {
 
 
 /**
- * Writes the survey instructions to the page
+ * @function
+ * @name writeInstructions
+ * @description
+ * <p>Writes the survey instructions to the page</p>
  */
 function writeInstructions() {
 
@@ -1206,10 +1260,12 @@ function writeInstructions() {
 }
 
 /**
- * Gets a list of questions for a survey page and then 
- * calls either writeQuestions() or writeEndOfSurvey()
+ * @function
+ * @name getQuestions
+ * @description
+ * <p>Gets a list of questions for a survey page and then 
+ * calls writeQuestions()</p>
  * @see writeQuestions
- * @see writeEndOfSurvey
  */
 function getQuestions() {
 
@@ -1242,7 +1298,10 @@ function getQuestions() {
 }
 
 /**
- * Writes a list of survey questions to the page
+ * @function
+ * @name writeQuestions
+ * @description
+ * <p>Writes a list of survey questions to the page</p>
  */
 function writeQuestions() {
 
@@ -1306,8 +1365,11 @@ function writeQuestions() {
 }
 
 /**
- * Creates an HTML string for a progress bar
- * @returns {string} - HTML string for a progress bar
+ * @function
+ * @name getProgressBar
+ * @description
+ * <p>Creates an HTML string for a progress bar</p>
+ * @returns {string} HTML string for a progress bar
  */
 function getProgressBar() {
 
@@ -1340,7 +1402,10 @@ function getProgressBar() {
 }
 
 /**
- * Saves current questions and exits survey
+ * @function
+ * @name saveExit
+ * @description
+ * <p>Saves current questions and exits survey</p>
  * @see saveQuestions
  * @see writeInstructions
  */
@@ -1358,9 +1423,12 @@ function saveExit() {
 }
 
 /**
- * Saves current questions and continues survey
+ * @function
+ * @name saveContinue
+ * @description
+ * <p>Saves current questions and continues survey</p>
  * @see saveQuestions
- * @see getQuestions
+ * @see writeInstructions
  */
 function saveContinue() {
 
@@ -1376,7 +1444,10 @@ function saveContinue() {
 }
 
 /**
- * Saves current questions
+ * @function
+ * @name saveQuestions
+ * @description
+ * <p>Saves the current survey page questions to server and stored session variable</p>
  */
 function saveQuestions(continue_survey=true) {
 
@@ -1418,7 +1489,10 @@ function saveQuestions(continue_survey=true) {
 }
 
 /**
- * Gets the Likert score from a survey question
+ * @function
+ * @name getScore
+ * @description
+ * <p>Gets the Likert score from a survey question</p>
  * @param {HTMLElement} myform - the survey form element
  * @param {string} id - the survey question identifier
  * @returns {number} - an integer between 0 and 5 (0 means not answered)
@@ -1458,6 +1532,7 @@ function getScore(myform, id) {
  * @name surveyStarted
  * @description 
  * <p>Tests to see if survey has been started</p>
+ * @returns {boolean} True if survey has been started
  */
 function surveyStarted() {
 
@@ -1478,7 +1553,10 @@ function surveyStarted() {
 }
 
 /**
- * Gets an array of randomized questions
+ * @function
+ * @name randomQuestions
+ * @description
+ * <p>Gets an array of randomized questions (questions actually randomized on server)</p>
  * @returns {Question[]} - an array of questions for a survey page
  */
 function randomQuestions() {
@@ -1517,6 +1595,12 @@ function randomQuestions() {
  */
 
 /**
+ * @function
+ * @name getReport
+ * @description 
+ * <p>Extracts report objects from JSON</p>
+ * @param {JSON} reportObj JSON object for report
+ * @returns {boolean} True if report succesfully loaded
  */
 function getReport(reportObj) {
 
@@ -1567,9 +1651,13 @@ function getReport(reportObj) {
 }
 
 /**
- * Utility function for extracting and creating a QuadrantModel 
- * object from JSON data
- * @param {JSON} qmjson
+ * @function
+ * @name extractQuadrantModel
+ * @description
+ * <p>Utility function for extracting and creating a QuadrantModel 
+ * object from JSON data</p>
+ * @param {JSON} qmjson JSON object for QuadrantModel
+ * @returns {QuadrantModel} The QuadrantModel extracted from JSON data
  */
 function extractQuadrantModel(qmjson) {
 
@@ -1610,10 +1698,14 @@ function extractQuadrantModel(qmjson) {
 }
 
 /**
- * Utility function for extracting and creating a Dimension
+ * @function
+ * @name extractDimension
+ * @description
+ * <p>Utility function for extracting and creating a Dimension
  * object from JSON data. This is used specifically for parent 
- * Dimension objects.
- * @param {JSON} dimjson
+ * Dimension objects.</p>
+ * @param {JSON} dimjson JSON object for dimension
+ * @returns {Dimension} Dimension object
  */
 function extractDimension(dimjson) {
 
@@ -1665,10 +1757,14 @@ function extractDimension(dimjson) {
 }
 
 /**
- * Utility function for extracting and creating a Dimension
+ * @function
+ * @name extractSubDimension
+ * @description
+ * <p>Utility function for extracting and creating a Dimension
  * object from JSON data. This is used specifically for child
- * Dimension objects.
- * @param {JSON} subdimjson
+ * Dimension objects.</p>
+ * @param {JSON} subdimjson JSON object for sub-dimension
+ * @returns {Dimension} Dimension object for sub-dimension
  */
 function extractSubDimension(subdimjson) {
 
@@ -1705,9 +1801,13 @@ function extractSubDimension(subdimjson) {
 }
 
 /**
- * Utility function for extracting and creating a Blue4
- * (Leadership style) object from JSON data.
- * @param {JSON} b4json
+ * @function
+ * @name extractBlue4Model
+ * @description
+ * <p>Utility function for extracting and creating a Blue4
+ * (Leadership style) object from JSON data.</p>
+ * @param {JSON} b4json JSON object for Blue 4 model
+ * @returns {Blue4Model} Blue4Model object
  */
 function extractBlue4Model(b4json) {
 
@@ -1754,7 +1854,6 @@ function extractBlue4Model(b4json) {
  * <li>'communication_quad'</li>
  * <li>'feelings_quad'</li>
  * </ul>
- * <p>Global variables accessed:</p>
  * @see quadModel_probSolveImpStyle
  * @see quadModel_commInterperStyle
  * @see quadModel_feelSelfControl
@@ -1947,7 +2046,6 @@ function writeLeadership() {
  * @description
  * <p>Assigns quadrant colours and fonts from CSS.
  * If CSS definitions are not found, default values are used.</p>
- * <p>Global variables accessed:</p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2053,7 +2151,6 @@ function assignQuadFormating() {
  * @param {QuadrantModel} quadrant - the QuadrantModel to display
  * @description
  * <p>Draws the Quadrant model visualisation</p>
- * <p>Global variables accessed:</p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2307,7 +2404,6 @@ function drawQuadrant(quadrant) {
  * @name drawSten
  * @param {Dimension} dimension - the Dimesion of the score to display
  * @description <p>Draws the sten score visualisation</p>
- * <p>Global variables accessed:</p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour

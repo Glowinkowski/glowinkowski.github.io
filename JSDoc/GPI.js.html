@@ -34,6 +34,9 @@
  * &lt;b>Key functionality:&lt;/b>
  * &lt;ul>
  *    &lt;li>Signs up a new user&lt;/li>
+ *    &lt;li>Logs in an existing user&lt;/li>
+ *    &lt;li>Renders the GPI survey questionnaire&lt;/li>
+ *    &lt;li>Renders the GPI talent report&lt;/li>
  * &lt;/ul>
  * @author M.P. Vaughan
  * @version 1.01
@@ -46,7 +49,9 @@
  * ===========================================================                 
  */
 
-
+/**
+ * @classdesc &lt;p>Represents a user/profile for passing data to and from the API&lt;/p>
+ */
 class UserProfile {
 
     constructor(_Email, _Password, _FirstName="", _LastName="", _AccessCode="", _GenderId = 1, _AgeRangeId = 1, _EthnicityId = 1) {
@@ -59,18 +64,14 @@ class UserProfile {
         this.GenderId = _GenderId;
         this.AgeRangeId = _AgeRangeId;
         this.EthnicityId = _EthnicityId;
-        this.Questions = null;
+        this.SurveyCompleted = false;
+        this.Questions = null; // Used for returning answered questions to server
     }
 
-    isValid() {
-
-        return true;
-    }
 }
 
 /**
- * Class representing a GPI survey question
- * @class
+ * @classdesc &lt;p>Represents a GPI survey question&lt;/p>
  */
 class Question {
 
@@ -227,7 +228,7 @@ class Blue4Model {
             }
 
         }
-        else {
+        else { 
 
             throw "Risk level must be an integer 0 - 5 (not an integer)";
         }
@@ -515,23 +516,195 @@ var myReport;
 
 /*
  * ===========================================================
+ *                  INITIALIZATION
+ * ===========================================================
+ */
+
+/**
+ * @function
+ * @name init
+ * @description
+ * &lt;p>This function is intended to be called when a page loads (after any required HTML
+ * components have been loaded) and checks whether user/profile data has been stored locally
+ * in session variables (i.e. the user is 'logged in'). If so, it loads this data so that 
+ * no further calls to the API are required.&lt;/p>
+ */
+function init() {
+
+    try {
+
+        // Check if profile has have been saved
+        var jsontext = sessionStorage.getItem("GPIStoredProfile");
+
+        if (jsontext !== null) {
+
+            processJSON(jsontext);
+
+        }
+        
+    }
+    catch (err) {
+
+        alert(err.message + " in init()");
+    }
+
+}
+
+/**
+ * @function
+ * @name logout
+ * @description
+ * &lt;p>Logs the user out by deleting session variables and reloading page&lt;/p>
+ */
+function logout() {
+
+    try {
+        // Logout function
+        var logout = "Do you wish to log out? (Click OK if so)";
+
+        if (confirm(logout)) {
+
+            // Delete session storage
+            sessionStorage.removeItem("GPIStoredProfile");
+
+            if (sessionStorage.getItem("GPIStoredQuestions") !== null) {
+
+                sessionStorage.removeItem("GPIStoredQuestions");
+            }
+
+        }
+    }
+    catch (err) {
+
+        alert(err.message + " in logout()");
+    }
+}
+
+/*
+ * ===========================================================
  *          USER SIGN-UP / LOGIN FUNCTIONS
  * ===========================================================
  */
 
 /**
- * Processes sign-up form and calls signup API
+ * @function
+ * @name submitSignUpForm
+ * @description
+ * &lt;p>Processes sign-up form and calls signup API.&lt;/p>
  */
 function submitSignUpForm() {
 
     try {
 
+        // Disable submit button
+        document.getElementById("submit_button").disabled = true;
+
+        var errors = false;
+
+        var error_msg = "There were problems with your submission:";
+
+        var email = document.getElementById("email").value;
+
+        var pwd = document.getElementById("pwd").value;
+
+        var confirm_pwd = document.getElementById("confirm_pwd").value;
+
+        var first_name = document.getElementById("first_name").value;
+
+        var last_name = document.getElementById("last_name").value;
+
+        var access_code = document.getElementById("access_code").value;
+
+        if (email == null) {
+            errors = true;
+            error_msg += "\n - Email required.";
+        }
+        else {
+            
+            if (email.length == 0) {
+                errors = true;
+                error_msg += "\n - Email required.";
+            }
+            else {
+                if (!isValidEmail(email)) {
+
+                    errors = true;
+                    error_msg += "\n - Invalid email format.";
+                }
+            }
+        }
+
+        if (pwd == null) {
+            errors = true;
+            error_msg += "\n - Password required.";
+        }
+        else {
+            
+            if (pwd.length == 0) {
+                errors = true;
+                error_msg += "\n - Password required.";
+            }
+            else {
+
+                if (pwd !== confirm_pwd) {
+
+                    errors = true;
+                    error_msg += "\n - Passwords do not match.";
+
+                }
+            }
+        }
+
+        if (first_name == null) {
+            errors = true;
+            error_msg += "\n - First name required.";
+        }
+        else {
+            
+            if (first_name.length == 0) {
+                errors = true;
+                error_msg += "\n - First name required.";
+            }
+        }
+
+        if (last_name == null) {
+            errors = true;
+            error_msg += "\n - Last name required.";
+        }
+        else {
+            
+            if (last_name.length == 0) {
+                errors = true;
+                error_msg += "\n - Last name required.";
+            }
+        }
+
+        if (access_code == null) {
+            errors = true;
+            error_msg += "\n - Access code required.";
+        }
+        else {
+            
+            if (access_code.length == 0) {
+                errors = true;
+                error_msg += "\n - Access code required.";
+            }
+        }
+
+        if (errors) {
+
+            alert(error_msg);
+            // Re-enable submit button
+            document.getElementById("submit_button").disabled = false;
+            return;
+        }
+
         var user_profile = new UserProfile(
-            document.getElementById("email").value,
-            document.getElementById("pwd").value,
-            document.getElementById("first_name").value,
-            document.getElementById("last_name").value,
-            document.getElementById("access_code").value,
+            email,
+            pwd,
+            first_name,
+            last_name,
+            access_code,
             document.getElementById("gender").value,
             document.getElementById("age_range").value,
             document.getElementById("ethnicity").value
@@ -546,13 +719,68 @@ function submitSignUpForm() {
     }
 }
 
+/**
+ * @function
+ * @name submitLoginForm
+ * @description
+ * &lt;p>Processes login form and calls login API.&lt;/p>
+ */
 function submitLoginForm() {
 
     try {
 
+        // Disable submit button
+        document.getElementById("submit_button").disabled = true;
+
+        var errors = false;
+
+        var error_msg = "There were problems with your submission:";
+
+        var email = document.getElementById("email").value;
+
+        var pwd = document.getElementById("pwd").value;
+
+        if (email == null) {
+            errors = true;
+            error_msg += "\n - Email required.";
+        }
+        else {
+
+            if (email.length == 0) {
+                errors = true;
+                error_msg += "\n - Email required.";
+            }
+            else {
+                if (!isValidEmail(email)) {
+                    errors = true;
+                    error_msg += "\n - Invalid email format.";
+                }
+            }
+        }
+
+        if (pwd == null) {
+            errors = true;
+            error_msg += "\n - Password required.";
+        }
+        else {
+
+            if (pwd.length == 0) {
+                errors = true;
+                error_msg += "\n - Password required.";
+            }
+        }
+
+        if (errors) {
+
+            alert(error_msg);
+            // Re-enable submit button
+            document.getElementById("submit_button").disabled = false;
+            return;
+        }
+
         var user_profile = new UserProfile(
-            document.getElementById("email").value,
-            document.getElementById("pwd").value
+            email,
+            pwd
         )
 
         login(user_profile);
@@ -564,13 +792,62 @@ function submitLoginForm() {
     }
 }
 
+/**
+ * @function
+ * @name isValidEmail
+ * @description
+ * &lt;p>Validates a user email&lt;/p>
+ * @param {string} email String representing a user email
+ * @returns {boolean} True if the argument represents a valid email
+ */
+function isValidEmail(email) {
+    try {
 
+        if (email == null) return false;
+
+        if (email.length == 0) return false;
+
+        // Check for '@'
+        at = email.indexOf('@');
+
+        // If '@' does not exist or is first character
+        if (at &lt; 1) return false;
+
+        // Check for '.' after '@'
+        dot = email.indexOf('.', at);
+
+        // There should be at least one character after '@' before '.'
+        if (dot - at &lt; 2) return false;
+
+        // Get domain
+        domain = email.substring(dot + 1);
+
+        // Domain should be at least one character long
+        if (domain.length == 0) return false;
+
+        return true;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in isValidEmail()");
+    }
+}
+
+/**
+ * @function
+ * @name signup
+ * @description &lt;p>Calls the signup API and then calls the routines to 
+ * deserialize the returned JSON string&lt;/p>
+ * @param {UserProfile} user_profile Object representing a user/profile
+ */
 function signup(user_profile) {
 
     try {
 
-        // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/signup/";
+        // URL changed to the live version
+        //var url = "https://localhost:44369/api/user/signup/";
+        var url = "https://gi-api.azurewebsites.net/api/user/signup/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -584,14 +861,10 @@ function signup(user_profile) {
 
                     if (this.status == 200) {  
 
-                        // TODO load survey
-
                         // The text from the API call
-                        var responseText = this.responseText;
-                        var textstr = responseText;
+                        var jsontext = this.responseText;
 
-                        // Write string to document
-                        document.getElementById("GPI_content").innerHTML = textstr;
+                        processJSON(jsontext);
 
                     }
                     else {
@@ -613,6 +886,9 @@ function signup(user_profile) {
                                 msg = msg + "; Response: " + this.responseText;
                                 alert(msg);
                         }
+
+                        // Re-enable submit button
+                        document.getElementById("submit_button").disabled = false;
                         
                     }
 
@@ -638,12 +914,20 @@ function signup(user_profile) {
     }
 }
 
+/**
+ * @function
+ * @name login
+ * @description &lt;p>Calls the login API and then calls the routines to
+ * deserialize the returned JSON string&lt;/p>
+ * @param {UserProfile} user_profile Object representing a user/profile
+ */
 function login(user_profile) {
 
     try {
 
-        // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/login/";
+        // URL changed to the live version
+        //var url = "https://localhost:44369/api/user/login/";
+        var url = "https://gi-api.azurewebsites.net/api/user/login/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -660,36 +944,8 @@ function login(user_profile) {
                         // The text from the API call
                         var jsontext = this.responseText;
 
-                        var user_profile_json = JSON.parse(jsontext);
-
-                        // Check for correct properties
-                        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
-                        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
-
-                        if (user_profile_json.SurveyCompleted) {
-
-                            // Get report
-                            // TEMP
-                            var json_str = JSON.stringify(user_profile_json, null, 4);
-                            document.getElementById("GPI_content").innerHTML = json_str;
-
-                            // JSON object should have a field 'Report' containing the report data
-                            getReport(user_profile_json.Report);
-
-                        }
-                        else {
-
-                            // Get survey questions
-                            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
-
-                            // If all OK
-                            userProfile = new UserProfile(
-                                user_profile_json.Email,
-                                user_profile_json.Password
-                            );
-
-                            writeInstructions();
-                        }
+                        processJSON(jsontext);
+                        
                     }
                     else {
 
@@ -710,6 +966,9 @@ function login(user_profile) {
                                 msg = msg + "; Response: " + this.responseText;
                                 alert(msg);
                         }
+
+                        // Re-enable submit button
+                        document.getElementById("submit_button").disabled = false;
 
                     }
 
@@ -735,6 +994,95 @@ function login(user_profile) {
     }
 }
 
+/**
+ * @function
+ * @name processJSON
+ * @description &lt;p>Processes the JSON text from the server (or stored in session)&lt;/p>
+ * @param {string} jsontext
+ */
+function processJSON(jsontext) {
+
+    try {
+
+        var user_profile_json = JSON.parse(jsontext);
+
+        // Check for correct properties
+        if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
+        if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
+
+        // Store JSON string
+        sessionStorage.setItem("GPIStoredProfile", jsontext);
+
+        if (user_profile_json.SurveyCompleted) {
+
+            // Get report
+            // TEMP
+            // var json_str = JSON.stringify(user_profile_json, null, 4);
+            // document.getElementById("GPI_content").innerHTML = json_str;
+
+            // JSON object should have a field 'Report' containing the report data
+            if (!getReport(user_profile_json.Report)) throw "Could not load report";
+
+            // If all OK
+            userProfile = new UserProfile(
+                user_profile_json.Email,
+                user_profile_json.Password
+            );
+
+            userProfile.SurveyCompleted = true;
+
+            writeElement("problem_quad");
+
+        }
+        else {
+
+            // Get survey questions
+            if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
+
+            // If all OK
+            userProfile = new UserProfile(
+                user_profile_json.Email,
+                user_profile_json.Password
+            );
+
+            userProfile.SurveyCompleted = false;
+
+            // Check if questions have been saved
+            jsontext = sessionStorage.getItem("GPIStoredQuestions");
+
+            if (jsontext !== null) {
+
+                // Survey has been started - using stored session variable
+                serverQuestionList = JSON.parse(jsontext);
+                getQuestions();
+            }
+            else {
+
+                // Save questions locally to session variable
+                sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
+
+                writeInstructions();
+
+            }
+            
+        }
+
+    }
+
+    catch (err) {
+
+        alert(err.message + " in processJSON()");
+
+    }
+}
+
+/**
+ * @function
+ * @name updateAnswer
+ * @description &lt;p>Calls the API to submit a list of answered questions&lt;/p>
+ * @param {UserProfile} user_profile User/profile object
+ * @param {boolean} continue_survey Signals that the survey should be continued after submitting answers
+ */
 function updateAnswers(user_profile, continue_survey=true) {
 
     try {
@@ -742,7 +1090,8 @@ function updateAnswers(user_profile, continue_survey=true) {
         //api/User/UpdateAnswers
 
         // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/updateanswers/";
+        //var url = "https://localhost:44369/api/user/updateanswers/";
+        var url = "https://gi-api.azurewebsites.net/api/user/updateanswers/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -830,7 +1179,15 @@ function updateAnswers(user_profile, continue_survey=true) {
  *                USER SURVEY FUNCTIONS
  * ===========================================================
  */
- 
+
+/**
+ * @function
+ * @name loadQuestions
+ * @description &lt;p>Creates the serverQuestionList array from deserialized JSON&lt;/p>
+ * @param {Question[]} qarray Array of survey questions
+ * @returns {boolean} True if questions successfully loaded, false otherwise
+ * @see serverQuestionList
+ */
 function loadQuestions(qarray) {
 
     try {
@@ -878,7 +1235,10 @@ function loadQuestions(qarray) {
 
 
 /**
- * Writes the survey instructions to the page
+ * @function
+ * @name writeInstructions
+ * @description
+ * &lt;p>Writes the survey instructions to the page&lt;/p>
  */
 function writeInstructions() {
 
@@ -886,6 +1246,7 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
+        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
         textstr += "&lt;h1>The GPI Survey&lt;/h1>";
         textstr += "&lt;p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
@@ -900,7 +1261,16 @@ function writeInstructions() {
         textstr += "&lt;p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
         textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.&lt;/p>";
 
-        textstr += "&lt;div class=\"gpi_surv_button_box\">&lt;input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\">&lt;/div>";
+        if (surveyStarted()) {
+
+            verb = "Continue";
+        }
+        else {
+
+            verb = "Take";
+        }
+
+        textstr += "&lt;div class=\"gpi_surv_button_box\">&lt;input type=\"button\" class=\"gpi_button\" value=\"" + verb + " Survey\" onclick=\"getQuestions()\">&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -918,10 +1288,12 @@ function writeInstructions() {
 }
 
 /**
- * Gets a list of questions for a survey page and then 
- * calls either writeQuestions() or writeEndOfSurvey()
+ * @function
+ * @name getQuestions
+ * @description
+ * &lt;p>Gets a list of questions for a survey page and then 
+ * calls writeQuestions()&lt;/p>
  * @see writeQuestions
- * @see writeEndOfSurvey
  */
 function getQuestions() {
 
@@ -954,13 +1326,17 @@ function getQuestions() {
 }
 
 /**
- * Writes a list of survey questions to the page
+ * @function
+ * @name writeQuestions
+ * @description
+ * &lt;p>Writes a list of survey questions to the page&lt;/p>
  */
 function writeQuestions() {
 
     try {
 
         textstr = "";
+        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
 
         textstr += getProgressBar();
 
@@ -1017,8 +1393,11 @@ function writeQuestions() {
 }
 
 /**
- * Creates an HTML string for a progress bar
- * @returns {string} - HTML string for a progress bar
+ * @function
+ * @name getProgressBar
+ * @description
+ * &lt;p>Creates an HTML string for a progress bar&lt;/p>
+ * @returns {string} HTML string for a progress bar
  */
 function getProgressBar() {
 
@@ -1039,7 +1418,7 @@ function getProgressBar() {
         var completed = Math.floor(100 * n / N);
 
         textstr += "&lt;progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\">&lt;/progress>";
-        textstr += "&lt;label for=\"progress\"> " + completed + "%&lt;/label >";
+        textstr += "&lt;label for=\"progress\">&amp;nbsp;" + completed + "%&lt;/label >";
 
         return textstr;
 
@@ -1051,7 +1430,10 @@ function getProgressBar() {
 }
 
 /**
- * Saves current questions and exits survey
+ * @function
+ * @name saveExit
+ * @description
+ * &lt;p>Saves current questions and exits survey&lt;/p>
  * @see saveQuestions
  * @see writeInstructions
  */
@@ -1069,9 +1451,12 @@ function saveExit() {
 }
 
 /**
- * Saves current questions and continues survey
+ * @function
+ * @name saveContinue
+ * @description
+ * &lt;p>Saves current questions and continues survey&lt;/p>
  * @see saveQuestions
- * @see getQuestions
+ * @see writeInstructions
  */
 function saveContinue() {
 
@@ -1087,7 +1472,10 @@ function saveContinue() {
 }
 
 /**
- * Saves current questions
+ * @function
+ * @name saveQuestions
+ * @description
+ * &lt;p>Saves the current survey page questions to server and stored session variable&lt;/p>
  */
 function saveQuestions(continue_survey=true) {
 
@@ -1112,6 +1500,9 @@ function saveQuestions(continue_survey=true) {
             }
         }
 
+        // Save questions locally to session variable
+        sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
+
         // Attach question list
         userProfile.Questions = localQuestionList;
 
@@ -1126,7 +1517,10 @@ function saveQuestions(continue_survey=true) {
 }
 
 /**
- * Gets the Likert score from a survey question
+ * @function
+ * @name getScore
+ * @description
+ * &lt;p>Gets the Likert score from a survey question&lt;/p>
  * @param {HTMLElement} myform - the survey form element
  * @param {string} id - the survey question identifier
  * @returns {number} - an integer between 0 and 5 (0 means not answered)
@@ -1162,7 +1556,35 @@ function getScore(myform, id) {
 }
 
 /**
- * Gets an array of randomized questions
+ * @function
+ * @name surveyStarted
+ * @description 
+ * &lt;p>Tests to see if survey has been started&lt;/p>
+ * @returns {boolean} True if survey has been started
+ */
+function surveyStarted() {
+
+    try {
+
+        // Test if survey started
+        for (var i = 0; i &lt; serverQuestionList.length; i++) {
+
+            if (serverQuestionList[i].Score > 0) return true;
+        }
+
+        return false;
+    }
+    catch (err) {
+
+        alert(err.message + " in surveyStarted()");
+    }
+}
+
+/**
+ * @function
+ * @name randomQuestions
+ * @description
+ * &lt;p>Gets an array of randomized questions (questions actually randomized on server)&lt;/p>
  * @returns {Question[]} - an array of questions for a survey page
  */
 function randomQuestions() {
@@ -1201,6 +1623,12 @@ function randomQuestions() {
  */
 
 /**
+ * @function
+ * @name getReport
+ * @description 
+ * &lt;p>Extracts report objects from JSON&lt;/p>
+ * @param {JSON} reportObj JSON object for report
+ * @returns {boolean} True if report succesfully loaded
  */
 function getReport(reportObj) {
 
@@ -1219,7 +1647,7 @@ function getReport(reportObj) {
         var qmarray = reportObj.QuadrantModels;
         var len = qmarray.length;
 
-        if (len &lt; 1) throw "Error: Expected an array of QuadrantModels in JSON object";
+        if (len &lt; 1) return false;
 
         myReport.QuadrantModels = [];
 
@@ -1234,24 +1662,30 @@ function getReport(reportObj) {
         quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication &amp; Interpersonal Style");
         quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings &amp; Self-Control");
 
-        //alert(quadModel_feelSelfControl.Name);
-
         // Set formating for quadrant element
         assignQuadFormating();
 
-        writeElement("problem_quad");
+        return true;
+
+        //writeElement("problem_quad");
 
     }
     catch (err) {
 
         alert(err.message + " in getReport()");
+        return false;
+
     }
 }
 
 /**
- * Utility function for extracting and creating a QuadrantModel 
- * object from JSON data
- * @param {JSON} qmjson
+ * @function
+ * @name extractQuadrantModel
+ * @description
+ * &lt;p>Utility function for extracting and creating a QuadrantModel 
+ * object from JSON data&lt;/p>
+ * @param {JSON} qmjson JSON object for QuadrantModel
+ * @returns {QuadrantModel} The QuadrantModel extracted from JSON data
  */
 function extractQuadrantModel(qmjson) {
 
@@ -1292,10 +1726,14 @@ function extractQuadrantModel(qmjson) {
 }
 
 /**
- * Utility function for extracting and creating a Dimension
+ * @function
+ * @name extractDimension
+ * @description
+ * &lt;p>Utility function for extracting and creating a Dimension
  * object from JSON data. This is used specifically for parent 
- * Dimension objects.
- * @param {JSON} dimjson
+ * Dimension objects.&lt;/p>
+ * @param {JSON} dimjson JSON object for dimension
+ * @returns {Dimension} Dimension object
  */
 function extractDimension(dimjson) {
 
@@ -1347,10 +1785,14 @@ function extractDimension(dimjson) {
 }
 
 /**
- * Utility function for extracting and creating a Dimension
+ * @function
+ * @name extractSubDimension
+ * @description
+ * &lt;p>Utility function for extracting and creating a Dimension
  * object from JSON data. This is used specifically for child
- * Dimension objects.
- * @param {JSON} subdimjson
+ * Dimension objects.&lt;/p>
+ * @param {JSON} subdimjson JSON object for sub-dimension
+ * @returns {Dimension} Dimension object for sub-dimension
  */
 function extractSubDimension(subdimjson) {
 
@@ -1387,9 +1829,13 @@ function extractSubDimension(subdimjson) {
 }
 
 /**
- * Utility function for extracting and creating a Blue4
- * (Leadership style) object from JSON data.
- * @param {JSON} b4json
+ * @function
+ * @name extractBlue4Model
+ * @description
+ * &lt;p>Utility function for extracting and creating a Blue4
+ * (Leadership style) object from JSON data.&lt;/p>
+ * @param {JSON} b4json JSON object for Blue 4 model
+ * @returns {Blue4Model} Blue4Model object
  */
 function extractBlue4Model(b4json) {
 
@@ -1436,7 +1882,6 @@ function extractBlue4Model(b4json) {
  * &lt;li>'communication_quad'&lt;/li>
  * &lt;li>'feelings_quad'&lt;/li>
  * &lt;/ul>
- * &lt;p>Global variables accessed:&lt;/p>
  * @see quadModel_probSolveImpStyle
  * @see quadModel_commInterperStyle
  * @see quadModel_feelSelfControl
@@ -1496,6 +1941,7 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
+        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
         textstr += "&lt;h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report&lt;/h1>";
 
         // Navigation
@@ -1628,7 +2074,6 @@ function writeLeadership() {
  * @description
  * &lt;p>Assigns quadrant colours and fonts from CSS.
  * If CSS definitions are not found, default values are used.&lt;/p>
- * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -1734,7 +2179,6 @@ function assignQuadFormating() {
  * @param {QuadrantModel} quadrant - the QuadrantModel to display
  * @description
  * &lt;p>Draws the Quadrant model visualisation&lt;/p>
- * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -1988,7 +2432,6 @@ function drawQuadrant(quadrant) {
  * @name drawSten
  * @param {Dimension} dimension - the Dimesion of the score to display
  * @description &lt;p>Draws the sten score visualisation&lt;/p>
- * &lt;p>Global variables accessed:&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2212,13 +2655,13 @@ function drawSten(dimension) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blue4Model.html">Blue4Model</a></li><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Report.html">Report</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#extractBlue4Model">extractBlue4Model</a></li><li><a href="global.html#extractDimension">extractDimension</a></li><li><a href="global.html#extractQuadrantModel">extractQuadrantModel</a></li><li><a href="global.html#extractSubDimension">extractSubDimension</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#myReport">myReport</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#submitSignUpForm">submitSignUpForm</a></li><li><a href="global.html#userProfile">userProfile</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeLeadership">writeLeadership</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blue4Model.html">Blue4Model</a></li><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Report.html">Report</a></li><li><a href="UserProfile.html">UserProfile</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#dimensionList">dimensionList</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#extractBlue4Model">extractBlue4Model</a></li><li><a href="global.html#extractDimension">extractDimension</a></li><li><a href="global.html#extractQuadrantModel">extractQuadrantModel</a></li><li><a href="global.html#extractSubDimension">extractSubDimension</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadQuestions">loadQuestions</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#myReport">myReport</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#processJSON">processJSON</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#signup">signup</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#submitLoginForm">submitLoginForm</a></li><li><a href="global.html#submitSignUpForm">submitSignUpForm</a></li><li><a href="global.html#surveyStarted">surveyStarted</a></li><li><a href="global.html#updateAnswer">updateAnswer</a></li><li><a href="global.html#userProfile">userProfile</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeLeadership">writeLeadership</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 08 2021 11:30:42 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Jan 12 2021 16:42:19 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
