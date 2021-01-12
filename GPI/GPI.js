@@ -506,7 +506,7 @@ function init() {
     try {
 
         // Check if profile has have been saved
-        jsontext = sessionStorage.getItem("GPIStoredProfile");
+        var jsontext = sessionStorage.getItem("GPIStoredProfile");
 
         if (jsontext !== null) {
 
@@ -522,6 +522,30 @@ function init() {
 
 }
 
+function logout() {
+
+    try {
+        // Logout function
+        var logout = "Do you wish to log out? (Click OK if so)";
+
+        if (confirm(logout)) {
+
+            // Delete session storage
+            sessionStorage.removeItem("GPIStoredProfile");
+
+            if (sessionStorage.getItem("GPIStoredQuestions") !== null) {
+
+                sessionStorage.removeItem("GPIStoredQuestions");
+            }
+
+        }
+    }
+    catch (err) {
+
+        alert(err.message + " in logout()");
+    }
+}
+
 /*
  * ===========================================================
  *          USER SIGN-UP / LOGIN FUNCTIONS
@@ -534,6 +558,9 @@ function init() {
 function submitSignUpForm() {
 
     try {
+
+        // Disable submit button
+        document.getElementById("submit_button").disabled = true;
 
         var errors = false;
 
@@ -564,6 +591,7 @@ function submitSignUpForm() {
             else {
                 if (!isValidEmail(email)) {
 
+                    errors = true;
                     error_msg += "\n - Invalid email format.";
                 }
             }
@@ -595,8 +623,9 @@ function submitSignUpForm() {
             error_msg += "\n - First name required.";
         }
         else {
-            errors = true;
+            
             if (first_name.length == 0) {
+                errors = true;
                 error_msg += "\n - First name required.";
             }
         }
@@ -606,8 +635,9 @@ function submitSignUpForm() {
             error_msg += "\n - Last name required.";
         }
         else {
-            errors = true;
+            
             if (last_name.length == 0) {
+                errors = true;
                 error_msg += "\n - Last name required.";
             }
         }
@@ -617,8 +647,9 @@ function submitSignUpForm() {
             error_msg += "\n - Access code required.";
         }
         else {
-            errors = true;
+            
             if (access_code.length == 0) {
+                errors = true;
                 error_msg += "\n - Access code required.";
             }
         }
@@ -626,6 +657,8 @@ function submitSignUpForm() {
         if (errors) {
 
             alert(error_msg);
+            // Re-enable submit button
+            document.getElementById("submit_button").disabled = false;
             return;
         }
 
@@ -653,6 +686,9 @@ function submitLoginForm() {
 
     try {
 
+        // Disable submit button
+        document.getElementById("submit_button").disabled = true;
+
         var errors = false;
 
         var error_msg = "There were problems with your submission:";
@@ -673,7 +709,7 @@ function submitLoginForm() {
             }
             else {
                 if (!isValidEmail(email)) {
-
+                    errors = true;
                     error_msg += "\n - Invalid email format.";
                 }
             }
@@ -694,6 +730,8 @@ function submitLoginForm() {
         if (errors) {
 
             alert(error_msg);
+            // Re-enable submit button
+            document.getElementById("submit_button").disabled = false;
             return;
         }
 
@@ -751,7 +789,8 @@ function signup(user_profile) {
     try {
 
         // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/signup/";
+        //var url = "https://localhost:44369/api/user/signup/";
+        var url = "https://gi-api.azurewebsites.net/api/user/signup/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -790,6 +829,9 @@ function signup(user_profile) {
                                 msg = msg + "; Response: " + this.responseText;
                                 alert(msg);
                         }
+
+                        // Re-enable submit button
+                        document.getElementById("submit_button").disabled = false;
                         
                     }
 
@@ -820,7 +862,8 @@ function login(user_profile) {
     try {
 
         // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/login/";
+        //var url = "https://localhost:44369/api/user/login/";
+        var url = "https://gi-api.azurewebsites.net/api/user/login/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -859,6 +902,9 @@ function login(user_profile) {
                                 msg = msg + "; Response: " + this.responseText;
                                 alert(msg);
                         }
+
+                        // Re-enable submit button
+                        document.getElementById("submit_button").disabled = false;
 
                     }
 
@@ -900,6 +946,9 @@ function processJSON(jsontext) {
         if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
         if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
 
+        // Store JSON string
+        sessionStorage.setItem("GPIStoredProfile", jsontext);
+
         if (user_profile_json.SurveyCompleted) {
 
             // Get report
@@ -939,26 +988,26 @@ function processJSON(jsontext) {
 
             if (jsontext !== null) {
 
-                // Survey has been started
+                // Survey has been started - using stored session variable
                 serverQuestionList = JSON.parse(jsontext);
                 getQuestions();
             }
             else {
 
-                // This is start of survey
+                // Save questions locally to session variable
+                sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
+
                 writeInstructions();
 
             }
             
         }
 
-        // Store JSON string
-        sessionStorage.setItem("GPIStoredProfile", jsontext);
     }
 
     catch (err) {
 
-        alert(err.message + " in processReportJSON()");
+        alert(err.message + " in processJSON()");
 
     }
 }
@@ -970,7 +1019,8 @@ function updateAnswers(user_profile, continue_survey=true) {
         //api/User/UpdateAnswers
 
         // TODO: Change the url in the live version
-        var url = "https://localhost:44369/api/user/updateanswers/";
+        //var url = "https://localhost:44369/api/user/updateanswers/";
+        var url = "https://gi-api.azurewebsites.net/api/user/updateanswers/";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -1114,6 +1164,7 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
+        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
         textstr += "<h1>The GPI Survey</h1>";
         textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
@@ -1128,7 +1179,16 @@ function writeInstructions() {
         textstr += "<p>Ensure that each question is answered by clicking in the circle that reflects your answer. The questionnaire is spread across several pages. ";
         textstr += "Once you move on to the next page and also once the questionnaire is complete you will not be able to revisit or amend your answers.</p>";
 
-        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"Take Survey\" onclick=\"getQuestions()\"></div>";
+        if (surveyStarted()) {
+
+            verb = "Continue";
+        }
+        else {
+
+            verb = "Take";
+        }
+
+        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"" + verb + " Survey\" onclick=\"getQuestions()\"></div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -1189,6 +1249,7 @@ function writeQuestions() {
     try {
 
         textstr = "";
+        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
 
         textstr += getProgressBar();
 
@@ -1267,7 +1328,7 @@ function getProgressBar() {
         var completed = Math.floor(100 * n / N);
 
         textstr += "<progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
-        textstr += "<label for=\"progress\"> " + completed + "%</label >";
+        textstr += "<label for=\"progress\">&nbsp;" + completed + "%</label >";
 
         return textstr;
 
@@ -1390,6 +1451,30 @@ function getScore(myform, id) {
     }
 
 
+}
+
+/**
+ * @function
+ * @name surveyStarted
+ * @description 
+ * <p>Tests to see if survey has been started</p>
+ */
+function surveyStarted() {
+
+    try {
+
+        // Test if survey started
+        for (var i = 0; i < serverQuestionList.length; i++) {
+
+            if (serverQuestionList[i].Score > 0) return true;
+        }
+
+        return false;
+    }
+    catch (err) {
+
+        alert(err.message + " in surveyStarted()");
+    }
 }
 
 /**
@@ -1729,6 +1814,7 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
+        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
         textstr += "<h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h1>";
 
         // Navigation
