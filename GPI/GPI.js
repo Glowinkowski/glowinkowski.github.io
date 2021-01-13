@@ -1471,8 +1471,24 @@ function saveQuestions(continue_survey=true) {
         // Attach question list
         userProfile.Questions = localQuestionList;
 
-        // Call API to update questions
-        updateAnswers(userProfile, continue_survey);
+        // Check if any questions have been answered before calling API
+        var total_score = 0;
+        for (var i = 0; i < localQuestionList.length; i++) {
+
+            total_score = total_score + localQuestionList[i].Score;
+        }
+
+        if (total_score > 0) {
+
+            // Call API to update questions
+            updateAnswers(userProfile, continue_survey);
+
+        }
+        else {
+
+            alert("No questions answered");
+        }
+        
         
     }
     catch (err) {
