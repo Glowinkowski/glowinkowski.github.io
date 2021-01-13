@@ -474,13 +474,6 @@ var quadModel_commInterperStyle;
 var quadModel_feelSelfControl;
 
 /**
- * Array of Dimensions (with scores)
- * @type {Dimension[]}
- * @deprecated
- */
-var dimensionList;
-
-/**
  * Report object
  * @type {Report}
  */
