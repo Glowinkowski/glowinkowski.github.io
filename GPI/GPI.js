@@ -532,6 +532,9 @@ function logout() {
             // Delete session storage
             sessionStorage.removeItem("GPIStoredProfile");
 
+            // Delete password
+            sessionStorage.removeItem("GPIStoredPWD");
+
             if (sessionStorage.getItem("GPIStoredQuestions") !== null) {
 
                 sessionStorage.removeItem("GPIStoredQuestions");
@@ -664,6 +667,9 @@ function submitSignUpForm() {
             return;
         }
 
+        // Store user password
+        sessionStorage.setItem("GPIStoredPWD", pwd);
+
         var user_profile = new UserProfile(
             email,
             pwd,
@@ -742,6 +748,9 @@ function submitLoginForm() {
             document.getElementById("submit_button").disabled = false;
             return;
         }
+
+        // Store user password
+        sessionStorage.setItem("GPIStoredPWD", pwd);
 
         var user_profile = new UserProfile(
             email,
@@ -978,6 +987,9 @@ function processJSON(jsontext) {
         // Store JSON string
         sessionStorage.setItem("GPIStoredProfile", jsontext);
 
+        // Get stored password
+        var pwd = sessionStorage.getItem("GPIStoredPWD");
+
         if (user_profile_json.SurveyCompleted) {
 
             // Get report
@@ -991,7 +1003,7 @@ function processJSON(jsontext) {
             // If all OK
             userProfile = new UserProfile(
                 user_profile_json.Email,
-                user_profile_json.Password
+                pwd
             );
 
             userProfile.SurveyCompleted = true;
@@ -1007,7 +1019,7 @@ function processJSON(jsontext) {
             // If all OK
             userProfile = new UserProfile(
                 user_profile_json.Email,
-                user_profile_json.Password
+                pwd
             );
 
             userProfile.SurveyCompleted = false;
