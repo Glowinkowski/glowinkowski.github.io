@@ -1061,7 +1061,7 @@ function updateAnswers(user_profile, continue_survey=true) {
 
         //api/User/UpdateAnswers
 
-        // TODO: Change the url in the live version
+        // Changed the url to the live version
         //var url = "https://localhost:44369/api/user/updateanswers/";
         var url = "https://gi-api.azurewebsites.net/api/user/updateanswers/";
 
@@ -1085,7 +1085,7 @@ function updateAnswers(user_profile, continue_survey=true) {
 
                         if (num_updated <= 0) {
 
-                            alert("Could not save questions - possible server error");
+                            alert("No questions saved");
                         }
 
                         // Get next set of questions
