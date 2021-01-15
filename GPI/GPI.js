@@ -1973,9 +1973,11 @@ function writeElement(mystr) {
         // Write contents
         textstr = "";
         textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
-        textstr += "<h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h1>";
+        //textstr += "<h2>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h2>";
+        //textstr += "<h2>Your GPI Talent Report</h2>";
 
         // Navigation
+        /*
         textstr += "<div class=\"page_nav\">"
             + "<div class=\"link_box\">"
             + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
@@ -1984,6 +1986,7 @@ function writeElement(mystr) {
             + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
             + "</div>"
             + "</div>";
+            */
 
 
         textstr += "<h2>" + quadmodel.Name + "</h2>";
@@ -2033,6 +2036,7 @@ function writeElement(mystr) {
         }
 
         // Navigation
+        /*
         textstr += "<div class=\"page_nav\">"
             + "<div class=\"link_box\">"
             + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
@@ -2041,6 +2045,13 @@ function writeElement(mystr) {
             + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
             + "</div>"
             + "</div>";
+            */
+
+        // Navigation
+        textstr += "<div class=\"gpi_surv_button_box\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "</div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
