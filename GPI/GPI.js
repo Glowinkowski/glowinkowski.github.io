@@ -520,31 +520,54 @@ function init() {
  * @name logout
  * @description
  * <p>Logs the user out by deleting session variables and reloading page</p>
+ * @returns {boolean} True if user wishes to exit the GPI
  */
 function logout() {
 
     try {
         // Logout function
-        var logout = "Do you wish to log out? (Click OK if so)";
+        var logout = "Do you wish to exit the GPI? (Click OK if so)";
 
         if (confirm(logout)) {
 
-            // Delete session storage
-            sessionStorage.removeItem("GPIStoredProfile");
+            logoutGPI();
 
-            // Delete password
-            sessionStorage.removeItem("GPIStoredPWD");
-
-            if (sessionStorage.getItem("GPIStoredQuestions") !== null) {
-
-                sessionStorage.removeItem("GPIStoredQuestions");
-            }
+            return true;
 
         }
+
+        return false;
     }
     catch (err) {
 
         alert(err.message + " in logout()");
+    }
+}
+
+/**
+ * @function
+ * @name logoutGPI
+ * @description
+ * <p>Deletes session storage variables and effectively logs the user out</p>
+ */
+function logoutGPI() {
+    try {
+
+        // Delete session storage
+
+        // Delete profile
+        sessionStorage.removeItem("GPIStoredProfile");
+
+        // Delete password
+        sessionStorage.removeItem("GPIStoredPWD");
+
+        // Delete questions
+        sessionStorage.removeItem("GPIStoredQuestions");
+
+    }
+    catch (err) {
+
+        alert(err.message + " in logoutGPI()");
     }
 }
 
@@ -1101,7 +1124,14 @@ function updateAnswers(user_profile, continue_survey=true) {
                         }
                         else {
 
-                            writeInstructions();
+                            if (logout()) {
+
+                                location.reload();
+                            }
+                            else {
+
+                                getQuestions();
+                            }
                         }
                         
 
@@ -1223,7 +1253,7 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
+        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
         textstr += "<h1>The GPI Survey</h1>";
         textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
@@ -1313,7 +1343,7 @@ function writeQuestions() {
     try {
 
         textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
+        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\"  onclick=\"logout();\">Exit GPI</a></div>";
 
         textstr += getProgressBar();
 
@@ -1498,7 +1528,15 @@ function saveQuestions(continue_survey=true) {
         }
         else {
 
-            alert("No questions answered");
+            if (!continue_survey) {
+
+                if (logout()) {
+
+                    location.reload();
+                }
+
+            }
+            
         }
         
         
@@ -1934,7 +1972,7 @@ function writeElement(mystr) {
 
         // Write contents
         textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" onclick=\"logout();\">Log out</a></div>";
+        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
         textstr += "<h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h1>";
 
         // Navigation
