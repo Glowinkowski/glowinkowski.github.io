@@ -1,4 +1,8 @@
 :root {
+	--gpi_h1_col: #2e5979; /* GPI dark blue #2e5979 */
+	--gpi_h2_col: #2e5979; /* GPI dark blue #2e5979 */
+	--gpi_h3_col: #2e5979; /* GPI dark blue #2e5979 */
+	--gpi_h4_col: #2e5979; /* GPI dark blue #2e5979 */
 	--gpi_table_txt_col: #2e5979; /* Colour for the GPI survey table (GPI dark blue #2e5979) */
 	--gpi_table_bkg_col: #ffffff; /* Colour for the GPI survey table background */
 	--gpi_table_alt_col: #c4cfd5; /* Alternating colour for GPI survey table background (GPI grey #c4cfd5) */
@@ -12,7 +16,33 @@
 	--gpi_quad_marker_colour: #f0210a; /* GPI default : #f0210a */
 	--gpi_quad_text_colour: #ffffff; /* GPI default : #ffffff */
 	--gpi_link_col: #4788c2; /* GPI light blue : #4788c2 */
-	--edease_blue: #59c1d7;
+}
+
+.gpi_h1 {
+	color: var(--gpi_h1_col);
+	font-weight: bold;
+	font-size: 28px;
+	text-align: center;
+}
+
+.gpi_h2 {
+	color: var(--gpi_h2_col);
+	font-weight: bold;
+	font-size: 24px;
+	text-align: center;
+}
+
+.gpi_h3 {
+	color: var(--gpi_h3_col);
+	font-weight: bold;
+	font-size: 20px;
+	text-align: center;
+}
+
+.gpi_h4 {
+	color: var(--gpi_h4_col);
+	font-weight: bold;
+	font-size: 16px;
 }
 
 .gpi_main {
