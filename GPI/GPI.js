@@ -1989,7 +1989,7 @@ function writeElement(mystr) {
             */
 
 
-        textstr += "<div class=\"gpi_h1\">" + quadmodel.Name + "</div>";
+        textstr += "<h1 class=\"gpi_h1\">" + quadmodel.Name + "</h1>";
         textstr += "<div align='center'>";
         textstr += "<canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'></canvas>";
         textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
@@ -1997,7 +1997,7 @@ function writeElement(mystr) {
 
         textstr += quadmodel.QText;
 
-        textstr += "<div class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</div>";
+        textstr += "<h2 class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";
 
         for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
 
@@ -2005,8 +2005,8 @@ function writeElement(mystr) {
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "<div class=\"gpi_h3\">" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
-            textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "</div>";
+            textstr += "<h3 class=\"gpi_h3\">" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "</h3>";
 
             textstr += "<div align='center'>";
             textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
@@ -2017,7 +2017,7 @@ function writeElement(mystr) {
             textstr += "<div>&nbsp;</div>";
         }
 
-        textstr += "<div class=\"gpi_h2\">" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</div>";
+        textstr += "<h2 class=\"gpi_h2\">" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</h2>";
 
         for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
 
@@ -2025,8 +2025,8 @@ function writeElement(mystr) {
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "<div class=\"gpi_h3\">" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
-            textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "</div>";
+            textstr += "<h3 class=\"gpi_h3\">" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "</h3>";
 
             textstr += "<div align='center'>";
             textstr += "<canvas id='" + id_str + "' width='" + sten_width + "' height='" + sten_height + "' style='display: none'></canvas>";
