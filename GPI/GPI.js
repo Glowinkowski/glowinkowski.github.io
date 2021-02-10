@@ -474,6 +474,12 @@ var quadModel_commInterperStyle;
 var quadModel_feelSelfControl;
 
 /**
+ * Creativity and Entrepreneurship model
+ * @type {QuadrantModel}
+ */
+var quadModel_creatEntrepreneur;
+
+/**
  * Report object
  * @type {Report}
  */
@@ -1692,6 +1698,7 @@ function getReport(reportObj) {
         quadModel_probSolveImpStyle = myReport.QuadrantModels.find(x => x.Name === "Problem Solving & Implementation Style");
         quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication & Interpersonal Style");
         quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings & Self-Control");
+        quadModel_creatEntrepreneur = myReport.QuadrantModels.find(x => x.Name === "Creativity & Entrepreneurship");
 
         // Set formating for quadrant element
         assignQuadFormating();
@@ -1905,8 +1912,8 @@ function extractBlue4Model(b4json) {
 /**
  * @function
  * @name writeElement
- * @param {string} mystr String specifying the QuadrantModel to display
- * @description <p>Writes the QuadrantModel element to the web page</p>
+ * @param {string} mystr String specifying the GPI Model to display
+ * @description <p>Writes the GPI Model element to the web page</p>
  * <p>The possible values of 'mystr' are currently:</p>
  * <ul>
  * <li>'problem_quad'</li>
@@ -1955,6 +1962,15 @@ function writeElement(mystr) {
                 quadmodel = quadModel_feelSelfControl;
 
                 prev = "communication_quad";
+                next = "entrepreneur_quad";
+
+                break;
+
+            case "entrepreneur_quad":
+
+                quadmodel = quadModel_creatEntrepreneur;
+
+                prev = "feelings_quad";
                 next = "problem_quad";
 
                 break;
