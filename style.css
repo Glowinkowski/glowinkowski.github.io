@@ -126,6 +126,10 @@ a {
         box-sizing: border-box;
     }
 
+a.plus:hover {
+    cursor:pointer;
+}
+
 hr {
     margin-top: 20px;
     margin-bottom: 20px;
