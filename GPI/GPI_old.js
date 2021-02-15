@@ -1986,9 +1986,6 @@ function writeElement(mystr) {
 
         }
 
-        // Index for text paragraphs
-        var text_id = 0;
-
         // Write contents
         textstr = "";
         textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
@@ -2014,30 +2011,11 @@ function writeElement(mystr) {
         textstr += "<img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
         textstr += "</div>";
 
-        text_id++;  // Index for text paragraphs
-
-        // Identifiers for text paragraphs
-        more_text_id = "more_" + text_id;
-        less_text_id = "less_" + text_id;
-
-        textstr += "<div id=\"" + less_text_id + "\">";
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
-        textstr += "</div>";
-
-        textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
-
         textstr += quadmodel.QText;
-
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
-
-        textstr += "</div>";
 
         textstr += "<h2 class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";
 
         for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
-
-            text_id++;  // Index for text paragraphs
 
             id_str = quadmodel.xDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
@@ -2051,33 +2029,13 @@ function writeElement(mystr) {
             textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
             textstr += "</div>";
 
-            // Identifiers for text paragraphs
-            more_text_id = "more_" + text_id;
-            less_text_id = "less_" + text_id;
-
-            textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
-            textstr += "</div>";
-
-            textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
-
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
-
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
-
             textstr += "<div>&nbsp;</div>";
-
-            textstr += "</div>";
-
-            
         }
 
         textstr += "<h2 class=\"gpi_h2\">" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</h2>";
 
         for (var i = 0; i < quadmodel.yDimension.SubDimensions.length; i++) {
-
-            text_id++;  // Index for text paragraphs
 
             id_str = quadmodel.yDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
@@ -2091,26 +2049,8 @@ function writeElement(mystr) {
             textstr += "<img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
             textstr += "</div>";
 
-            // Identifiers for text paragraphs
-            more_text_id = "more_" + text_id;
-            less_text_id = "less_" + text_id;
-
-            textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
-            textstr += "</div>";
-
-            textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
-
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
-
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
-
             textstr += "<div>&nbsp;</div>";
-
-            textstr += "</div>";
-
-            
         }
 
         // Navigation
@@ -2159,25 +2099,6 @@ function writeElement(mystr) {
         alert(err.message + " in writeElement()");
 
     }
-}
-
-
-function toggleHidden(show_id, hide_id) {
-
-    try {
-
-        var show = document.getElementById(show_id);
-        var hide = document.getElementById(hide_id);
-
-        show.style.display = "inline";
-        hide.style.display = "none";
-
-    }
-    catch (err) {
-
-        alert(err.message + " in toggleHidden(show, hide)");
-    }
-
 }
 
 /**
