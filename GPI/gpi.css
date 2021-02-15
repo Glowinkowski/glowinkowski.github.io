@@ -198,6 +198,15 @@ input:hover {
 	font-family: 'Open Sans', sans-serif;
 }
 
+.plus {
+	font-display: inherit;
+	display: inline;
+}
+
+	.plus:hover {
+		cursor: pointer;
+	}
+
 @media only screen and (max-width: 768px) {
 	.content_box {
 		width: 100%;
