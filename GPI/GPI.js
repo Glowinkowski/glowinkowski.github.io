@@ -1057,7 +1057,8 @@ function processJSON(jsontext) {
 
             userProfile.SurveyCompleted = true;
 
-            writeElement("problem_quad");
+            // Go to HOME page
+            writeElement("home");
 
         }
         else {
@@ -1936,18 +1937,12 @@ function extractBlue4Model(b4json) {
  * @description <p>Writes the GPI Model element to the web page</p>
  * <p>The possible values of 'mystr' are currently:</p>
  * <ul>
+ * <li>'home'</li>
  * <li>'problem_quad'</li>
  * <li>'communication_quad'</li>
  * <li>'feelings_quad'</li>
+ * <li>'career'</li>
  * </ul>
- * @see quadModel_probSolveImpStyle
- * @see quadModel_commInterperStyle
- * @see quadModel_feelSelfControl
- * @see myReport
- * @see quad_width
- * @see quad_height
- * @see sten_width
- * @see sten_height
  */
 function writeElement(mystr) {
 
@@ -1956,15 +1951,26 @@ function writeElement(mystr) {
         var quadmodel;
         var prev;
         var next;
+        var is_quad = false;
+        var is_home = false;
+        var is_career = false;
 
         switch (mystr) {
+
+            case "home":
+
+                is_home = true;
+
+                break;
 
             case "problem_quad":
 
                 quadmodel = quadModel_probSolveImpStyle;
 
-                prev = "feelings_quad";
+                prev = "home";
                 next = "communication_quad";
+
+                is_quad = true;
 
                 break;
 
@@ -1975,6 +1981,8 @@ function writeElement(mystr) {
                 prev = "problem_quad";
                 next = "feelings_quad";
 
+                is_quad = true;
+
                 break;
 
             case "feelings_quad":
@@ -1984,6 +1992,8 @@ function writeElement(mystr) {
                 prev = "communication_quad";
                 next = "entrepreneur_quad";
 
+                is_quad = true;
+
                 break;
 
             case "entrepreneur_quad":
@@ -1991,14 +2001,20 @@ function writeElement(mystr) {
                 quadmodel = quadModel_creatEntrepreneur;
 
                 prev = "feelings_quad";
-                next = "problem_quad";
+                next = "career";
+
+                is_quad = true;
 
                 break;
 
-            case "leadership":
+            case "career":
 
-                writeLeadership();
-                return;
+                prev = "entrepreneur_quad";
+                next = "home";
+
+                is_career = true;
+
+                break;
 
             default:
 
@@ -2006,31 +2022,167 @@ function writeElement(mystr) {
 
         }
 
-        // Index for text paragraphs
-        var text_id = 0;
+        // If home
+        if (is_home) {
 
-        // Write menu
+            writeHome();
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+        // If quadrant model
+        if (is_quad) {
+
+            writeQuadrant(quadmodel, next, prev);
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+        // If career themes model
+        if (is_career) {
+
+            writeCareer(next, prev);
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeElement()");
+
+    }
+}
+
+/**
+ * @function
+ * @name writeMenu
+ * @returns {string} HTML string 
+ * @description <p>Generates the HTML string for generating the navigation menu</p>
+ */
+function writeMenu() {
+
+    try {
+
+        // Write menu component
         textstr = "";
-
         textstr += "<div class=\"GPI_menu\">";
         textstr += "<div class=\"GPI_burger_bar\">";
         textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><i class=\"fa fa-bars\"></i></a>";
         textstr += "</div>";
         textstr += "<div id=\"GPI_dropdown_id\" class=\"GPI_dropdown\" style=\"display:none\">";
-        textstr += "<a >Home</a><br />";
+        textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
         textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
         textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
         textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
         textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
-        textstr += "<a >Career Themes</a><br />";
+        textstr += "<a onclick=\"writeElement('career');\">Career Themes</a><br />";
         textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
         textstr += "</div>";
         textstr += "</div>";  
 
+        return textstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeMenu()");
+    }
+}
+
+/**
+ * @function
+ * @name writeHome
+ * @description <p>Generates the HTML string for generating the home page</p>
+ */
+function writeHome() {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
         textstr += "<div>&nbsp;</div>";
 
-        // Write contents
-        // textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
+        textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator</h1>";
+        textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
+
+        textstr += "<div>&nbsp;</div>";
+
+        textstr += "<h3 class=\"gpi_h3\">Profile for</h3>";
+
+        textstr += "<h2 class=\"gpi_h2\">" + myReport.FirstName + " " + myReport.LastName + "</h2>";
+
+        textstr += "<div>&nbsp;</div>";
+
+        textstr += "<h3 class=\"gpi_h3\">Contents:</h3>";
+
+        textstr += "<div align='center'>";
+        textstr += "<a class=\"gpi_link\" onclick=\"writeElement('problem_quad');\">Problem Solving / Implementation</a><br />";
+        textstr += "<div>&nbsp;</div><div>&nbsp;</div>";
+        textstr += "<a class=\"gpi_link\" onclick=\"writeElement('communication_quad');\">Communication / Interpersonal</a><br />";
+        textstr += "<div>&nbsp;</div><div>&nbsp;</div>";
+        textstr += "<a class=\"gpi_link\" onclick=\"writeElement('feelings_quad');\">Feelings / Self-Control</a><br />";
+        textstr += "<div>&nbsp;</div><div>&nbsp;</div>";
+        textstr += "<a class=\"gpi_link\" onclick=\"writeElement('entrepreneur_quad');\">Creativity / Entrepreneurship</a>";
+        textstr += "</div>";
+
+        textstr += "<div>&nbsp;</div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeHome()");
+    }
+}
+
+/**
+ * @function
+ * @name writeQuadrant
+ * @param {QuadrantModel} quadmodel The QuadrantModel object to render
+ * @param {string} next String for next element in report
+ * @param {string} prev String for previous element in report
+ * @description <p>Renders the page for a Quadrant model</p>
+ * @see quadModel_probSolveImpStyle
+ * @see quadModel_commInterperStyle
+ * @see quadModel_feelSelfControl
+ * @see myReport
+ * @see quad_width
+ * @see quad_height
+ * @see sten_width
+ * @see sten_height
+ */
+function writeQuadrant(quadmodel, next, prev) {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "<div>&nbsp;</div>";
+
+        // Write Quadrant component
+
+        // Index for text paragraphs
+        var text_id = 0;
 
         textstr += "<h1 class=\"gpi_h1\">" + quadmodel.Name + "</h1>";
         textstr += "<div align='center'>";
@@ -2094,7 +2246,6 @@ function writeElement(mystr) {
 
             textstr += "</div>";
 
-            
         }
 
         textstr += "<h2 class=\"gpi_h2\">" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions</h2>";
@@ -2134,7 +2285,7 @@ function writeElement(mystr) {
 
             textstr += "</div>";
 
-            
+
         }
 
         // Navigation
@@ -2160,18 +2311,47 @@ function writeElement(mystr) {
 
         }
 
-        // Scroll to top
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+    catch (err) {
 
+        alert(err.message + " in writeMenu()");
+    }
+}
+
+/**
+ * @function
+ * @name writeCareer
+ * @param {string} next String for next element in report
+ * @param {string} prev String for previous element in report
+ * @description <p>Renders the page for the Career themes model</p>
+ */
+function writeCareer(next, prev) {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "<div>&nbsp;</div>";
+
+        textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
+
+        // Navigation
+        textstr += "<div class=\"gpi_surv_button_box\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "</div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
 
     }
     catch (err) {
 
-        alert(err.message + " in writeElement()");
-
+        alert(err.message + " in writeCareer()");
     }
 }
+
 
 /**
  * @function

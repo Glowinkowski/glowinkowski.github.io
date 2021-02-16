@@ -1,8 +1,8 @@
 :root {
-	--gpi_h1_col: #2e5979; /* GPI dark blue #2e5979 */
-	--gpi_h2_col: #2e5979; /* GPI dark blue #2e5979 */
-	--gpi_h3_col: #2e5979; /* GPI dark blue #2e5979 */
-	--gpi_h4_col: #2e5979; /* GPI dark blue #2e5979 */
+	--gpi_h1_col: #2e5979; /* <h1> text colour */
+	--gpi_h2_col: #2e5979; /* <h2> text colour */
+	--gpi_h3_col: #2e5979; /* <h3> text colour */
+	--gpi_h4_col: #2e5979; /* <h4> text colour */
 	--gpi_table_txt_col: #2e5979; /* Colour for the GPI survey table (GPI dark blue #2e5979) */
 	--gpi_table_bkg_col: #ffffff; /* Colour for the GPI survey table background */
 	--gpi_table_alt_col: #c4cfd5; /* Alternating colour for GPI survey table background (GPI grey #c4cfd5) */
@@ -24,6 +24,18 @@
 	--gpi_menu_item_bkg_col: #000333; /* Colour for the navigation menu bar text */
 	--gpi_link_hover_col: #ff0000; /* Colour for the link hover colour */
 }
+
+.gpi_link {
+	color: var(--gpi_link_col);
+	border: 2px solid var(--gpi_link_col);
+	border-radius: 24px;
+	padding: 6px;
+}
+
+	.gpi_link:hover {
+		color: var(--gpi_link_hover_col);
+		cursor: pointer;
+	}
 
 .GPI_menu {
 	width: 100%;
