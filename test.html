@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>The Global Predisposition Indicator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="style.css">
+    <!--To use Font Awesome icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
+    <style>
+
+        .GPI_menu {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+        }
+
+        .GPI_burger_bar {
+            background-color: black;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+            .GPI_burger_bar a {
+                color: white;
+            }
+
+        .GPI_dropdown {
+            width: 400px;
+            color:white;
+            background-color: #333;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+            .GPI_dropdown a {
+                color: white;
+                line-height: 200%;
+            }
+
+                .GPI_dropdown a:hover {
+                    color: red;
+                }
+    </style>
+
+    <script>
+        function toggleMenu(menu_id) {
+
+            try {
+
+                var dropdown = document.getElementById(menu_id);
+
+                if (dropdown.style.display === "none") {
+
+                    dropdown.style.display = "block";
+                }
+                else {
+
+                    dropdown.style.display = "none";
+
+                }
+
+            }
+            catch (err) {
+
+                alert(err.message + " in toggleHidden(show, hide)");
+            }
+
+        }
+    </script>
+
+
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul class="nav">
+                    <li class="nav"><a href="login.html">Login</a></li>
+                    <li class="nav"><a href="signup.html">Sign up</a></li>
+                    <li class="nav"><a href="http://www.glowinkowski.com/" target="_blank">Glowinkowski International</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+
+        <script type="text/javascript" charset="utf-8" src="GPI/GPI.js"></script>
+        <div id="GPI_content" class="content_box">
+            <div class="GPI_menu">
+                <div class="GPI_burger_bar">
+                    <a href="javascript:void(0);" onclick="toggleMenu('GPI_dropdown_id')"><i class="fa fa-bars"></i></a>
+                </div>
+                <div id="GPI_dropdown_id" class="GPI_dropdown" style="display:none">
+                    <a href="#">Home</a><br />
+                    <a href="#">Problem Solving & Implementation Style</a><br />
+                    <a href="#">Communication & Interpersonal Style</a><br />
+                    <a href="#">Feelings & Self-Control</a><br />
+                    <a href="#">Creativity & Entrepreneurship</a><br />
+                    <a href="#">Career Themes</a><br />
+                    <a href="#">Exit GPI</a><br />
+                </div>
+            </div>
+
+            <h1>Welcome to the GPI!</h1>
+            <h2>The Global Predisposition Indicator (GPI<sup style="font-size:8pt">TM</sup>)</h2>
+            <hr />
+            <h4>About the GPI</h4>
+            <hr />
+
+            <ul class="top">
+                <li class="text">The GPI helps people assess their behavioural predispositions and develop an understanding of their natural or preferred style of behaviour</li>
+                <li class="text">It is less about what people do and more about who they are in terms of:</li>
+                <ul class="sub">
+                    <li class="text">Problem Solving and Implementation</li>
+                    <li class="text">Communication and Interpersonal Style</li>
+                    <li class="text">Feelings and Self control</li>
+                    <li class="text">Entrepreneurship Style</li>
+                    <li class="text">Career drivers</li>
+                    <li class="text">Relationships</li>
+                    <li class="text">Leadership</li>
+                </ul>
+                <li class="text">The GPI was developed by Dr S Glowinkowski in the early 90s. Many thousands of senior global leaders have completed the GPI questionnaire and received in-depth feedback</li>
+                <li class="text">The GPI helps people establish clarity for themselves, achieve potential, improve their performance and build confidence</li>
+                <li class="text">It is used in the following context:</li>
+                <ul class="sub">
+                    <li class="text">Individual coaching</li>
+                    <li class="text">Leadership development</li>
+                    <li class="text">Team-working</li>
+                    <li class="text">Recruitment</li>
+                    <li class="text">Culture change in organisations</li>
+                    <li class="text">Careers guidance</li>
+                    <li class="text">The school and learning environment</li>
+                    <li class="text">Talent management</li>
+                    <li class="text">Succession planning</li>
+                    <li class="text">Family counselling</li>
+                    <li class="text">Relationship building</li>
+                </ul>
+            </ul>
+
+        </div>
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>The 'Global Predisposition Indicator (GPI)' is traded marked by Glowinkowski International Ltd.</p>
+    </div>
+
+</body>
+</html>

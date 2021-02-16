@@ -9,6 +9,8 @@
  *    <li>Logs in an existing user</li>
  *    <li>Renders the GPI survey questionnaire</li>
  *    <li>Renders the GPI talent report</li>
+ *    <li>Manages page navigation</li>
+ *    <li>Provides HTML manipulation for showing/hiding elements</li>
  * </ul>
  * @author M.P. Vaughan
  * @version 1.01
@@ -456,6 +458,18 @@ var sten_width;
 var sten_height;
 
 /**
+ * Boolean indicating if quadrant circles should be plotted
+ * @type {boolean}
+ */
+var plot_circle = true;
+
+/**
+ * Boolean indicating if quadrant shadows should be plotted
+ * @type {boolean}
+ */
+var plot_shadow = true;
+
+/**
  * Problem solving and implementation style model
  * @type {QuadrantModel}
  */
@@ -520,6 +534,12 @@ function init() {
     }
 
 }
+
+/*
+ * ===========================================================
+ *          LOGGING OUT (DELETE SESSION VARIABLES)
+ * ===========================================================
+ */
 
 /**
  * @function
@@ -1082,6 +1102,12 @@ function processJSON(jsontext) {
     }
 }
 
+/*
+ * ===========================================================
+ *                USER SURVEY FUNCTIONS
+ * ===========================================================
+ */
+
 /**
  * @function
  * @name updateAnswer
@@ -1186,12 +1212,6 @@ function updateAnswers(user_profile, continue_survey=true) {
         alert(err.message + " in signup(user_profile)");
     }
 }
-
-/*
- * ===========================================================
- *                USER SURVEY FUNCTIONS
- * ===========================================================
- */
 
 /**
  * @function
@@ -1905,7 +1925,7 @@ function extractBlue4Model(b4json) {
 
 /*
  * ===========================================================
- *                USER REPORT FUNCTIONS
+ *                PAGE GENERATION FUNCTIONS
  * ===========================================================
  */
 
@@ -1989,24 +2009,28 @@ function writeElement(mystr) {
         // Index for text paragraphs
         var text_id = 0;
 
-        // Write contents
+        // Write menu
         textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
-        //textstr += "<h2>" + myReport.FirstName + " " + myReport.LastName + " Talent Report</h2>";
-        //textstr += "<h2>Your GPI Talent Report</h2>";
 
-        // Navigation
-        /*
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
-            */
+        textstr += "<div class=\"GPI_menu\">";
+        textstr += "<div class=\"GPI_burger_bar\">";
+        textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><i class=\"fa fa-bars\"></i></a>";
+        textstr += "</div>";
+        textstr += "<div id=\"GPI_dropdown_id\" class=\"GPI_dropdown\" style=\"display:none\">";
+        textstr += "<a >Home</a><br />";
+        textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
+        textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
+        textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
+        textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
+        textstr += "<a >Career Themes</a><br />";
+        textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
+        textstr += "</div>";
+        textstr += "</div>";  
 
+        textstr += "<div>&nbsp;</div>";
+
+        // Write contents
+        // textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
 
         textstr += "<h1 class=\"gpi_h1\">" + quadmodel.Name + "</h1>";
         textstr += "<div align='center'>";
@@ -2114,18 +2138,6 @@ function writeElement(mystr) {
         }
 
         // Navigation
-        /*
-        textstr += "<div class=\"page_nav\">"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + prev + "')\"><img src=\"images/prev.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "<div class=\"link_box\">"
-            + "<a onclick=\"writeElement('" + next + "')\"><img src=\"images/next.png\" class=\"nav_arrow\"/></a>"
-            + "</div>"
-            + "</div>";
-            */
-
-        // Navigation
         textstr += "<div class=\"gpi_surv_button_box\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
@@ -2161,7 +2173,43 @@ function writeElement(mystr) {
     }
 }
 
+/**
+ * @function
+ * @name toggleMenu
+ * @param {string} menu_id String specifying the element id for the menu
+ * @description<p>Shows or hides the dropdown navigation menu</p>
+ */
+function toggleMenu(menu_id) {
 
+    try {
+
+        var dropdown = document.getElementById(menu_id);
+
+        if (dropdown.style.display === "none") {
+
+            dropdown.style.display = "block";
+        }
+        else {
+
+            dropdown.style.display = "none";
+
+        }
+
+    }
+    catch (err) {
+
+        alert(err.message + " in toggleHidden(show, hide)");
+    }
+
+}
+
+/**
+ * @function
+ * @name toggleHidden
+ * @param {string} show_id String specifying the id of the element to show
+ * @param {string} hide_id String specifying the id of the element to hide
+ * @description <p>Toggles the visibility of HTML elements. Used to show or hide extra text</p>
+ */
 function toggleHidden(show_id, hide_id) {
 
     try {
@@ -2207,6 +2255,12 @@ function writeLeadership() {
     }
 }
 
+/*
+ * ===========================================================
+ *                GRAPHICS FUNCTIONS
+ * ===========================================================
+ */
+
 /**
  * @function
  * @name assignQuadFormating
@@ -2229,6 +2283,8 @@ function writeLeadership() {
  * @see quad_height
  * @see sten_width
  * @see sten_height
+ * @see plot_circle
+ * @see plot_shadow
  */
 function assignQuadFormating() {
 
@@ -2284,7 +2340,7 @@ function assignQuadFormating() {
 
         quad_text_colour = rs.getPropertyValue('--gpi_quad_text_colour');
 
-        if (quad_marker_colour.length == 0) {
+        if (quad_text_colour.length == 0) {
 
             quad_text_colour = "#ffffff";
         }
@@ -2292,7 +2348,13 @@ function assignQuadFormating() {
         quad_text_size = 26;
         quad_text_font = quad_text_size + "px Arial";
 
-        quad_label_text_colour = "#ffffff";
+        quad_label_text_colour = rs.getPropertyValue('--gpi_quad_label_text_colour');
+
+        if (quad_label_text_colour.length == 0) {
+
+            quad_label_text_colour = "#ffffff";
+        }
+
         quad_label_text_size = 24;
         quad_label_text_font = quad_label_text_size + "px Arial";
 
@@ -2303,6 +2365,47 @@ function assignQuadFormating() {
         // Canvas dimensions for sten scores
         sten_width = 900; //1000;
         sten_height = 220;
+
+        // Set booleans
+        // --gpi_quad_shadow_on
+
+        plot_circle_str = rs.getPropertyValue('--gpi_quad_show_circle');
+
+        if (plot_circle_str.length == 0) {
+
+            plot_circle = true;
+        }
+        else {
+
+            if (plot_circle_str > 0) {
+
+                plot_circle = true;
+
+            }
+            else {
+
+                plot_circle = false;
+            }
+        }
+
+        plot_shadow_str = rs.getPropertyValue('--gpi_quad_shadow_on');
+
+        if (plot_shadow_str.length == 0) {
+
+            plot_shadow = true;
+        }
+        else {
+
+            if (plot_shadow_str > 0) {
+
+                plot_shadow = true;
+
+            }
+            else {
+
+                plot_shadow = false;
+            }
+        }
 
     }
     catch (err) {
@@ -2317,7 +2420,8 @@ function assignQuadFormating() {
  * @name drawQuadrant
  * @param {QuadrantModel} quadrant - the QuadrantModel to display
  * @description
- * <p>Draws the Quadrant model visualisation</p>
+ * <p>Draws the Quadrant model visualisation. This is configurable from CSS by setting
+ * JavaScript global variables from the CSS root variables.</p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2413,21 +2517,29 @@ function drawQuadrant(quadrant) {
         // Move origin to the centre of the canvas
         ctx.translate(x0, y0);
 
-        // Shadow definition
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "black";
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+        if (plot_shadow) {
 
-        // Circle definition
-        ctx.fillStyle = quad_circle_colour;
-        ctx.lineWidth = 2;
+            // Shadow definition
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "black";
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
 
-        // Draw circle
-        ctx.beginPath();
-        ctx.arc(0, 0, r1, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+        }  
+
+        if (plot_circle) {
+
+            // Circle definition
+            ctx.fillStyle = quad_circle_colour;
+            ctx.lineWidth = 2;
+
+            // Draw circle
+            ctx.beginPath();
+            ctx.arc(0, 0, r1, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+        }
 
         // Radial gradient fill for square
         var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
@@ -2441,11 +2553,13 @@ function drawQuadrant(quadrant) {
 
         // Draw gridlines
         ctx.strokeStyle = quad_grid_colour;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
+        if (plot_shadow) {
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
         // vertical
-
         for (var i = 0; i < 13; i++) {
 
             var x = -r2 + i * grid_space;
@@ -2468,10 +2582,15 @@ function drawQuadrant(quadrant) {
         }
 
         // Write quadrant text
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
 
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }
+        
         ctx.font = quad_text_font;
         ctx.fillStyle = quad_text_colour;
 
@@ -2490,9 +2609,15 @@ function drawQuadrant(quadrant) {
 
         // Draw axes and label boxes
         ctx.fillStyle = quad_axis_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+
+        }
+        
 
         // Note order important to get shadows right
 
@@ -2523,9 +2648,14 @@ function drawQuadrant(quadrant) {
 
         ctx.font = quad_label_text_font;
         ctx.fillStyle = quad_label_text_colour;
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }       
 
         // Top label text
         ctx.fillText(top_text, -ttw / 2, -r1 + 0.4 * quad_label_text_size);
@@ -2541,10 +2671,15 @@ function drawQuadrant(quadrant) {
 
         // Plot marker
         ctx.fillStyle = quad_marker_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
 
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+
+        }
+        
         // Turn on transparency
         ctx.globalAlpha = 0.8;
 
@@ -2654,27 +2789,35 @@ function drawSten(dimension) {
         // Move origin to the centre of the canvas
         ctx.translate(x0, y0);
 
-        // Shadow definition
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "black";
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+        if (plot_shadow) {
 
-        // Circle definition
-        ctx.fillStyle = quad_circle_colour;
+            // Shadow definition
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "black";
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
 
-        // Draw circles
-        // Syntax: arc(x, y, r, sAngle, eAngle, counterclockwise)
+        }       
 
-        ctx.beginPath();
-        ctx.arc(r4 - r1, 0, r4, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+        if (plot_circle) {
 
-        ctx.beginPath();
-        ctx.arc(r1 - r4, 0, r4, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+            // Circle definition
+            ctx.fillStyle = quad_circle_colour;
+
+            // Draw circles
+            // Syntax: arc(x, y, r, sAngle, eAngle, counterclockwise)
+
+            ctx.beginPath();
+            ctx.arc(r4 - r1, 0, r4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.arc(r1 - r4, 0, r4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+        }
 
         // Radial gradient fill for square
         var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
@@ -2689,11 +2832,15 @@ function drawSten(dimension) {
         // Draw gridlines
         ctx.lineWidth = 2;
         ctx.strokeStyle = quad_grid_colour;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
+        if (plot_shadow) {
+
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+        }
+        
         // vertical
-
         for (var i = 0; i < 13; i++) {
 
             var x = -r2 + i * grid_space;
@@ -2717,9 +2864,13 @@ function drawSten(dimension) {
 
         // Draw axes and label boxes
         ctx.fillStyle = quad_axis_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+
+        if (plot_shadow) {
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+        }
+        
 
         // Note order important to get shadows right
         // Syntax: fillRect(x, y, width, height)
@@ -2749,9 +2900,14 @@ function drawSten(dimension) {
 
         ctx.font = quad_label_text_font;
         ctx.fillStyle = quad_label_text_colour;
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }       
 
         // Left label text
         ctx.fillText(left_text, -r3 - ltw / 2, 0.4 * quad_label_text_size);
@@ -2761,10 +2917,13 @@ function drawSten(dimension) {
 
         // Plot marker
         ctx.fillStyle = quad_marker_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
 
+        if (plot_shadow) {
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+        }
+        
         // Turn on transparency
         ctx.globalAlpha = 0.8;
 
