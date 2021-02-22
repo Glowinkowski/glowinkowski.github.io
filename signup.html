@@ -75,6 +75,42 @@
                         <input class="form-control" id="access_code" type="text" />
                     </div>
                 </div>
+
+                <!--Location information-->
+                <h4>Location</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="country">Country</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="country"  onchange="countrySelected()">
+                            <option value="" selected disabled hidden>Select your country</option>
+                            <option value="1">Ireland</option>
+                            <option value="2">Nigeria</option>
+                            <option value="3">United Kingdom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="region">Region/Province</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="region" onchange="regionSelected()">
+                            <!--To be allocated-->
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="state">State/County</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="state">
+                            <!--To be allocated-->
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!--Profile information-->
                 <h4>Profile information</h4>
                 <hr />
                 <div class="form-group">
@@ -102,31 +138,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label" for="ethnicity">Ethnicity</label>
-                    <div class="col-md-10">
-                        <select class="form-control" id="ethnicity">
-                            <option value="1">Prefer not to say</option>
-                            <option value="2">White British</option>
-                            <option value="3">White Irish</option>
-                            <option value="4">Other White background</option>
-                            <option value="5">White and Black Caribbean</option>
-                            <option value="6">White and Black African</option>
-                            <option value="7">White and Asian</option>
-                            <option value="8">Asian British</option>
-                            <option value="9">Indian</option>
-                            <option value="10">Pakistani</option>
-                            <option value="11">Bangladeshi</option>
-                            <option value="12">Other Asian background</option>
-                            <option value="13">Black British</option>
-                            <option value="14">Black Caribbean</option>
-                            <option value="15">African</option>
-                            <option value="16">Other Black background</option>
-                            <option value="17">Chinese</option>
-                            <option value="18">Other ethnic group</option>
-                        </select>
-                    </div>
-                </div>
+                
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input id="submit_button" type="button" class="btn btn-default" value="Sign-up" onclick="submitSignUpForm()" />
