@@ -2589,8 +2589,8 @@ function writeHome() {
 
         textstr += "<div class=\"gpi_content\">";
 
-        textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator</h1>";
-        textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
+        textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator (GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
+        //textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
 
         textstr += "<div>&nbsp;</div>";
 
