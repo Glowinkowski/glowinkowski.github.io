@@ -239,6 +239,8 @@
 	top: 65px;
 	width: 400px;
 	text-align: left;
+	font-size: var(--gpi_text_size);
+	font-family: var(--gpi_font);
 	color: var(--gpi_menu_text_col);
 	background-color: var(--gpi_menu_item_bkg_col);
 	padding-left: 10px;
@@ -453,15 +455,15 @@ input:hover {
 	}
 
 	.col-md-10 {
-		width: 83.33333333%;
+		width: 75%;
 	}
 
 	.col-md-2 {
-		width: 16.66666667%;
+		width: 25%;
 	}
 
 	.col-md-offset-2 {
-		margin-left: 16.66666667%;
+		margin-left: 25%;
 	}
 	
 }
