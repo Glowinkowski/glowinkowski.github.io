@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>The Global Predisposition Indicator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="style.css">
+    <!--To use Font Awesome icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="GPI/gpi.css">
+    <!-- END INCLUDE-->
+
+</head>
+<body>
+
+    <div class="header">
+        <div class="headerbar">
+            <div class="logoContainer">
+                <a href="index.html"><img class="logo" src="images/GI_Logo.png" /></a>
+            </div>
+            <div class="linkContainer">
+                <ul class="nav">
+                    <li class="nav"><a href="login.html">Login</a></li>
+                    <li class="nav"><a href="signup.html">Sign up</a></li>
+                    <li class="nav"><a href="http://www.glowinkowski.com/" target="_blank">GI Website</a></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <div class="pagecontent">
+        <!-- INCLUDE THIS IN YOUR PAGE-->
+        <script type="text/javascript" charset="utf-8" src="GPI/GPI.js"></script>
+        <div id="GPI_content" class="content_box">
+
+            <h2>Sign-up</h2>
+
+            <form class="form-horizontal">
+                <h4>Create a new account</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="email">Email</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="email" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="pwd">Password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="pwd" type="password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="confirm_pwd">Confirm password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="confirm_pwd" type="password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="first_name">First name</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="first_name" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="last_name">Last name</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="last_name" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="access_code">Access Token</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="access_code" type="text" />
+                    </div>
+                </div>
+
+                <!--Location information-->
+                <h4>Location</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="country">Country</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="country"  onchange="countrySelected()">
+                            <option value="" selected disabled hidden>Select your country</option>
+                            <option value="1">Ireland</option>
+                            <option value="2">Nigeria</option>
+                            <option value="3">United Kingdom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="region">Region/Province</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="region" onchange="regionSelected()">
+                            <!--To be allocated-->
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="state">State/County</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="state">
+                            <!--To be allocated-->
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!--Profile information-->
+                <h4>Profile information</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="gender">Gender</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="gender">
+                            <option value="1">Prefer not to say</option>
+                            <option value="2">Male</option>
+                            <option value="3">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="age_range">Age range</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="age_range">
+                            <option value="1">Prefer not to say</option>
+                            <option value="8">Under 21</option>
+                            <option value="9">21-30</option>
+                            <option value="10">31-40</option>
+                            <option value="11">41-50</option>
+                            <option value="12">51-60</option>
+                            <option value="13">61-65</option>
+                            <option value="14">Over 65</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="submit_button" type="button" class="btn btn-default" value="Sign-up" onclick="submitSignUpForm()" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript">init();</script>
+
+        <!-- END INCLUDE-->
+
+        <div>&nbsp;</div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>The 'Global Predisposition Indicator (GPI)' is traded marked by Glowinkowski International Ltd.</p>
+    </div>
+
+</body>
+</html>

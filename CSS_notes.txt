@@ -1,0 +1,7 @@
+form-horizontal
+form-group
+col-md-2 
+control-label
+col-md-10
+form-control
+col-md-offset-2 

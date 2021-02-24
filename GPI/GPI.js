@@ -403,6 +403,18 @@ var numQuestions = 10;
 // Formatting and report
 
 /**
+ * Path for logo
+ * @type {string}
+ */
+var logo_src;
+
+/**
+ * Path for burger image
+ * @type {string}
+ */
+var burger_src;
+
+/**
  * Quadrant back cirle colour
  * @type {string}
  */
@@ -2158,7 +2170,7 @@ function getReport(reportObj) {
         quadModel_creatEntrepreneur = myReport.QuadrantModels.find(x => x.Name === "Creativity & Entrepreneurship");
 
         // Set formating for quadrant element
-        assignQuadFormating();
+        assignFormatting();
 
         return true;
 
@@ -2516,6 +2528,7 @@ function writeMenu() {
     try {
 
         // Write menu component
+        /*
         textstr = "";
         textstr += "<div class=\"GPI_menu\">";
         textstr += "<div class=\"GPI_burger_bar\">";
@@ -2531,6 +2544,27 @@ function writeMenu() {
         textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
         textstr += "</div>";
         textstr += "</div>";  
+        */
+
+        textstr = "";
+        textstr += "<div class=\"gpi_menu_bar\">";
+        textstr += "<div class=\"gpi_logo_container\">";
+        textstr += "<a href=\"index.html\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
+        textstr += "</div >";
+        textstr += "<div class=\"gpi_burger_container\">";
+        textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
+        textstr += "</div>";
+        textstr += "</div >";
+        textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
+        textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
+        textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
+        textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
+        textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
+        textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
+        textstr += "<a onclick=\"writeElement('career');\">Career Themes</a><br />";
+        textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
+        textstr += "</div>";
+
 
         return textstr;
 
@@ -2553,7 +2587,7 @@ function writeHome() {
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div>&nbsp;</div>";
+        textstr += "<div class=\"gpi_content\">";
 
         textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator</h1>";
         textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
@@ -2579,6 +2613,8 @@ function writeHome() {
         textstr += "</div>";
 
         textstr += "<div>&nbsp;</div>";
+
+        textstr += "</div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -2613,7 +2649,7 @@ function writeQuadrant(quadmodel, next, prev) {
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div>&nbsp;</div>";
+        textstr += "<div class=\"gpi_content\">";
 
         // Write Quadrant component
 
@@ -2633,15 +2669,15 @@ function writeQuadrant(quadmodel, next, prev) {
         less_text_id = "less_" + text_id;
 
         textstr += "<div id=\"" + less_text_id + "\">";
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
         textstr += "</div>";
 
         textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
 
         textstr += quadmodel.QText;
 
-        textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
 
         textstr += "</div>";
 
@@ -2668,15 +2704,15 @@ function writeQuadrant(quadmodel, next, prev) {
             less_text_id = "less_" + text_id;
 
             textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
             textstr += "</div>";
 
             textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
 
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
 
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
 
             textstr += "<div>&nbsp;</div>";
 
@@ -2707,15 +2743,15 @@ function writeQuadrant(quadmodel, next, prev) {
             less_text_id = "less_" + text_id;
 
             textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
             textstr += "</div>";
 
             textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
 
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
 
-            textstr += "<h4><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
 
             textstr += "<div>&nbsp;</div>";
 
@@ -2728,6 +2764,8 @@ function writeQuadrant(quadmodel, next, prev) {
         textstr += "<div class=\"gpi_surv_button_box\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "</div>";
+
         textstr += "</div>";
 
         // Write string to document
@@ -2768,7 +2806,7 @@ function writeCareer(next, prev) {
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div>&nbsp;</div>";
+        textstr += "<div class=\"gpi_content\">";
 
         textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
 
@@ -2776,6 +2814,8 @@ function writeCareer(next, prev) {
         textstr += "<div class=\"gpi_surv_button_box\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
         textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "</div>";
+
         textstr += "</div>";
 
         // Write string to document
@@ -2879,7 +2919,7 @@ function writeLeadership() {
 
 /**
  * @function
- * @name assignQuadFormating
+ * @name assignFormatting
  * @description
  * <p>Assigns quadrant colours and fonts from CSS.
  * If CSS definitions are not found, default values are used.</p>
@@ -2902,7 +2942,7 @@ function writeLeadership() {
  * @see plot_circle
  * @see plot_shadow
  */
-function assignQuadFormating() {
+function assignFormatting() {
 
     try {
 
@@ -2912,6 +2952,23 @@ function assignQuadFormating() {
         // Get the styles (properties and values) for the root
         var rs = getComputedStyle(r);
 
+        // Paths for images
+        logo_src = rs.getPropertyValue('--gpi_logo_src');
+
+        if (logo_src.length == 0) {
+
+            logo_src = "";
+        }
+
+        burger_src = rs.getPropertyValue('--gpi_burger_src');
+
+        if (burger_src.length == 0) {
+
+            burger_src = "";
+        }
+
+
+        // Quadrant formatting
         quad_circle_colour = rs.getPropertyValue('--gpi_quad_circle_colour');
 
         if (quad_circle_colour.length == 0) {

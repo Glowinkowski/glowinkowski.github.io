@@ -13,15 +13,16 @@
 
     <style>
 
-        .GPI_menu {
+        .gpi_menu {
             width: 100%;
+            background-color: #b6ff00;
             position: absolute;
             top: 0;
             left: 0;
             display: block;
         }
 
-        .GPI_burger_bar {
+        .gpi_burger_bar {
             background-color: black;
             padding-left: 10px;
             padding-right: 10px;
@@ -29,11 +30,11 @@
             padding-bottom: 10px;
         }
 
-            .GPI_burger_bar a {
+            .gpi_burger_bar a {
                 color: white;
             }
 
-        .GPI_dropdown {
+        .gpi_dropdown {
             width: 400px;
             color:white;
             background-color: #333;
@@ -43,14 +44,18 @@
             padding-bottom: 10px;
         }
 
-            .GPI_dropdown a {
+            .gpi_dropdown a {
                 color: white;
                 line-height: 200%;
             }
 
-                .GPI_dropdown a:hover {
+                .gpi_dropdown a:hover {
                     color: red;
                 }
+
+        .gpi_logo_container {
+            display:inline;
+        }
     </style>
 
     <script>
@@ -102,11 +107,14 @@
 
         <script type="text/javascript" charset="utf-8" src="GPI/GPI.js"></script>
         <div id="GPI_content" class="content_box">
-            <div class="GPI_menu">
-                <div class="GPI_burger_bar">
+            <div class="gpi_menu">
+                <div class="gpi_burger_bar">
+                    <div class="gpi_logo_container">
+                        <a href="index.html"><img class="logo" src="../images/GI_Logo.png" /></a>
+                    </div>
                     <a href="javascript:void(0);" onclick="toggleMenu('GPI_dropdown_id')"><i class="fa fa-bars"></i></a>
                 </div>
-                <div id="GPI_dropdown_id" class="GPI_dropdown" style="display:none">
+                <div id="GPI_dropdown_id" class="gpi_dropdown" style="display:none">
                     <a href="#">Home</a><br />
                     <a href="#">Problem Solving & Implementation Style</a><br />
                     <a href="#">Communication & Interpersonal Style</a><br />

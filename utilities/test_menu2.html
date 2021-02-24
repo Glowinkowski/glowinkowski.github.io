@@ -1,57 +1,45 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Glowinkowski International</title>
+    <title>The Global Predisposition Indicator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" charset="utf-8" href="style.css">
     <!--To use Font Awesome icons-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!--GPI specific styles-->
-    <link rel="stylesheet" type="text/css" charset="utf-8" href="GPI/gpi.css">
-    <script>
-        function toggleHidden(show_id, hide_id) {
-
-            try {
-
-                var show = document.getElementById(show_id);
-                var hide = document.getElementById(hide_id);
-
-                show.style.display = "inline";
-                hide.style.display = "none";
-
-            }
-            catch (err) {
-
-                alert(err.message + " in toggleHidden(show, hide)");
-            }
-
-        }
-    </script>
+    <!-- INCLUDE THIS IN YOUR PAGE-->
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="../GPI/gpi.css">
+    <!-- END INCLUDE-->
+    
 </head>
 <body>
 
-    <script type="text/javascript" charset="utf-8" src="GPI/GPI.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../GPI/GPI.js"></script>
     <div id="GPI_content" class="gpi_component">
         <div class="gpi_menu_bar">
             <div class="gpi_logo_container">
-                <a href="index.html"><img class="gpi_logo" src="images/GI_Logo.png" /></a>
+                <a href="index.html"><img class="gpi_logo" src="../images/GI_Logo.png" /></a>
             </div>
             <div class="gpi_burger_container">
-                <a href="javascript:void(0);" onclick="toggleMenu('GPI_dropdown_id')"><img class="gpi_burger" src="images/burger_white.png" /></a>
+                <a href="javascript:void(0);" onclick="toggleMenu('GPI_dropdown_id')"><img class="gpi_burger" src="../images/burger_white.png" /></a>
             </div>
         </div>
         <div id="GPI_dropdown_id" class="gpi_dropdown" style="display:none">
-            <a href="login.html">Login</a><br />
-            <a href="signup.html">Sign up</a><br />
-            <a href="http://www.glowinkowski.com">Glowinkowski International</a><br />
+            <a href="#">Home</a><br />
+            <a href="#">Problem Solving & Implementation Style</a><br />
+            <a href="#">Communication & Interpersonal Style</a><br />
+            <a href="#">Feelings & Self-Control</a><br />
+            <a href="#">Creativity & Entrepreneurship</a><br />
+            <a href="#">Career Themes</a><br />
+            <a href="#">Exit GPI</a><br />
         </div>
 
         <div class="gpi_content">
 
+            <h1>Welcome to the GPI!</h1>
             <h2>The Global Predisposition Indicator (GPI<sup style="font-size:8pt">TM</sup>)</h2>
             <hr />
-            <h3 class="gpi_h3">About the GPI</h3>
+            <h4 class="gpi_h4">About the GPI</h4>
             <hr />
 
             <ul class="top">
@@ -142,7 +130,7 @@
     </div>
 
     <div class="footer">
-        <p style="text-align:center;">The 'Global Predisposition Indicator (GPI)' is traded marked by Glowinkowski International Ltd.</p>
+        <p>The 'Global Predisposition Indicator (GPI)' is traded marked by Glowinkowski International Ltd.</p>
     </div>
 
 </body>

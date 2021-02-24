@@ -37,6 +37,8 @@
  *    &lt;li>Logs in an existing user&lt;/li>
  *    &lt;li>Renders the GPI survey questionnaire&lt;/li>
  *    &lt;li>Renders the GPI talent report&lt;/li>
+ *    &lt;li>Manages page navigation&lt;/li>
+ *    &lt;li>Provides HTML manipulation for showing/hiding elements&lt;/li>
  * &lt;/ul>
  * @author M.P. Vaughan
  * @version 1.01
@@ -346,10 +348,56 @@ class Report {
     }
 }
 
+/**
+ * @classdesc &lt;p>Represents a country object for locations section of sign-up form&lt;/p>
+ */
+class Country {
+
+    constructor(_ID, _Name) {
+
+        this.ID = _ID;
+        this.Name = _Name;
+    }
+
+}
+
+/**
+ * @classdesc &lt;p>Represents a region object for locations section of sign-up form&lt;/p>
+ */
+class Region {
+
+    constructor(_ID, _CountryID, _Name) {
+
+        this.ID = _ID;
+        this.CountryID = _CountryID;
+        this.Name = _Name;
+    }
+
+}
+
+/**
+ * @classdesc &lt;p>Represents a state object for locations section of sign-up form&lt;/p>
+ */
+class State {
+
+    constructor(_ID, _CountryID, _RegionID, _Name) {
+
+        this.ID = _ID;
+        this.CountryID = _CountryID;
+        this.RegionID = _RegionID;
+        this.Name = _Name;
+    }
+
+}
+
 /*
- * ===========================================================
- *                  GLOBAL VARIABLES
- * ===========================================================
+ ****************** END OF CLASS DEFINITIONS ******************
+*/
+
+/*
+ * ============================================================
+ *                     GLOBAL VARIABLES
+ * ============================================================
  */
 
 
@@ -484,6 +532,18 @@ var sten_width;
 var sten_height;
 
 /**
+ * Boolean indicating if quadrant circles should be plotted
+ * @type {boolean}
+ */
+var plot_circle = true;
+
+/**
+ * Boolean indicating if quadrant shadows should be plotted
+ * @type {boolean}
+ */
+var plot_shadow = true;
+
+/**
  * Problem solving and implementation style model
  * @type {QuadrantModel}
  */
@@ -502,15 +562,25 @@ var quadModel_commInterperStyle;
 var quadModel_feelSelfControl;
 
 /**
+ * Creativity and Entrepreneurship model
+ * @type {QuadrantModel}
+ */
+var quadModel_creatEntrepreneur;
+
+/**
  * Report object
  * @type {Report}
  */
 var myReport;
 
 /*
- * ===========================================================
- *                  INITIALIZATION
- * ===========================================================
+ ****************** END OF GLOBAL VARIABLES  ******************
+*/
+
+/*
+ * ============================================================
+ *                      INITIALIZATION
+ * ============================================================
  */
 
 /**
@@ -534,6 +604,17 @@ function init() {
             processJSON(jsontext);
 
         }
+        else {
+            // Check if we are on the sign-up page
+            country_element = document.getElementById("country");
+
+            if (country_element !== null) {
+
+                // This gets a list of countries and writes to the user input form
+                getCountries();
+            }
+            
+        }
         
     }
     catch (err) {
@@ -543,29 +624,38 @@ function init() {
 
 }
 
+/*
+ ******************* END OF INITIALIZATION  *******************
+*/
+
+/*
+ * ============================================================
+ *            LOGGING OUT (DELETE SESSION VARIABLES)
+ * ============================================================
+ */
+
 /**
  * @function
  * @name logout
  * @description
  * &lt;p>Logs the user out by deleting session variables and reloading page&lt;/p>
+ * @returns {boolean} True if user wishes to exit the GPI
  */
 function logout() {
 
     try {
         // Logout function
-        var logout = "Do you wish to log out? (Click OK if so)";
+        var logout = "Do you wish to exit the GPI? (Click OK if so)";
 
         if (confirm(logout)) {
 
-            // Delete session storage
-            sessionStorage.removeItem("GPIStoredProfile");
+            logoutGPI();
 
-            if (sessionStorage.getItem("GPIStoredQuestions") !== null) {
-
-                sessionStorage.removeItem("GPIStoredQuestions");
-            }
+            return true;
 
         }
+
+        return false;
     }
     catch (err) {
 
@@ -573,10 +663,409 @@ function logout() {
     }
 }
 
+/**
+ * @function
+ * @name logoutGPI
+ * @description
+ * &lt;p>Deletes session storage variables and effectively logs the user out&lt;/p>
+ */
+function logoutGPI() {
+    try {
+
+        // Delete session storage
+
+        // Delete profile
+        sessionStorage.removeItem("GPIStoredProfile");
+
+        // Delete password
+        sessionStorage.removeItem("GPIStoredPWD");
+
+        // Delete questions
+        sessionStorage.removeItem("GPIStoredQuestions");
+
+    }
+    catch (err) {
+
+        alert(err.message + " in logoutGPI()");
+    }
+}
+
 /*
- * ===========================================================
- *          USER SIGN-UP / LOGIN FUNCTIONS
- * ===========================================================
+ ******************** END OF LOGGING OUT  *********************
+*/
+
+/*
+ * ============================================================
+ *                 SIGN-UP FORM FUNCTIONALITY
+ * ============================================================
+ */
+
+/**
+ * @function
+ * @name countrySelected
+ * @description 
+ * &lt;p>Called when a user selects a country from the location section of the sign-up form.&lt;/p> 
+ * &lt;p>The routine then calls getRegions to populate the regions drop-down list&lt;/p>
+ * @see getRegions
+ */
+function countrySelected() {
+
+    try {
+
+        var country_id = document.getElementById("country").value;
+
+        getRegions(country_id);
+
+    }
+    catch (err) {
+
+        alert(err.message + " in countrySelected()");
+    }
+}
+
+/**
+ * @function
+ * @name regionSelected
+ * @description
+ * &lt;p>Called when a user selects a region from the location section of the sign-up form.&lt;/p>
+ * &lt;p>The routine then calls getStates to populate the states drop-down list&lt;/p>
+ * @see getStates
+ */
+function regionSelected() {
+
+    try {
+
+        var region_id = document.getElementById("region").value;
+
+        getStates(region_id);
+
+    }
+    catch (err) {
+
+        alert(err.message + " in regionSelected()");
+    }
+}
+
+/**
+ * @function
+ * @name getCountries
+ * @description
+ * &lt;p>Calls the API to get a list of countries, which is then written to the countries drop-down box.&lt;/p>
+ * @see writeCountries
+ */
+function getCountries() {
+
+    try {
+
+        var url = "/GPI/countries.json";
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 &amp;&amp; this.status == 200) {
+
+                try {
+
+                    // The text from the API call
+                    var jsontext = this.responseText;
+                    var json = JSON.parse(jsontext);
+
+                    // Load countries
+
+                    // Set countries to zero array
+                    countries = [];
+
+                    var N = json.length;
+
+                    for (var i = 0; i &lt; N; i++) {
+
+                        countries[i] = new Country(json[i].ID, json[i].Name);
+                    }
+
+                    // Write to page
+                    writeCountries(countries);
+
+                }
+                catch (err) {
+
+                    alert(err.message + " in xhttp.onreadystatechange()");
+
+                }
+
+            }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+
+    }
+    catch (err) {
+
+        alert(err.message + " in getCountries()");
+    }
+}
+
+/**
+ * @function
+ * @name getRegions
+ * @param {number} country_id Unique identifier for the country
+ * @description
+ * &lt;p>Calls the API to get a list of regions by country id, which is then written to the regions drop-down box.&lt;/p>
+ * @see writeRegions
+ */
+function getRegions(country_id) {
+
+    try {
+
+        var url = "/GPI/regions.json";
+
+        url += "?" + country_id;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 &amp;&amp; this.status == 200) {
+
+                try {
+
+                    // The text from the API call
+                    var jsontext = this.responseText;
+                    var json = JSON.parse(jsontext);
+
+                    // Load regions
+
+                    // Set regions to zero array
+                    var regions = [];
+
+                    var N = json.length;
+                    var k = 0;
+
+                    for (var i = 0; i &lt; N; i++) {
+
+                        // Keep this, even though it may become redundant when data are returned from server
+                        // as it means that we do not need to change the code when loading local JSON files.
+                        if (json[i].CountryID == country_id) {
+
+                            regions[k] = new Region(json[i].ID, json[i].CountryID, json[i].Name);
+                            k++;
+
+                        }
+                    }
+
+                    // Write to page
+                    writeRegions(regions);
+
+                }
+                catch (err) {
+
+                    alert(err.message + " in xhttp.onreadystatechange()");
+
+                }
+
+            }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+    }
+    catch (err) {
+
+        alert(err.message + " in getRegions(country_id)");
+    }
+}
+
+/**
+ * @function
+ * @name getStates
+ * @param {number} region_id Unique identifier for the region
+ * @description
+ * &lt;p>Calls the API to get a list of states by region id, which is then written to the states drop-down box.&lt;/p>
+ * @see writeStates
+ */
+function getStates(region_id) {
+
+    try {
+
+        var url = "/GPI/states.json";
+
+        url += "?" + region_id;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 &amp;&amp; this.status == 200) {
+
+                try {
+
+                    // The text from the API call
+                    var jsontext = this.responseText;
+                    var json = JSON.parse(jsontext);
+
+                    // Load states
+
+                    // Set states to zero array
+                    var states = [];
+
+                    var N = json.length;
+                    var k = 0;
+
+                    for (var i = 0; i &lt; N; i++) {
+
+                        // Keep this, even though it may become redundant when data are returned from server
+                        // as it means that we do not need to change the code when loading local JSON files.
+                        if (json[i].RegionID == region_id) {
+
+                            states[k] = new State(json[i].ID, json[i].CountryID, json[i].RegionID, json[i].Name);
+                            k++;
+
+                        }
+                    }
+
+                    // Write to page
+                    writeStates(states);
+
+                }
+                catch (err) {
+
+                    alert(err.message + " in xhttp.onreadystatechange()");
+
+                }
+
+            }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+    }
+    catch (err) {
+
+        alert(err.message + " in getStates(region_id)");
+    }
+
+}
+
+/**
+ * @function
+ * @name writeCountries
+ * @param {Country[]} countries Array of Country objects
+ * @description
+ * &lt;p>Writes a list of countries to the countries drop-down list in the user sign-up form.&lt;/p>
+ */
+function writeCountries(countries) {
+
+    try {
+
+        var textstr = "&lt;option value=\"\" selected disabled hidden>Select your country&lt;/option>";
+
+        var N = countries.length;
+
+        for (var i = 0; i &lt; N; i++) {
+
+            textstr += "&lt;option value=\"" + countries[i].ID + "\">" + countries[i].Name + "&lt;/option>";
+        }
+
+        textstr += "&lt;option value=\"0\">Not listed&lt;/option>";
+
+        // Write string to document
+        document.getElementById("country").innerHTML = textstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in printCountries()");
+    }
+
+}
+
+/**
+ * @function
+ * @name writeRegions
+ * @param {Region[]} regions Array of Region objects
+ * @description
+ * &lt;p>Writes a list of regions to the regions drop-down list in the user sign-up form.&lt;/p>
+ */
+function writeRegions(regions) {
+
+    try {
+
+        var regionstr = "";
+
+        var N = regions.length;
+
+        if (N > 0) {
+
+            regionstr = "&lt;option value=\"\" selected disabled hidden>Select your region/province&lt;/option>";
+
+            for (var i = 0; i &lt; N; i++) {
+
+                regionstr += "&lt;option value=\"" + regions[i].ID + "\">" + regions[i].Name + "&lt;/option>";
+            }
+
+            // Erase list of states
+            document.getElementById("state").innerHTML = "&lt;option value=\"0\">&lt;/option>";
+
+        }
+        else {
+
+            regionstr += "&lt;option value=\"0\">Not listed&lt;/option>";
+
+            // Erase list of states
+            document.getElementById("state").innerHTML = "&lt;option value=\"0\">Not listed&lt;/option>";
+
+        }
+
+
+        // Write string to document
+        document.getElementById("region").innerHTML = regionstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeRegions()");
+    }
+}
+
+/**
+ * @function
+ * @name writeStates
+ * @param {State[]} states Array of State objects
+ * @description
+ * &lt;p>Writes a list of states to the states drop-down list in the user sign-up form.&lt;/p>
+ */
+function writeStates(states) {
+
+    try {
+
+        var statestr = "&lt;option value=\"\" selected disabled hidden>Select your state/county&lt;/option>";
+
+        var N = states.length;
+
+        for (var i = 0; i &lt; N; i++) {
+
+            statestr += "&lt;option value=\"" + states[i].ID + "\">" + states[i].Name + "&lt;/option>";
+        }
+
+        if (N == 0) {
+
+            regionstr += "&lt;option value=\"0\">Not listed&lt;/option>";
+
+        }
+
+        // Write string to document
+        document.getElementById("state").innerHTML = statestr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeRegions()");
+    }
+}
+
+/*
+ ************* END OF SIGN-UP FORM FUNCTIONALITY  *************
+*/
+
+/*
+ * ============================================================
+ *               USER SIGN-UP / LOGIN FUNCTIONS
+ * ============================================================
  */
 
 /**
@@ -692,6 +1181,9 @@ function submitSignUpForm() {
             return;
         }
 
+        // Store user password
+        sessionStorage.setItem("GPIStoredPWD", pwd);
+
         var user_profile = new UserProfile(
             email,
             pwd,
@@ -699,8 +1191,7 @@ function submitSignUpForm() {
             last_name,
             access_code,
             document.getElementById("gender").value,
-            document.getElementById("age_range").value,
-            document.getElementById("ethnicity").value
+            document.getElementById("age_range").value
         )
 
         signup(user_profile);
@@ -770,6 +1261,9 @@ function submitLoginForm() {
             document.getElementById("submit_button").disabled = false;
             return;
         }
+
+        // Store user password
+        sessionStorage.setItem("GPIStoredPWD", pwd);
 
         var user_profile = new UserProfile(
             email,
@@ -1006,6 +1500,9 @@ function processJSON(jsontext) {
         // Store JSON string
         sessionStorage.setItem("GPIStoredProfile", jsontext);
 
+        // Get stored password
+        var pwd = sessionStorage.getItem("GPIStoredPWD");
+
         if (user_profile_json.SurveyCompleted) {
 
             // Get report
@@ -1019,12 +1516,13 @@ function processJSON(jsontext) {
             // If all OK
             userProfile = new UserProfile(
                 user_profile_json.Email,
-                user_profile_json.Password
+                pwd
             );
 
             userProfile.SurveyCompleted = true;
 
-            writeElement("problem_quad");
+            // Go to HOME page
+            writeElement("home");
 
         }
         else {
@@ -1035,7 +1533,7 @@ function processJSON(jsontext) {
             // If all OK
             userProfile = new UserProfile(
                 user_profile_json.Email,
-                user_profile_json.Password
+                pwd
             );
 
             userProfile.SurveyCompleted = false;
@@ -1068,6 +1566,12 @@ function processJSON(jsontext) {
 
     }
 }
+
+/*
+ * ===========================================================
+ *                USER SURVEY FUNCTIONS
+ * ===========================================================
+ */
 
 /**
  * @function
@@ -1117,7 +1621,14 @@ function updateAnswers(user_profile, continue_survey=true) {
                         }
                         else {
 
-                            writeInstructions();
+                            if (logout()) {
+
+                                location.reload();
+                            }
+                            else {
+
+                                getQuestions();
+                            }
                         }
                         
 
@@ -1166,12 +1677,6 @@ function updateAnswers(user_profile, continue_survey=true) {
         alert(err.message + " in signup(user_profile)");
     }
 }
-
-/*
- * ===========================================================
- *                USER SURVEY FUNCTIONS
- * ===========================================================
- */
 
 /**
  * @function
@@ -1239,7 +1744,7 @@ function writeInstructions() {
 
         // Create instructions string
         textstr = "";
-        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
+        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI&lt;/a>&lt;/div>";
         textstr += "&lt;h1>The GPI Survey&lt;/h1>";
         textstr += "&lt;p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
@@ -1329,7 +1834,7 @@ function writeQuestions() {
     try {
 
         textstr = "";
-        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
+        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" class=\"gpi_link\"  onclick=\"logout();\">Exit GPI&lt;/a>&lt;/div>";
 
         textstr += getProgressBar();
 
@@ -1499,8 +2004,32 @@ function saveQuestions(continue_survey=true) {
         // Attach question list
         userProfile.Questions = localQuestionList;
 
-        // Call API to update questions
-        updateAnswers(userProfile, continue_survey);
+        // Check if any questions have been answered before calling API
+        var total_score = 0;
+        for (var i = 0; i &lt; localQuestionList.length; i++) {
+
+            total_score = total_score + localQuestionList[i].Score;
+        }
+
+        if (total_score > 0) {
+
+            // Call API to update questions
+            updateAnswers(userProfile, continue_survey);
+
+        }
+        else {
+
+            if (!continue_survey) {
+
+                if (logout()) {
+
+                    location.reload();
+                }
+
+            }
+            
+        }
+        
         
     }
     catch (err) {
@@ -1654,6 +2183,7 @@ function getReport(reportObj) {
         quadModel_probSolveImpStyle = myReport.QuadrantModels.find(x => x.Name === "Problem Solving &amp; Implementation Style");
         quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication &amp; Interpersonal Style");
         quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings &amp; Self-Control");
+        quadModel_creatEntrepreneur = myReport.QuadrantModels.find(x => x.Name === "Creativity &amp; Entrepreneurship");
 
         // Set formating for quadrant element
         assignQuadFormating();
@@ -1860,29 +2390,23 @@ function extractBlue4Model(b4json) {
 
 /*
  * ===========================================================
- *                USER REPORT FUNCTIONS
+ *                PAGE GENERATION FUNCTIONS
  * ===========================================================
  */
 
 /**
  * @function
  * @name writeElement
- * @param {string} mystr String specifying the QuadrantModel to display
- * @description &lt;p>Writes the QuadrantModel element to the web page&lt;/p>
+ * @param {string} mystr String specifying the GPI Model to display
+ * @description &lt;p>Writes the GPI Model element to the web page&lt;/p>
  * &lt;p>The possible values of 'mystr' are currently:&lt;/p>
  * &lt;ul>
+ * &lt;li>'home'&lt;/li>
  * &lt;li>'problem_quad'&lt;/li>
  * &lt;li>'communication_quad'&lt;/li>
  * &lt;li>'feelings_quad'&lt;/li>
+ * &lt;li>'career'&lt;/li>
  * &lt;/ul>
- * @see quadModel_probSolveImpStyle
- * @see quadModel_commInterperStyle
- * @see quadModel_feelSelfControl
- * @see myReport
- * @see quad_width
- * @see quad_height
- * @see sten_width
- * @see sten_height
  */
 function writeElement(mystr) {
 
@@ -1891,15 +2415,26 @@ function writeElement(mystr) {
         var quadmodel;
         var prev;
         var next;
+        var is_quad = false;
+        var is_home = false;
+        var is_career = false;
 
         switch (mystr) {
+
+            case "home":
+
+                is_home = true;
+
+                break;
 
             case "problem_quad":
 
                 quadmodel = quadModel_probSolveImpStyle;
 
-                prev = "feelings_quad";
+                prev = "home";
                 next = "communication_quad";
+
+                is_quad = true;
 
                 break;
 
@@ -1910,6 +2445,8 @@ function writeElement(mystr) {
                 prev = "problem_quad";
                 next = "feelings_quad";
 
+                is_quad = true;
+
                 break;
 
             case "feelings_quad":
@@ -1917,14 +2454,31 @@ function writeElement(mystr) {
                 quadmodel = quadModel_feelSelfControl;
 
                 prev = "communication_quad";
-                next = "problem_quad";
+                next = "entrepreneur_quad";
+
+                is_quad = true;
 
                 break;
 
-            case "leadership":
+            case "entrepreneur_quad":
 
-                writeLeadership();
-                return;
+                quadmodel = quadModel_creatEntrepreneur;
+
+                prev = "feelings_quad";
+                next = "career";
+
+                is_quad = true;
+
+                break;
+
+            case "career":
+
+                prev = "entrepreneur_quad";
+                next = "home";
+
+                is_career = true;
+
+                break;
 
             default:
 
@@ -1932,39 +2486,204 @@ function writeElement(mystr) {
 
         }
 
-        // Write contents
+        // If home
+        if (is_home) {
+
+            writeHome();
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+        // If quadrant model
+        if (is_quad) {
+
+            writeQuadrant(quadmodel, next, prev);
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+        // If career themes model
+        if (is_career) {
+
+            writeCareer(next, prev);
+
+            // Scroll to top
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            return;
+
+        }
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeElement()");
+
+    }
+}
+
+/**
+ * @function
+ * @name writeMenu
+ * @returns {string} HTML string 
+ * @description &lt;p>Generates the HTML string for generating the navigation menu&lt;/p>
+ */
+function writeMenu() {
+
+    try {
+
+        // Write menu component
         textstr = "";
-        textstr += "&lt;div style=\"float: right\">&lt;a href=\"\" onclick=\"logout();\">Log out&lt;/a>&lt;/div>";
-        textstr += "&lt;h1>" + myReport.FirstName + " " + myReport.LastName + " Talent Report&lt;/h1>";
+        textstr += "&lt;div class=\"GPI_menu\">";
+        textstr += "&lt;div class=\"GPI_burger_bar\">";
+        textstr += "&lt;a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\">&lt;i class=\"fa fa-bars\">&lt;/i>&lt;/a>";
+        textstr += "&lt;/div>";
+        textstr += "&lt;div id=\"GPI_dropdown_id\" class=\"GPI_dropdown\" style=\"display:none\">";
+        textstr += "&lt;a onclick=\"writeElement('home');\">Home&lt;/a>&lt;br />";
+        textstr += "&lt;a onclick=\"writeElement('problem_quad');\">Problem Solving &amp; Implementation Style&lt;/a>&lt;br />";
+        textstr += "&lt;a onclick=\"writeElement('communication_quad');\">Communication &amp; Interpersonal Style&lt;/a>&lt;br />";
+        textstr += "&lt;a onclick=\"writeElement('feelings_quad');\">Feelings &amp; Self-Control&lt;/a>&lt;br />";
+        textstr += "&lt;a onclick=\"writeElement('entrepreneur_quad');\">Creativity &amp; Entrepreneurship&lt;/a>&lt;br />";
+        textstr += "&lt;a onclick=\"writeElement('career');\">Career Themes&lt;/a>&lt;br />";
+        textstr += "&lt;a href=\"\" onclick=\"logout();\">Exit GPI&lt;/a>&lt;br />";
+        textstr += "&lt;/div>";
+        textstr += "&lt;/div>";  
 
-        // Navigation
-        textstr += "&lt;div class=\"page_nav\">"
-            + "&lt;div class=\"link_box\">"
-            + "&lt;a onclick=\"writeElement('" + prev + "')\">&lt;img src=\"images/prev.png\" class=\"nav_arrow\"/>&lt;/a>"
-            + "&lt;/div>"
-            + "&lt;div class=\"link_box\">"
-            + "&lt;a onclick=\"writeElement('" + next + "')\">&lt;img src=\"images/next.png\" class=\"nav_arrow\"/>&lt;/a>"
-            + "&lt;/div>"
-            + "&lt;/div>";
+        return textstr;
 
+    }
+    catch (err) {
 
-        textstr += "&lt;h2>" + quadmodel.Name + "&lt;/h2>";
+        alert(err.message + " in writeMenu()");
+    }
+}
+
+/**
+ * @function
+ * @name writeHome
+ * @description &lt;p>Generates the HTML string for generating the home page&lt;/p>
+ */
+function writeHome() {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        textstr += "&lt;h1 class=\"gpi_h1\">The Global Predisposition Indicator&lt;/h1>";
+        textstr += "&lt;h1 class=\"gpi_h1\">(GPI&lt;sup style=\"font-size: 8pt\">TM&lt;/sup>)&lt;/h1>";
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        textstr += "&lt;h3 class=\"gpi_h3\">Profile for&lt;/h3>";
+
+        textstr += "&lt;h2 class=\"gpi_h2\">" + myReport.FirstName + " " + myReport.LastName + "&lt;/h2>";
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        textstr += "&lt;h3 class=\"gpi_h3\">Contents:&lt;/h3>";
+
+        textstr += "&lt;div align='center'>";
+        textstr += "&lt;a class=\"gpi_link\" onclick=\"writeElement('problem_quad');\">Problem Solving / Implementation&lt;/a>&lt;br />";
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>&lt;div>&amp;nbsp;&lt;/div>";
+        textstr += "&lt;a class=\"gpi_link\" onclick=\"writeElement('communication_quad');\">Communication / Interpersonal&lt;/a>&lt;br />";
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>&lt;div>&amp;nbsp;&lt;/div>";
+        textstr += "&lt;a class=\"gpi_link\" onclick=\"writeElement('feelings_quad');\">Feelings / Self-Control&lt;/a>&lt;br />";
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>&lt;div>&amp;nbsp;&lt;/div>";
+        textstr += "&lt;a class=\"gpi_link\" onclick=\"writeElement('entrepreneur_quad');\">Creativity / Entrepreneurship&lt;/a>";
+        textstr += "&lt;/div>";
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeHome()");
+    }
+}
+
+/**
+ * @function
+ * @name writeQuadrant
+ * @param {QuadrantModel} quadmodel The QuadrantModel object to render
+ * @param {string} next String for next element in report
+ * @param {string} prev String for previous element in report
+ * @description &lt;p>Renders the page for a Quadrant model&lt;/p>
+ * @see quadModel_probSolveImpStyle
+ * @see quadModel_commInterperStyle
+ * @see quadModel_feelSelfControl
+ * @see myReport
+ * @see quad_width
+ * @see quad_height
+ * @see sten_width
+ * @see sten_height
+ */
+function writeQuadrant(quadmodel, next, prev) {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        // Write Quadrant component
+
+        // Index for text paragraphs
+        var text_id = 0;
+
+        textstr += "&lt;h1 class=\"gpi_h1\">" + quadmodel.Name + "&lt;/h1>";
         textstr += "&lt;div align='center'>";
         textstr += "&lt;canvas id='quadrant' width='" + quad_width + "' height='" + quad_height + "' style='display: none'>&lt;/canvas>";
         textstr += "&lt;img id='quadrant_image' src='' width='" + quad_width + "' height='" + quad_height + "' style='max-width: 100%; height: auto;'/>";
         textstr += "&lt;/div>";
 
+        text_id++;  // Index for text paragraphs
+
+        // Identifiers for text paragraphs
+        more_text_id = "more_" + text_id;
+        less_text_id = "less_" + text_id;
+
+        textstr += "&lt;div id=\"" + less_text_id + "\">";
+        textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&amp;#9654;&lt;/div> Read more...&lt;/h4>";
+        textstr += "&lt;/div>";
+
+        textstr += "&lt;div id=\"" + more_text_id + "\" style=\"display: none\">";
+        textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9660;&lt;/div> Read less&lt;/h4>";
+
         textstr += quadmodel.QText;
 
-        textstr += "&lt;h2>" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions&lt;/h2>";
+        textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9650;&lt;/div> Read less&lt;/h4>";
+
+        textstr += "&lt;/div>";
+
+        textstr += "&lt;h2 class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions&lt;/h2>";
 
         for (var i = 0; i &lt; quadmodel.xDimension.SubDimensions.length; i++) {
+
+            text_id++;  // Index for text paragraphs
 
             id_str = quadmodel.xDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "&lt;h3>" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += "&lt;h3 class=\"gpi_h3\">" + quadmodel.xDimension.SubDimensions[i].LeftBipolarName + "/";
             textstr += quadmodel.xDimension.SubDimensions[i].RightBipolarName + "&lt;/h3>";
 
             textstr += "&lt;div align='center'>";
@@ -1972,18 +2691,38 @@ function writeElement(mystr) {
             textstr += "&lt;img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
             textstr += "&lt;/div>";
 
+            // Identifiers for text paragraphs
+            more_text_id = "more_" + text_id;
+            less_text_id = "less_" + text_id;
+
+            textstr += "&lt;div id=\"" + less_text_id + "\">";
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&amp;#9654;&lt;/div> Read more...&lt;/h4>";
+            textstr += "&lt;/div>";
+
+            textstr += "&lt;div id=\"" + more_text_id + "\" style=\"display: none\">";
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9660;&lt;/div> Read less&lt;/h4>";
+
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
+
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9650;&lt;/div> Read less&lt;/h4>";
+
+            textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+            textstr += "&lt;/div>";
+
         }
 
-        textstr += "&lt;h2>" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions&lt;/h2>";
+        textstr += "&lt;h2 class=\"gpi_h2\">" + quadmodel.yDimension.LeftBipolarName + " and " + quadmodel.yDimension.RightBipolarName + " subdimensions&lt;/h2>";
 
         for (var i = 0; i &lt; quadmodel.yDimension.SubDimensions.length; i++) {
+
+            text_id++;  // Index for text paragraphs
 
             id_str = quadmodel.yDimension.SubDimensions[i].UnipolarName;    // used to identify HTML element
             id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
             image_id = "image" + id_str;
 
-            textstr += "&lt;h3>" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
+            textstr += "&lt;h3 class=\"gpi_h3\">" + quadmodel.yDimension.SubDimensions[i].LeftBipolarName + "/";
             textstr += quadmodel.yDimension.SubDimensions[i].RightBipolarName + "&lt;/h3>";
 
             textstr += "&lt;div align='center'>";
@@ -1991,18 +2730,33 @@ function writeElement(mystr) {
             textstr += "&lt;img id='" + image_id + "' src='' width='" + sten_width + "' height='" + sten_height + "' style='max-width: 100%; height: auto;'/>";
             textstr += "&lt;/div>";
 
+            // Identifiers for text paragraphs
+            more_text_id = "more_" + text_id;
+            less_text_id = "less_" + text_id;
+
+            textstr += "&lt;div id=\"" + less_text_id + "\">";
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&amp;#9654;&lt;/div> Read more...&lt;/h4>";
+            textstr += "&lt;/div>";
+
+            textstr += "&lt;div id=\"" + more_text_id + "\" style=\"display: none\">";
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9660;&lt;/div> Read less&lt;/h4>";
+
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
+
+            textstr += "&lt;h4>&lt;div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&amp;#9650;&lt;/div> Read less&lt;/h4>";
+
+            textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+            textstr += "&lt;/div>";
+
+
         }
 
         // Navigation
-        textstr += "&lt;div class=\"page_nav\">"
-            + "&lt;div class=\"link_box\">"
-            + "&lt;a onclick=\"writeElement('" + prev + "')\">&lt;img src=\"images/prev.png\" class=\"nav_arrow\"/>&lt;/a>"
-            + "&lt;/div>"
-            + "&lt;div class=\"link_box\">"
-            + "&lt;a onclick=\"writeElement('" + next + "')\">&lt;img src=\"images/next.png\" class=\"nav_arrow\"/>&lt;/a>"
-            + "&lt;/div>"
-            + "&lt;/div>";
+        textstr += "&lt;div class=\"gpi_surv_button_box\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "&lt;/div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -2021,17 +2775,101 @@ function writeElement(mystr) {
 
         }
 
-        // Scroll to top
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+    catch (err) {
 
+        alert(err.message + " in writeMenu()");
+    }
+}
+
+/**
+ * @function
+ * @name writeCareer
+ * @param {string} next String for next element in report
+ * @param {string} prev String for previous element in report
+ * @description &lt;p>Renders the page for the Career themes model&lt;/p>
+ */
+function writeCareer(next, prev) {
+
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "&lt;div>&amp;nbsp;&lt;/div>";
+
+        textstr += "&lt;h1 class=\"gpi_h1\">Career Themes&lt;/h1>";
+
+        // Navigation
+        textstr += "&lt;div class=\"gpi_surv_button_box\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Previous\"  onclick=\"writeElement('" + prev + "')\">";
+        textstr += "&lt;input type=\"button\" class=\"gpi_button\" value=\"Next\"  onclick=\"writeElement('" + next + "')\">";
+        textstr += "&lt;/div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
 
     }
     catch (err) {
 
-        alert(err.message + " in writeElement()");
+        alert(err.message + " in writeCareer()");
+    }
+}
+
+
+/**
+ * @function
+ * @name toggleMenu
+ * @param {string} menu_id String specifying the element id for the menu
+ * @description&lt;p>Shows or hides the dropdown navigation menu&lt;/p>
+ */
+function toggleMenu(menu_id) {
+
+    try {
+
+        var dropdown = document.getElementById(menu_id);
+
+        if (dropdown.style.display === "none") {
+
+            dropdown.style.display = "block";
+        }
+        else {
+
+            dropdown.style.display = "none";
+
+        }
 
     }
+    catch (err) {
+
+        alert(err.message + " in toggleHidden(show, hide)");
+    }
+
+}
+
+/**
+ * @function
+ * @name toggleHidden
+ * @param {string} show_id String specifying the id of the element to show
+ * @param {string} hide_id String specifying the id of the element to hide
+ * @description &lt;p>Toggles the visibility of HTML elements. Used to show or hide extra text&lt;/p>
+ */
+function toggleHidden(show_id, hide_id) {
+
+    try {
+
+        var show = document.getElementById(show_id);
+        var hide = document.getElementById(hide_id);
+
+        show.style.display = "inline";
+        hide.style.display = "none";
+
+    }
+    catch (err) {
+
+        alert(err.message + " in toggleHidden(show, hide)");
+    }
+
 }
 
 /**
@@ -2061,6 +2899,12 @@ function writeLeadership() {
     }
 }
 
+/*
+ * ===========================================================
+ *                GRAPHICS FUNCTIONS
+ * ===========================================================
+ */
+
 /**
  * @function
  * @name assignQuadFormating
@@ -2083,6 +2927,8 @@ function writeLeadership() {
  * @see quad_height
  * @see sten_width
  * @see sten_height
+ * @see plot_circle
+ * @see plot_shadow
  */
 function assignQuadFormating() {
 
@@ -2138,7 +2984,7 @@ function assignQuadFormating() {
 
         quad_text_colour = rs.getPropertyValue('--gpi_quad_text_colour');
 
-        if (quad_marker_colour.length == 0) {
+        if (quad_text_colour.length == 0) {
 
             quad_text_colour = "#ffffff";
         }
@@ -2146,7 +2992,13 @@ function assignQuadFormating() {
         quad_text_size = 26;
         quad_text_font = quad_text_size + "px Arial";
 
-        quad_label_text_colour = "#ffffff";
+        quad_label_text_colour = rs.getPropertyValue('--gpi_quad_label_text_colour');
+
+        if (quad_label_text_colour.length == 0) {
+
+            quad_label_text_colour = "#ffffff";
+        }
+
         quad_label_text_size = 24;
         quad_label_text_font = quad_label_text_size + "px Arial";
 
@@ -2157,6 +3009,47 @@ function assignQuadFormating() {
         // Canvas dimensions for sten scores
         sten_width = 900; //1000;
         sten_height = 220;
+
+        // Set booleans
+        // --gpi_quad_shadow_on
+
+        plot_circle_str = rs.getPropertyValue('--gpi_quad_show_circle');
+
+        if (plot_circle_str.length == 0) {
+
+            plot_circle = true;
+        }
+        else {
+
+            if (plot_circle_str > 0) {
+
+                plot_circle = true;
+
+            }
+            else {
+
+                plot_circle = false;
+            }
+        }
+
+        plot_shadow_str = rs.getPropertyValue('--gpi_quad_shadow_on');
+
+        if (plot_shadow_str.length == 0) {
+
+            plot_shadow = true;
+        }
+        else {
+
+            if (plot_shadow_str > 0) {
+
+                plot_shadow = true;
+
+            }
+            else {
+
+                plot_shadow = false;
+            }
+        }
 
     }
     catch (err) {
@@ -2171,7 +3064,8 @@ function assignQuadFormating() {
  * @name drawQuadrant
  * @param {QuadrantModel} quadrant - the QuadrantModel to display
  * @description
- * &lt;p>Draws the Quadrant model visualisation&lt;/p>
+ * &lt;p>Draws the Quadrant model visualisation. This is configurable from CSS by setting
+ * JavaScript global variables from the CSS root variables.&lt;/p>
  * @see quad_circle_colour
  * @see quad_start_colour
  * @see quad_end_colour
@@ -2267,21 +3161,29 @@ function drawQuadrant(quadrant) {
         // Move origin to the centre of the canvas
         ctx.translate(x0, y0);
 
-        // Shadow definition
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "black";
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+        if (plot_shadow) {
 
-        // Circle definition
-        ctx.fillStyle = quad_circle_colour;
-        ctx.lineWidth = 2;
+            // Shadow definition
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "black";
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
 
-        // Draw circle
-        ctx.beginPath();
-        ctx.arc(0, 0, r1, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+        }  
+
+        if (plot_circle) {
+
+            // Circle definition
+            ctx.fillStyle = quad_circle_colour;
+            ctx.lineWidth = 2;
+
+            // Draw circle
+            ctx.beginPath();
+            ctx.arc(0, 0, r1, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+        }
 
         // Radial gradient fill for square
         var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
@@ -2295,11 +3197,13 @@ function drawQuadrant(quadrant) {
 
         // Draw gridlines
         ctx.strokeStyle = quad_grid_colour;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
+        if (plot_shadow) {
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
         // vertical
-
         for (var i = 0; i &lt; 13; i++) {
 
             var x = -r2 + i * grid_space;
@@ -2322,10 +3226,15 @@ function drawQuadrant(quadrant) {
         }
 
         // Write quadrant text
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
 
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }
+        
         ctx.font = quad_text_font;
         ctx.fillStyle = quad_text_colour;
 
@@ -2344,9 +3253,15 @@ function drawQuadrant(quadrant) {
 
         // Draw axes and label boxes
         ctx.fillStyle = quad_axis_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+
+        }
+        
 
         // Note order important to get shadows right
 
@@ -2377,9 +3292,14 @@ function drawQuadrant(quadrant) {
 
         ctx.font = quad_label_text_font;
         ctx.fillStyle = quad_label_text_colour;
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }       
 
         // Top label text
         ctx.fillText(top_text, -ttw / 2, -r1 + 0.4 * quad_label_text_size);
@@ -2395,10 +3315,15 @@ function drawQuadrant(quadrant) {
 
         // Plot marker
         ctx.fillStyle = quad_marker_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
 
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+
+        }
+        
         // Turn on transparency
         ctx.globalAlpha = 0.8;
 
@@ -2508,27 +3433,35 @@ function drawSten(dimension) {
         // Move origin to the centre of the canvas
         ctx.translate(x0, y0);
 
-        // Shadow definition
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "black";
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+        if (plot_shadow) {
 
-        // Circle definition
-        ctx.fillStyle = quad_circle_colour;
+            // Shadow definition
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "black";
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
 
-        // Draw circles
-        // Syntax: arc(x, y, r, sAngle, eAngle, counterclockwise)
+        }       
 
-        ctx.beginPath();
-        ctx.arc(r4 - r1, 0, r4, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+        if (plot_circle) {
 
-        ctx.beginPath();
-        ctx.arc(r1 - r4, 0, r4, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.closePath();
+            // Circle definition
+            ctx.fillStyle = quad_circle_colour;
+
+            // Draw circles
+            // Syntax: arc(x, y, r, sAngle, eAngle, counterclockwise)
+
+            ctx.beginPath();
+            ctx.arc(r4 - r1, 0, r4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.arc(r1 - r4, 0, r4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+        }
 
         // Radial gradient fill for square
         var grad = ctx.createRadialGradient(0, 0, 1, 0, 0, r1);
@@ -2543,11 +3476,15 @@ function drawSten(dimension) {
         // Draw gridlines
         ctx.lineWidth = 2;
         ctx.strokeStyle = quad_grid_colour;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
+        if (plot_shadow) {
+
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+        }
+        
         // vertical
-
         for (var i = 0; i &lt; 13; i++) {
 
             var x = -r2 + i * grid_space;
@@ -2571,9 +3508,13 @@ function drawSten(dimension) {
 
         // Draw axes and label boxes
         ctx.fillStyle = quad_axis_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+
+        if (plot_shadow) {
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+        }
+        
 
         // Note order important to get shadows right
         // Syntax: fillRect(x, y, width, height)
@@ -2603,9 +3544,14 @@ function drawSten(dimension) {
 
         ctx.font = quad_label_text_font;
         ctx.fillStyle = quad_label_text_colour;
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 4;
-        ctx.shadowOffsetY = 4;
+
+        if (plot_shadow) {
+
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+
+        }       
 
         // Left label text
         ctx.fillText(left_text, -r3 - ltw / 2, 0.4 * quad_label_text_size);
@@ -2615,10 +3561,13 @@ function drawSten(dimension) {
 
         // Plot marker
         ctx.fillStyle = quad_marker_colour;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
 
+        if (plot_shadow) {
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+        }
+        
         // Turn on transparency
         ctx.globalAlpha = 0.8;
 
@@ -2648,13 +3597,13 @@ function drawSten(dimension) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blue4Model.html">Blue4Model</a></li><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Report.html">Report</a></li><li><a href="UserProfile.html">UserProfile</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#extractBlue4Model">extractBlue4Model</a></li><li><a href="global.html#extractDimension">extractDimension</a></li><li><a href="global.html#extractQuadrantModel">extractQuadrantModel</a></li><li><a href="global.html#extractSubDimension">extractSubDimension</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadQuestions">loadQuestions</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#myReport">myReport</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#processJSON">processJSON</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#signup">signup</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#submitLoginForm">submitLoginForm</a></li><li><a href="global.html#submitSignUpForm">submitSignUpForm</a></li><li><a href="global.html#surveyStarted">surveyStarted</a></li><li><a href="global.html#updateAnswer">updateAnswer</a></li><li><a href="global.html#userProfile">userProfile</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeLeadership">writeLeadership</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blue4Model.html">Blue4Model</a></li><li><a href="Country.html">Country</a></li><li><a href="Dimension.html">Dimension</a></li><li><a href="QuadrantModel.html">QuadrantModel</a></li><li><a href="Question.html">Question</a></li><li><a href="Region.html">Region</a></li><li><a href="Report.html">Report</a></li><li><a href="State.html">State</a></li><li><a href="UserProfile.html">UserProfile</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignQuadFormating">assignQuadFormating</a></li><li><a href="global.html#countrySelected">countrySelected</a></li><li><a href="global.html#drawQuadrant">drawQuadrant</a></li><li><a href="global.html#drawSten">drawSten</a></li><li><a href="global.html#extractBlue4Model">extractBlue4Model</a></li><li><a href="global.html#extractDimension">extractDimension</a></li><li><a href="global.html#extractQuadrantModel">extractQuadrantModel</a></li><li><a href="global.html#extractSubDimension">extractSubDimension</a></li><li><a href="global.html#getCountries">getCountries</a></li><li><a href="global.html#getProgressBar">getProgressBar</a></li><li><a href="global.html#getQuestions">getQuestions</a></li><li><a href="global.html#getRegions">getRegions</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#getStates">getStates</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadQuestions">loadQuestions</a></li><li><a href="global.html#localQuestionList">localQuestionList</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutGPI">logoutGPI</a></li><li><a href="global.html#myReport">myReport</a></li><li><a href="global.html#numQuestions">numQuestions</a></li><li><a href="global.html#plot_circle">plot_circle</a></li><li><a href="global.html#plot_shadow">plot_shadow</a></li><li><a href="global.html#processJSON">processJSON</a></li><li><a href="global.html#quad_axis_colour">quad_axis_colour</a></li><li><a href="global.html#quad_circle_colour">quad_circle_colour</a></li><li><a href="global.html#quad_end_colour">quad_end_colour</a></li><li><a href="global.html#quad_grid_colour">quad_grid_colour</a></li><li><a href="global.html#quad_height">quad_height</a></li><li><a href="global.html#quad_label_text_colour">quad_label_text_colour</a></li><li><a href="global.html#quad_label_text_font">quad_label_text_font</a></li><li><a href="global.html#quad_label_text_size">quad_label_text_size</a></li><li><a href="global.html#quad_marker_colour">quad_marker_colour</a></li><li><a href="global.html#quad_start_colour">quad_start_colour</a></li><li><a href="global.html#quad_text_colour">quad_text_colour</a></li><li><a href="global.html#quad_text_font">quad_text_font</a></li><li><a href="global.html#quad_text_size">quad_text_size</a></li><li><a href="global.html#quad_width">quad_width</a></li><li><a href="global.html#quadModel_commInterperStyle">quadModel_commInterperStyle</a></li><li><a href="global.html#quadModel_creatEntrepreneur">quadModel_creatEntrepreneur</a></li><li><a href="global.html#quadModel_feelSelfControl">quadModel_feelSelfControl</a></li><li><a href="global.html#quadModel_probSolveImpStyle">quadModel_probSolveImpStyle</a></li><li><a href="global.html#randomQuestions">randomQuestions</a></li><li><a href="global.html#regionSelected">regionSelected</a></li><li><a href="global.html#saveContinue">saveContinue</a></li><li><a href="global.html#saveExit">saveExit</a></li><li><a href="global.html#saveQuestions">saveQuestions</a></li><li><a href="global.html#serverQuestionList">serverQuestionList</a></li><li><a href="global.html#signup">signup</a></li><li><a href="global.html#sten_height">sten_height</a></li><li><a href="global.html#sten_width">sten_width</a></li><li><a href="global.html#submitLoginForm">submitLoginForm</a></li><li><a href="global.html#submitSignUpForm">submitSignUpForm</a></li><li><a href="global.html#surveyStarted">surveyStarted</a></li><li><a href="global.html#toggleHidden">toggleHidden</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateAnswer">updateAnswer</a></li><li><a href="global.html#userProfile">userProfile</a></li><li><a href="global.html#writeCareer">writeCareer</a></li><li><a href="global.html#writeCountries">writeCountries</a></li><li><a href="global.html#writeElement">writeElement</a></li><li><a href="global.html#writeHome">writeHome</a></li><li><a href="global.html#writeInstructions">writeInstructions</a></li><li><a href="global.html#writeLeadership">writeLeadership</a></li><li><a href="global.html#writeMenu">writeMenu</a></li><li><a href="global.html#writeQuadrant">writeQuadrant</a></li><li><a href="global.html#writeQuestions">writeQuestions</a></li><li><a href="global.html#writeRegions">writeRegions</a></li><li><a href="global.html#writeStates">writeStates</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Jan 13 2021 12:45:41 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 11:57:01 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
