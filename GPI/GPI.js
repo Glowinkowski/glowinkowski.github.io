@@ -2632,7 +2632,9 @@ function writeHome() {
 
         textstr += "<div>&nbsp;</div>";
 
-        textstr += "<h3 class=\"gpi_h3\">Contents:</h3>";
+        textstr += "<h3 class=\"gpi_h3\">Contents</h3>";
+
+        textstr += "<div>&nbsp;</div>";
 
         textstr += "<div align='center'>";
         textstr += "<a class=\"gpi_link\" onclick=\"writeElement('problem_quad');\">Problem Solving / Implementation</a><br />";
@@ -2644,6 +2646,8 @@ function writeHome() {
         textstr += "<a class=\"gpi_link\" onclick=\"writeElement('entrepreneur_quad');\">Creativity / Entrepreneurship</a>";
         textstr += "</div>";
 
+        textstr += "<div>&nbsp;</div>";
+        textstr += "<div>&nbsp;</div>";
         textstr += "<div>&nbsp;</div>";
 
         textstr += "</div>";
