@@ -2621,7 +2621,7 @@ function writeHome() {
 
         textstr += "<div class=\"gpi_content\">";
 
-        textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator (GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
+        textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator (GPI)</h1>";
         //textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
 
         textstr += "<div>&nbsp;</div>";
@@ -2845,6 +2845,12 @@ function writeCareer(next, prev) {
         textstr += "<div class=\"gpi_content\">";
 
         textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
+
+        // TEMP
+        textstr += "<div align='center'>";
+        textstr += "<it>Coming soon...</it>";
+        textstr += "</div>";
+
 
         // Navigation
         textstr += "<div class=\"gpi_surv_button_box\">";
