@@ -3047,6 +3047,7 @@ function assignFormatting() {
             quad_marker_colour = "#a9d5f5";
         }
 
+        // Quadrant text
         quad_text_colour = rs.getPropertyValue('--gpi_quad_text_colour');
 
         if (quad_text_colour.length == 0) {
@@ -3054,9 +3055,29 @@ function assignFormatting() {
             quad_text_colour = "#ffffff";
         }
 
-        quad_text_size = 26;
-        quad_text_font = quad_text_size + "px Arial";
+       
+        quad_text_size_str = rs.getPropertyValue('--gpi_quad_text_size');
 
+        if (quad_text_size_str.length == 0) {
+
+            quad_text_size = 28;
+        }
+        else {
+
+            quad_text_size = parseInt(quad_text_size_str);
+
+        }
+
+        quad_text_font = rs.getPropertyValue('--gpi_quad_text_font');
+
+        if (quad_text_font.length == 0) {
+
+            quad_text_font = "Arial";
+        }
+
+        quad_text_font = quad_text_size + "px " + quad_text_font;
+
+        // Quadrant axis label text
         quad_label_text_colour = rs.getPropertyValue('--gpi_quad_label_text_colour');
 
         if (quad_label_text_colour.length == 0) {
@@ -3064,8 +3085,29 @@ function assignFormatting() {
             quad_label_text_colour = "#ffffff";
         }
 
-        quad_label_text_size = 24;
-        quad_label_text_font = quad_label_text_size + "px Arial";
+        quad_label_text_size_str = rs.getPropertyValue('--gpi_quad_label_text_size');
+
+        if (quad_label_text_size_str.length == 0) {
+
+            quad_label_text_size = 24;
+        }
+        else {
+
+            quad_label_text_size = parseInt(quad_label_text_size_str);
+
+        }
+
+        // quad_label_text_size = 24;
+        quad_label_text_font = rs.getPropertyValue('--gpi_quad_label_text_font');
+
+        if (quad_text_font.length == 0) {
+
+            quad_label_text_font = "Arial";
+        }
+
+        quad_label_text_font = quad_label_text_size + "px " + quad_label_text_font;
+
+        // quad_label_text_font = quad_label_text_size + "px Arial";
 
         // Canvas dimensions for quadrants
         quad_width = 900; //1000;
@@ -3212,11 +3254,11 @@ function drawQuadrant(quadrant) {
         }
 
         ctx.font = quad_label_text_font;
-        var ltw = ctx.measureText(left_text).width;
-        var rtw = ctx.measureText(right_text).width;
-        var ttw = ctx.measureText(top_text).width;
-        var btw = ctx.measureText(bottom_text).width;
-        var pad = ctx.measureText('XXX').width;
+        var ltw = ctx.measureText(left_text).width;   // Left text width
+        var rtw = ctx.measureText(right_text).width;  // Right text width
+        var ttw = ctx.measureText(top_text).width;    // Top text width
+        var btw = ctx.measureText(bottom_text).width; // Bottom text width
+        var pad = ctx.measureText('XX').width;
 
         var tw;     // text width (for use with quadrant text)
 
@@ -3303,6 +3345,7 @@ function drawQuadrant(quadrant) {
         ctx.font = quad_text_font;
         ctx.fillStyle = quad_text_colour;
 
+        // r2 is half width of square
         tw = ctx.measureText(Q1text).width;
         ctx.fillText(Q1text, r2 / 2 - tw / 2, -r2 / 2 + quad_text_size);
 
@@ -3488,7 +3531,7 @@ function drawSten(dimension) {
         ctx.font = quad_label_text_font;
         var ltw = ctx.measureText(left_text).width;
         var rtw = ctx.measureText(right_text).width;
-        var pad = ctx.measureText('XXX').width;
+        var pad = ctx.measureText('XX').width;
 
         var lw;         // Width of axis labels
         var lh = 2.0 * quad_label_text_size;     // Height of axis labels

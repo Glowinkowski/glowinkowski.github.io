@@ -62,7 +62,11 @@
 	--gpi_quad_grid_colour: #a9d5f5; /* Colour for quadrant / STEN score grid */
 	--gpi_quad_marker_colour: #f0210a; /* Colour for quadrant / STEN score location marker */
 	--gpi_quad_text_colour: #ffffff; /* Colour for quadrant text */
+	--gpi_quad_text_size: 28; /* N.B. just a number (no px) */
+	--gpi_quad_text_font: Arial; /* Do not include font size */
 	--gpi_quad_label_text_colour: #ffffff; /* Colour for quadrant / STEN score axis label text */
+	--gpi_quad_label_text_size: 28; /* N.B. just a number (no px) */
+	--gpi_quad_label_text_font: Arial; /* Do not include font size */
 }
 
 /*
@@ -138,6 +142,7 @@
 	/* Headings H4 */
 	.gpi_h4 {
 		font-size: var(--gpi_h4_mob_size);
+		padding-top: 10px;
 	}
 }
 
@@ -163,6 +168,11 @@
 		color: var(--gpi_link_hover_col);
 		cursor: pointer;
 	}
+
+/* Label next to link */
+.gpi_label {
+	line-height: 250%;
+}
 
 /* GPI component including menu and content */
 .gpi_component {
