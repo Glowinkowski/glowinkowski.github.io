@@ -563,6 +563,32 @@ var myReport;
 
 /*
  * ============================================================
+ *                          EVENTS
+ * ============================================================
+ */
+
+window.onpopstate = function (event) {
+    
+    if (event.state) {
+
+        var current_page = event.state.GPIpage;
+
+        if (current_page !== null) {
+
+            // Write element (do not push to stack)
+            writeElement(current_page, false);
+        }
+
+    }
+    
+}
+
+/*
+ ******************     END OF EVENTS        ******************
+*/
+
+/*
+ * ============================================================
  *                      INITIALIZATION
  * ============================================================
  */
@@ -1490,9 +1516,6 @@ function processJSON(jsontext) {
         if (user_profile_json.SurveyCompleted) {
 
             // Get report
-            // TEMP
-            // var json_str = JSON.stringify(user_profile_json, null, 4);
-            // document.getElementById("GPI_content").innerHTML = json_str;
 
             // JSON object should have a field 'Report' containing the report data
             if (!getReport(user_profile_json.Report)) throw "Could not load report";
@@ -1505,8 +1528,23 @@ function processJSON(jsontext) {
 
             userProfile.SurveyCompleted = true;
 
-            // Go to HOME page
-            writeElement("home");
+            // Check for current page
+            var current = sessionStorage.getItem("CurrentPage");
+
+            if (current !== null) {
+
+                // Go to current page
+                writeElement(current);
+
+            }
+            else {
+
+                sessionStorage.setItem("CurrentPage", "home");
+
+                // Go to HOME page
+                writeElement("home");
+
+            }
 
         }
         else {
@@ -2381,18 +2419,19 @@ function extractBlue4Model(b4json) {
 /**
  * @function
  * @name writeElement
- * @param {string} mystr String specifying the GPI Model to display
+ * @param {string} current_page String specifying the page to display
  * @description <p>Writes the GPI Model element to the web page</p>
- * <p>The possible values of 'mystr' are currently:</p>
+ * <p>The possible values of 'current_page' are currently:</p>
  * <ul>
  * <li>'home'</li>
  * <li>'problem_quad'</li>
  * <li>'communication_quad'</li>
  * <li>'feelings_quad'</li>
- * <li>'career'</li>
+ * <li>'feelings_quad'</li>
+ * <li>'entrepreneur_quad'</li>
  * </ul>
  */
-function writeElement(mystr) {
+function writeElement(current_page, push_state=true) {
 
     try {
 
@@ -2403,7 +2442,18 @@ function writeElement(mystr) {
         var is_home = false;
         var is_career = false;
 
-        switch (mystr) {
+        // Store current_page in session variable
+        sessionStorage.setItem("CurrentPage", current_page);
+
+        if (push_state) {
+
+            // Push state to history (do not write new URL)
+            history.pushState({ GPIpage: current_page }, null);
+
+        }
+        
+
+        switch (current_page) {
 
             case "home":
 
@@ -2528,24 +2578,6 @@ function writeMenu() {
     try {
 
         // Write menu component
-        /*
-        textstr = "";
-        textstr += "<div class=\"GPI_menu\">";
-        textstr += "<div class=\"GPI_burger_bar\">";
-        textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><i class=\"fa fa-bars\"></i></a>";
-        textstr += "</div>";
-        textstr += "<div id=\"GPI_dropdown_id\" class=\"GPI_dropdown\" style=\"display:none\">";
-        textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
-        textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
-        textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
-        textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
-        textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
-        textstr += "<a onclick=\"writeElement('career');\">Career Themes</a><br />";
-        textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
-        textstr += "</div>";
-        textstr += "</div>";  
-        */
-
         textstr = "";
         textstr += "<div class=\"gpi_menu_bar\">";
         textstr += "<div class=\"gpi_logo_container\">";
