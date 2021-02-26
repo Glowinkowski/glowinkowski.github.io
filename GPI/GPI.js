@@ -2700,6 +2700,8 @@ function writeHome() {
         textstr += "<a class=\"gpi_link\" onclick=\"writeElement('feelings_quad');\">Feelings / Self-Control</a><br />";
         textstr += "<div>&nbsp;</div><div>&nbsp;</div>";
         textstr += "<a class=\"gpi_link\" onclick=\"writeElement('entrepreneur_quad');\">Creativity / Entrepreneurship</a>";
+        textstr += "<div>&nbsp;</div><div>&nbsp;</div>";
+        textstr += "<a class=\"gpi_link\" onclick=\"writeElement('career');\">Career Themes</a>";
         textstr += "</div>";
 
         textstr += "<div>&nbsp;</div>";
