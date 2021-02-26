@@ -38,6 +38,9 @@ class UserProfile {
         this.GenderId = _GenderId;
         this.AgeRangeId = _AgeRangeId;
         this.EthnicityId = _EthnicityId;
+        this.CountryId = 0;
+        this.RegionId = 0;
+        this.StateId = 0;
         this.SurveyCompleted = false;
         this.Questions = null; // Used for returning answered questions to server
     }
@@ -811,7 +814,7 @@ function regionSelected() {
  * <p>Calls the API to get a list of countries, which is then written to the countries drop-down box.</p>
  * @see writeCountries
  */
-function getCountries() {
+function getCountries(set_details=false) {
 
     try {
 
@@ -842,6 +845,17 @@ function getCountries() {
                     // Write to page
                     writeCountries(countries);
 
+                    // Called for the account details page
+                    if (set_details) {
+
+                        country_id = userProfile.CountryId;
+
+                        document.getElementById("country").value = country_id;
+
+                        getRegions(country_id, set_details);
+
+                    }
+
                 }
                 catch (err) {
 
@@ -870,7 +884,7 @@ function getCountries() {
  * <p>Calls the API to get a list of regions by country id, which is then written to the regions drop-down box.</p>
  * @see writeRegions
  */
-function getRegions(country_id) {
+function getRegions(country_id, set_details = false) {
 
     try {
 
@@ -911,6 +925,16 @@ function getRegions(country_id) {
                     // Write to page
                     writeRegions(regions);
 
+                    // Called for the account details page
+                    if (set_details) {
+
+                        region_id = userProfile.RegionId;
+
+                        document.getElementById("region").value = region_id;
+
+                        getStates(region_id, set_details);
+                    }
+
                 }
                 catch (err) {
 
@@ -938,7 +962,7 @@ function getRegions(country_id) {
  * <p>Calls the API to get a list of states by region id, which is then written to the states drop-down box.</p>
  * @see writeStates
  */
-function getStates(region_id) {
+function getStates(region_id, set_details=false) {
 
     try {
 
@@ -979,6 +1003,13 @@ function getStates(region_id) {
                     // Write to page
                     writeStates(states);
 
+                    // Called for the account details page
+                    if (set_details) {
+
+                        document.getElementById("state").value = userProfile.StateId;
+
+                    }
+
                 }
                 catch (err) {
 
@@ -1010,10 +1041,12 @@ function writeCountries(countries) {
 
     try {
 
-        var textstr = "<option value=\"\" selected disabled hidden>Select your country</option>";
+        var textstr = "";
 
         var N = countries.length;
 
+        textstr += "<option value=\"\" selected disabled hidden>Select your country</option>"; 
+        
         for (var i = 0; i < N; i++) {
 
             textstr += "<option value=\"" + countries[i].ID + "\">" + countries[i].Name + "</option>";
@@ -1027,7 +1060,7 @@ function writeCountries(countries) {
     }
     catch (err) {
 
-        alert(err.message + " in printCountries()");
+        alert(err.message + " in writeCountries(countries)");
     }
 
 }
@@ -1102,7 +1135,7 @@ function writeStates(states) {
 
         if (N == 0) {
 
-            regionstr += "<option value=\"0\">Not listed</option>";
+            statestr += "<option value=\"0\">Not listed</option>";
 
         }
 
@@ -1112,7 +1145,29 @@ function writeStates(states) {
     }
     catch (err) {
 
-        alert(err.message + " in writeRegions()");
+        alert(err.message + " in writeStates()");
+    }
+}
+
+function setDetailsToStored() {
+
+    try {
+
+        // N.B. It is assumed that we are on the account details page
+        document.getElementById("email").value = userProfile.Email;
+        document.getElementById("pwd").value = userProfile.Password;
+        document.getElementById("confirm_pwd").value = userProfile.Password;
+        document.getElementById("first_name").value = userProfile.FirstName;
+        document.getElementById("last_name").value = userProfile.LastName;    
+        document.getElementById("gender").value = userProfile.GenderId;
+        document.getElementById("age_range").value = userProfile.AgeRangeId;
+
+        getCountries(set_details = true);
+
+    }
+    catch (err) {
+
+        alert(err.message + " in setDetailsToStored()");
     }
 }
 
@@ -2491,13 +2546,6 @@ function writeElement(current_page, push_state=true) {
 
     try {
 
-        var quadmodel;
-        var prev;
-        var next;
-        var is_quad = false;
-        var is_home = false;
-        var is_career = false;
-
         // Store current_page in session variable
         sessionStorage.setItem("CurrentPage", current_page);
 
@@ -2513,60 +2561,48 @@ function writeElement(current_page, push_state=true) {
 
             case "home":
 
-                is_home = true;
+                writeHome();
+
+                break;
+
+            case "account":
+
+                writeAccount();
 
                 break;
 
             case "problem_quad":
 
-                quadmodel = quadModel_probSolveImpStyle;
-
-                prev = "home";
-                next = "communication_quad";
-
-                is_quad = true;
+                // writeQuadrant(quadmodel, next, prev);
+                writeQuadrant(quadModel_probSolveImpStyle, "communication_quad", "career");
 
                 break;
 
             case "communication_quad":
 
-                quadmodel = quadModel_commInterperStyle;
-
-                prev = "problem_quad";
-                next = "feelings_quad";
-
-                is_quad = true;
+                // writeQuadrant(quadmodel, next, prev);
+                writeQuadrant(quadModel_commInterperStyle, "feelings_quad", "problem_quad");
 
                 break;
 
             case "feelings_quad":
 
-                quadmodel = quadModel_feelSelfControl;
-
-                prev = "communication_quad";
-                next = "entrepreneur_quad";
-
-                is_quad = true;
+                // writeQuadrant(quadmodel, next, prev);
+                writeQuadrant(quadModel_feelSelfControl, "entrepreneur_quad", "communication_quad");
 
                 break;
 
             case "entrepreneur_quad":
 
-                quadmodel = quadModel_creatEntrepreneur;
-
-                prev = "feelings_quad";
-                next = "career";
-
-                is_quad = true;
+                // writeQuadrant(quadmodel, next, prev);
+                writeQuadrant(quadModel_creatEntrepreneur, "career", "feelings_quad");
 
                 break;
 
             case "career":
-
-                prev = "entrepreneur_quad";
-                next = "home";
-
-                is_career = true;
+               
+                // writeCareer(next, prev);
+                writeCareer("problem_quad", "entrepreneur_quad");
 
                 break;
 
@@ -2576,44 +2612,9 @@ function writeElement(current_page, push_state=true) {
 
         }
 
-        // If home
-        if (is_home) {
-
-            writeHome();
-
-            // Scroll to top
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-            return;
-
-        }
-
-        // If quadrant model
-        if (is_quad) {
-
-            writeQuadrant(quadmodel, next, prev);
-
-            // Scroll to top
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-            return;
-
-        }
-
-        // If career themes model
-        if (is_career) {
-
-            writeCareer(next, prev);
-
-            // Scroll to top
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-            return;
-
-        }
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
     }
     catch (err) {
@@ -2645,6 +2646,7 @@ function writeMenu() {
         textstr += "</div >";
         textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
         textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
+        textstr += "<a onclick=\"writeElement('account');\">Account Details</a><br />";
         textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
         textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
         textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
@@ -2678,9 +2680,12 @@ function writeHome() {
         textstr += "<div class=\"gpi_content\">";
 
         textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator (GPI)</h1>";
-        //textstr += "<h1 class=\"gpi_h1\">(GPI<sup style=\"font-size: 8pt\">TM</sup>)</h1>";
 
-        textstr += "<div>&nbsp;</div>";
+        textstr += "<div align='center'>";
+        textstr += "<img id='gpi_image' src='images/GI_Logo.png' width='200' height='200' style='max-width: 100%; height: auto;'/>";
+        textstr += "</div>";
+
+        //textstr += "<div>&nbsp;</div>";
 
         textstr += "<h3 class=\"gpi_h3\">Profile for</h3>";
 
@@ -2710,6 +2715,12 @@ function writeHome() {
 
         textstr += "</div>";
 
+        textstr += "<div align='center'>";
+        textstr += "<p style=\"font-size:10px;\">The 'Global Predisposition Indicator (GPI)' is traded marked by Glowinkowski International Ltd.</p>";
+        textstr += "</div>";
+
+        textstr += "<div>&nbsp;</div>";
+
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
 
@@ -2718,6 +2729,189 @@ function writeHome() {
 
         alert(err.message + " in writeHome()");
     }
+}
+
+function writeAccount() {
+    try {
+
+        // Write menu
+        textstr = writeMenu();
+
+        textstr += "<div class=\"gpi_content\">";
+
+        textstr += "<h1 class=\"gpi_h1\">Account Details</h1>";
+
+        textstr += "<div class=\"gpi_form_container\">";
+        textstr += "<form class=\"form-horizontal\"  onchange=\"formChanged()\">";
+        textstr += "<h4 class=\"gpi_h4\">View or edit your account</h4>";
+        textstr += "<hr />";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"email\">Email</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"email\" type=\"text\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"pwd\">Password</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"pwd\" type=\"password\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"confirm_pwd\">Confirm password</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"confirm_pwd\" type=\"password\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"first_name\">First name</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"first_name\" type=\"text\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"last_name\">Last name</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"last_name\" type=\"text\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        /*
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"access_code\">Access Token</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<input class=\"form-control\" id=\"access_code\" type=\"text\" />";
+        textstr += "</div>";
+        textstr += "</div>";
+        */
+
+        // Location information
+        textstr += "<h4 class=\"gpi_h4\">Location</h4>";
+        textstr += "<hr />";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"country\">Country</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<select class=\"form-control\" id=\"country\" onchange=\"countrySelected()\">";
+        // To be allocated
+        textstr += "<option value=\"0\"></option>";
+        textstr += "</select>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"region\">Region/Province</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<select class=\"form-control\" id=\"region\" onchange=\"regionSelected()\">";
+        // To be allocated
+        textstr += "<option value=\"0\"></option>";
+        textstr += "</select>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"state\">State/County</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<select class=\"form-control\" id=\"state\">";
+        // To be allocated
+        textstr += "<option value=\"0\"></option>";
+        textstr += "</select>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        // Profile information
+        textstr += "<h4 class=\"gpi_h4\">Profile information</h4>";
+        textstr += "<hr />";
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"gender\">Gender</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<select class=\"form-control\" id=\"gender\">";
+        textstr += "<option value=\"1\">Prefer not to say</option>";
+        textstr += "<option value=\"2\">Male</option>";
+        textstr += "<option value=\"3\">Female</option>";
+        textstr += "</select>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<label class=\"col-md-2 control-label\" for=\"age_range\">Age range</label>";
+        textstr += "<div class=\"col-md-10\">";
+        textstr += "<select class=\"form-control\" id=\"age_range\">";
+        textstr += "<option value=\"1\">Prefer not to say</option>";
+        textstr += "<option value=\"8\">Under 21</option>";
+        textstr += "<option value=\"9\">21-30</option>";
+        textstr += "<option value=\"10\">31-40</option>";
+        textstr += "<option value=\"11\">41-50</option>";
+        textstr += "<option value=\"12\">51-60</option>";
+        textstr += "<option value=\"13\">61-65</option>";
+        textstr += "<option value=\"14\">Over 65</option>";
+        textstr += "</select>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<div class=\"col-md-offset-2 col-md-10\">";
+        textstr += "<input disabled id=\"reset_button\" type=\"button\" class=\"btn btn-default\" value=\"Reset\" onclick=\"resetDetails()\"/>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "<div class=\"form-group\">";
+        textstr += "<div class=\"col-md-offset-2 col-md-10\">";
+        textstr += "<input disabled id=\"update_button\" type=\"button\" class=\"btn btn-default\" value=\"Update\" onclick=\"alert('Update')\"/>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        textstr += "</form>";
+        textstr += "</div>";
+
+        textstr += "<div>&nbsp;</div>";
+
+        textstr += "</div>";
+
+        // Write string to document
+        document.getElementById("GPI_content").innerHTML = textstr;
+
+        // Set user details
+        setDetailsToStored();    
+
+    }
+    catch (err) {
+
+        alert(err.message + " in writeAccount()");
+    }
+}
+
+function formChanged() {
+
+    try {
+
+        document.getElementById("reset_button").disabled = false;
+        document.getElementById("update_button").disabled = false;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in formChanged()");
+    }
+    
+}
+
+function resetDetails() {
+
+    try {
+
+        // Set user details
+        setDetailsToStored();
+
+        document.getElementById("reset_button").disabled = true;
+        document.getElementById("update_button").disabled = true;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in resetDetails()");
+    }
+
 }
 
 /**
