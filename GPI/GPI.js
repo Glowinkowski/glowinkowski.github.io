@@ -143,6 +143,26 @@ class QuadrantModel {
     }
 }
 
+/**
+ * @classdesc <p>Implements a career theme - a factor derived from
+ * a user's GPI scores in the Career Themes model.</p>
+ */
+class CareerTheme {
+
+    /**
+     * Creates a CareerTheme factor
+     * @param {string} Name The name of the factor
+     * @param {any} Score The factor score
+     * @param {string} Description Description of the factor
+     */
+    constructor(Name, Score, Description) {
+
+        this.Name = Name;
+        this.Score = Score;
+        this.Description = Description;
+    }
+}
+
 
 /**
  * @classdesc <p>The GPI Blue model is a composite model based on
@@ -310,11 +330,12 @@ class Report {
      * @param {string} FirstName - First name of report subject
      * @param {string} LastName - Last name of report subject
      */
-    constructor(FirstName, LastName, QuadrantModels=[], LeadershipModel=null) {
+    constructor(FirstName, LastName, QuadrantModels=[], CareerThemes=[], LeadershipModel=null) {
 
         this.FirstName = FirstName;
         this.LastName = LastName;
         this.QuadrantModels = QuadrantModels;
+        this.CareerThemes = CareerThemes;
         this.LeadershipModel = LeadershipModel;
 
     }
@@ -528,6 +549,30 @@ var plot_circle = true;
 var plot_shadow = true;
 
 /**
+ * Colour of arrow in careers theme model
+ * @type {string}
+ */
+var careers_arrow_col;
+
+/**
+ * Colour of text in careers theme model
+ * @type {string}
+ */
+var careers_text_col;
+
+/**
+ * Text size in careers theme model
+ * @type {number}
+ */
+var careers_text_size;
+
+/**
+ * Text font in careers theme model
+ * @type {string}
+ */
+var careers_text_font;
+
+/**
  * Problem solving and implementation style model
  * @type {QuadrantModel}
  */
@@ -605,6 +650,9 @@ window.onpopstate = function (event) {
 function init() {
 
     try {
+
+        // Set formating for elements
+        assignFormatting();
 
         // Check if profile has have been saved
         var jsontext = sessionStorage.getItem("GPIStoredProfile");
@@ -2183,6 +2231,7 @@ function getReport(reportObj) {
         * FirstName: string
         * LastName: string
         * QuadrantModels: Array of QuadrantModel
+        * CareerThemes: Array of CareerTheme factors
         * LeadershipModel: Blue4Model
         */
 
@@ -2207,8 +2256,15 @@ function getReport(reportObj) {
         quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings & Self-Control");
         quadModel_creatEntrepreneur = myReport.QuadrantModels.find(x => x.Name === "Creativity & Entrepreneurship");
 
-        // Set formating for quadrant element
-        assignFormatting();
+        // Career themes
+        // TEMP
+        myReport.CareerThemes[0] = new CareerTheme("ORGANISATIONAL", 11.3, "Being organised and focussed.");
+        myReport.CareerThemes[1] = new CareerTheme("INVESTIGATIVE", 11.1, "Enquiry and evaluation.");
+        myReport.CareerThemes[2] = new CareerTheme("PRACTICAL", 10.8, "Working towards a practical outcome.");
+        myReport.CareerThemes[3] = new CareerTheme("ANALYTICAL", 8.8, "Handling and analysing data.");
+
+        // Set formating for elements (moved to init)
+        // assignFormatting();
 
         return true;
 
@@ -2842,14 +2898,48 @@ function writeCareer(next, prev) {
         // Write menu
         textstr = writeMenu();
 
+        // Index for text paragraphs
+        var text_id = 0;
+
         textstr += "<div class=\"gpi_content\">";
 
         textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
 
+        textstr += "<h4 class=\"gpi_h4\">" + myReport.FirstName + "'s top 4 career themes factors are:</h4>";
+
         // TEMP
         textstr += "<div align='center'>";
-        textstr += "<it>Coming soon...</it>";
+        textstr += "<canvas id=\"careers\" width=\"600\" height=\"470\" style=\"display: none\"></canvas>";
+        textstr += "<img id='careers_image' src='' width=\"600\" height=\"470\" style='max-width: 100%; height: auto;'/>";
         textstr += "</div>";
+
+        textstr += "<h2 class=\"gpi_h2\">What these themes mean</h2>";
+
+        for (var i = 0; i < 4; i++) {
+
+            text_id++;  // Index for text paragraphs
+            textstr += "<h3 class=\"gpi_h3\">" + myReport.CareerThemes[i].Name + "</h3>";
+
+            // Identifiers for text paragraphs
+            more_text_id = "more_" + text_id;
+            less_text_id = "less_" + text_id;
+
+            textstr += "<div id=\"" + less_text_id + "\">";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "</div>";
+
+            textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+
+            textstr += myReport.CareerThemes[i].Description;
+
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+
+            textstr += "<div>&nbsp;</div>";
+
+            textstr += "</div>";
+
+        }
 
 
         // Navigation
@@ -2862,6 +2952,9 @@ function writeCareer(next, prev) {
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
+
+        // Draw visualization
+        drawCareerThemes();
 
     }
     catch (err) {
@@ -3103,7 +3196,6 @@ function assignFormatting() {
 
         }
 
-        // quad_label_text_size = 24;
         quad_label_text_font = rs.getPropertyValue('--gpi_quad_label_text_font');
 
         if (quad_text_font.length == 0) {
@@ -3113,19 +3205,15 @@ function assignFormatting() {
 
         quad_label_text_font = quad_label_text_size + "px " + quad_label_text_font;
 
-        // quad_label_text_font = quad_label_text_size + "px Arial";
-
         // Canvas dimensions for quadrants
-        quad_width = 900; //1000;
+        quad_width = 900; 
         quad_height = 700;
 
         // Canvas dimensions for sten scores
-        sten_width = 900; //1000;
+        sten_width = 900; 
         sten_height = 220;
 
         // Set booleans
-        // --gpi_quad_shadow_on
-
         plot_circle_str = rs.getPropertyValue('--gpi_quad_show_circle');
 
         if (plot_circle_str.length == 0) {
@@ -3163,6 +3251,45 @@ function assignFormatting() {
                 plot_shadow = false;
             }
         }
+
+        // Career themes visualization
+        
+        // Colour of arrow
+        careers_arrow_col = rs.getPropertyValue('--gpi_careers_arrow_colour');
+
+        if (careers_arrow_col.length == 0) {
+
+            careers_arrow_col = "#253959";
+        }
+
+        // Colour of text
+        careers_text_col = rs.getPropertyValue('--gpi_careers_text_colour');
+
+        if (careers_arrow_col.length == 0) {
+
+            careers_text_col = "#ffffff";
+        }
+
+        careers_text_size_str = rs.getPropertyValue('--gpi_careers_text_size');
+
+        if (careers_text_size_str.length == 0) {
+
+            careers_text_size = 28;
+        }
+        else {
+
+            careers_text_size = parseInt(careers_text_size_str);
+
+        }
+
+        careers_text_font = rs.getPropertyValue('--gpi_careers_text_font');
+
+        if (careers_text_font.length == 0) {
+
+            careers_text_font = "Arial";
+        }
+
+        careers_text_font = careers_text_size + "px " + careers_text_font;
 
     }
     catch (err) {
@@ -3488,12 +3615,12 @@ function drawSten(dimension) {
             throw "Object is not a Dimension";
         }
 
-        // Draw quadrant
+        // Draw STEN score
         var aw = 10;                // axis width
 
         var id_str = dimension.UnipolarName;    // used to identify HTML element
         id_str = id_str.replace(/ /g, "_");     // replace spaces with underscore
-        var image_id = "image" + id_str;
+        var image_id = "image" + id_str;        // used to identify image to be drawn over canvas
 
         var c = document.getElementById(id_str);
         var ctx = c.getContext("2d");
@@ -3700,5 +3827,76 @@ function drawSten(dimension) {
 
         alert(err.message + " in drawQuadrant()");
 
+    }
+}
+
+
+function drawCareerThemes() {
+
+    try {
+
+        // Get canvas
+        var c = document.getElementById("careers");
+        var ctx = c.getContext("2d");
+        var w = c.width;            // width of canvas
+        //var h = c.height;           // height of canvas
+
+        var pad = 10;               // padding around drawing area
+        var text_pad = 20;          // padding before text
+
+        var ahl = 50;               // arrow head length
+        var ahw = 100;              // arrow head width
+
+        var arl = w - 2 * pad - ahl;   // arrow rod length
+        var arw = 50;                   // arrow rod width
+
+        var dec = 50;               // decrement
+
+        var yoff = ahw / 2 + 2 * pad;             // y-offset
+
+        /*
+        var careers_arrow_col = '#253959';
+        var careers_text_col = '#ffffff';
+
+        careers_text_size = 28;
+        careers_text_font = "Arial";
+        careers_text_font = careers_text_size + "px " + careers_text_font;
+        */
+
+        ctx.font = careers_text_font;
+
+        for (var i = 0; i < 4; i++) {
+
+            var text = myReport.CareerThemes[i].Name;
+
+            var y0 = yoff + i * (ahw + pad);
+            var x0 = arl - i * dec;
+            var xoff = pad;
+
+            ctx.fillStyle = careers_arrow_col;
+
+            ctx.beginPath();
+            ctx.moveTo(xoff, y0 - arw / 2);
+            ctx.lineTo(xoff + x0, y0 - arw / 2);
+            ctx.lineTo(xoff + x0, y0 - arw / 2 - (ahw - arw) / 2);
+            ctx.lineTo(xoff + x0 + ahl, y0);
+            ctx.lineTo(xoff + x0, y0 + arw / 2 + (ahw - arw) / 2);
+            ctx.lineTo(xoff + x0, y0 + arw / 2);
+            ctx.lineTo(xoff, y0 + arw / 2);
+            ctx.lineTo(xoff, y0 - arw / 2);
+            ctx.fill();
+
+            ctx.fillStyle = careers_text_col;
+            ctx.fillText(text, xoff + text_pad, y0 + 0.4 * careers_text_size);
+
+        }
+
+        // Write canvas to image (c is canvas object)
+        var domstr = c.toDataURL("image/png");
+        document.getElementById("careers_image").src = domstr;
+    }
+    catch (err) {
+
+        alert(err.message + " in drawCareerThemes(career_themes)");
     }
 }

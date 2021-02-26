@@ -67,6 +67,10 @@
 	--gpi_quad_label_text_colour: #ffffff; /* Colour for quadrant / STEN score axis label text */
 	--gpi_quad_label_text_size: 28; /* N.B. just a number (no px) */
 	--gpi_quad_label_text_font: Arial; /* Do not include font size */
+	--gpi_careers_arrow_colour: #253959; /* Colour of arrow in careers theme model */
+	--gpi_careers_text_colour: #ffffff; /* Colour of text in careers theme model */
+	--gpi_careers_text_size: 28; /* N.B. just a number (no px) */
+	--gpi_careers_text_font: Arial; /* Do not include font size */
 }
 
 /*
