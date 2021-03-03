@@ -330,6 +330,11 @@
 	   GPI survey
 	==============================================================
 */
+/* Progress bar */
+.gpi_progress {
+	height: 30px;
+}
+
 /* Lead question */
 .gpi_lead_qu {
 	font-style: italic;

@@ -2334,7 +2334,7 @@ function getProgressBar() {
 
         var completed = Math.floor(100 * n / N);
 
-        textstr += "<progress id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
+        textstr += "<progress class=\"gpi_progress\" id=\"progress\" value=\"" + n + "\" max=\"" + N + "\"></progress>";
         textstr += "<label for=\"progress\">&nbsp;" + completed + "%</label >";
 
         return textstr;
