@@ -17,6 +17,120 @@
  * @copyright Glowinkowski International Limited (2020)
 */
 
+/**
+ * ===========================================================
+ *    FILE SECTIONS
+ * ===========================================================
+ * 
+ * -----------------------------------------------------------
+ *    CLASS DEFINITIONS
+ * -----------------------------------------------------------
+ *    class UserProfile
+ *    class Question
+ *    class Dimension
+ *    class QuadrantModel
+ *    class CareerTheme
+ *    class Blue4Model (not used)
+ *    class Report
+ *    class Country
+ *    class Region
+ *    class State
+ *    
+ * -----------------------------------------------------------
+ *    GLOBAL VARIABLES
+ * -----------------------------------------------------------
+ *    (See definitions)
+ *    
+ * -----------------------------------------------------------
+ *    EVENT HANDLERS
+ * -----------------------------------------------------------
+ *    onpopstate
+ *    
+ * -----------------------------------------------------------
+ *    INITIALIZATION
+ * -----------------------------------------------------------
+ *    init
+ *    
+ * -----------------------------------------------------------
+ *    LOGGING OUT
+ * -----------------------------------------------------------
+ *    logout
+ *    logoutGPI
+ *    
+ * -----------------------------------------------------------
+ *    SIGN-UP/USER DETAILS FORM FUNCTIONALITY
+ * -----------------------------------------------------------
+ *    countrySelected
+ *    regionSelected
+ *    getCountries
+ *    getRegions
+ *    getStates
+ *    writeCountries
+ *    writeRegions
+ *    writeStates
+ *    setDetailsToStored
+ * 
+ * -----------------------------------------------------------
+ *    USER SIGN-UP / LOGIN FUNCTIONS
+ * -----------------------------------------------------------
+ *    submitSignUpForm
+ *    submitLoginForm
+ *    isValidEmail
+ *    signup
+ *    login
+ *    processJSON
+ *    
+ * -----------------------------------------------------------
+ *    USER SURVEY FUNCTIONS
+ * -----------------------------------------------------------
+ *    updateAnswers
+ *    loadQuestions
+ *    writeInstructions
+ *    getQuestions
+ *    writeQuestions
+ *    getProgressBar
+ *    saveExit
+ *    saveContinue
+ *    saveQuestions
+ *    getScore
+ *    surveyStarted
+ *    randomQuestions
+ * 
+ * -----------------------------------------------------------
+ *    REPORT EXTRACTION FUNCTIONS
+ * -----------------------------------------------------------
+ *    getReport
+ *    extractQuadrantModel
+ *    extractDimension
+ *    extractSubDimension
+ *    extractBlue4Model
+ *    
+ * -----------------------------------------------------------
+ *    PAGE GENERATION FUNCTIONS
+ * -----------------------------------------------------------
+ *    writeElement
+ *    writeMenu
+ *    writeHome
+ *    writeAccount
+ *    formChanged
+ *    resetDetails
+ *    writeQuadrant
+ *    writeCareer
+ *    toggleMenu
+ *    hideMenu
+ *    toggleHidden
+ *    
+ * -----------------------------------------------------------
+ *    GRAPHICS FUNCTIONS
+ * -----------------------------------------------------------
+ *    assignFormatting
+ *    drawQuadrant
+ *    drawSten
+ *    drawCareerThemes
+ * 
+ * -----------------------------------------------------------
+ */
+
 /*
  * ===========================================================
  *                  CLASS DEFINITIONS
@@ -38,8 +152,6 @@ class UserProfile {
         this.GenderId = _GenderId;
         this.AgeRangeId = _AgeRangeId;
         this.EthnicityId = _EthnicityId;
-        this.CountryId = 0;
-        this.RegionId = 0;
         this.StateId = 0;
         this.SurveyCompleted = false;
         this.Questions = null; // Used for returning answered questions to server
@@ -332,6 +444,8 @@ class Report {
      * Creates a GPI Talent Report
      * @param {string} FirstName - First name of report subject
      * @param {string} LastName - Last name of report subject
+     * @param {QuadrantModel[]} - Array of QuadrantModels
+     * @param {CareerTheme[]} - Array of CareerTheme factors
      */
     constructor(FirstName, LastName, QuadrantModels=[], CareerThemes=[], LeadershipModel=null) {
 
@@ -349,10 +463,19 @@ class Report {
  */
 class Country {
 
-    constructor(_ID, _Name) {
+    /**
+     * Creates a Country object.
+     * @param {number} _ID - Unique identifier for the Country
+     * @param {string} _Name - Country name
+     * @param {string} _RegionName - Country-specific name for a region (e.g. 'Zone')
+     * @param {any} _StateName - Country-specific name for a state (e.g. 'State' or 'County')
+     */
+    constructor(_ID, _Name, _RegionName="Region", _StateName="State") {
 
         this.ID = _ID;
         this.Name = _Name;
+        this.RegionName = _RegionName;   
+        this.StateName = _StateName;    
     }
 
 }
@@ -424,7 +547,7 @@ var localQuestionList;
  */
 var numQuestions = 10;
 
-// Formatting and report
+// Formatting (TODO: encapsulate into object)
 
 /**
  * Path for logo
@@ -575,6 +698,8 @@ var careers_text_size;
  */
 var careers_text_font;
 
+// Quadrant models
+
 /**
  * Problem solving and implementation style model
  * @type {QuadrantModel}
@@ -611,28 +736,43 @@ var myReport;
 
 /*
  * ============================================================
- *                          EVENTS
+ *                      EVENT HANDLERS
  * ============================================================
  */
 
+/**
+ * @function
+ * @name onpopstate
+ * @description <p>Handler for the popstate event. The routine gets the page from the 
+ * event object and passes it to the writeElement function.</p>
+ * @param {Event} event popstate event
+ * @see writeElement
+ */
 window.onpopstate = function (event) {
-    
-    if (event.state) {
 
-        var current_page = event.state.GPIpage;
+    try {
 
-        if (current_page !== null) {
+        if (event.state) {
 
-            // Write element (do not push to stack)
-            writeElement(current_page, false);
+            var current_page = event.state.GPIpage;
+
+            if (current_page !== null) {
+
+                // Write element (do not push to stack )
+                writeElement(current_page, push_state=false);
+            }
+
         }
 
     }
-    
+    catch (err) {
+
+        alert(err.message + " in onpopstate()");
+    } 
 }
 
 /*
- ******************     END OF EVENTS        ******************
+ ******************  END OF EVENT HANDLERS   ******************
 */
 
 /*
@@ -646,9 +786,15 @@ window.onpopstate = function (event) {
  * @name init
  * @description
  * <p>This function is intended to be called when a page loads (after any required HTML
- * components have been loaded) and checks whether user/profile data has been stored locally
- * in session variables (i.e. the user is 'logged in'). If so, it loads this data so that 
- * no further calls to the API are required.</p>
+ * components have been loaded). It assigns the formatting for the GPI visualizations (from
+ * CSS root variables) and checks whether user/profile data has been stored locally
+ * in session variables (i.e. the user is 'logged in'). If the user is logged in, it loads  
+ * this data via processJSON so that no further calls to the API are required.</p>
+ * <p>If there is no stored profile, the routine checks to see if we are on the sign-up
+ * page. If so, it calls getCountries to populate the countries drop-down box.</p>
+ * @see assignFormatting
+ * @see processJSON
+ * @see getCountries
  */
 function init() {
 
@@ -666,7 +812,7 @@ function init() {
 
         }
         else {
-            // Check if we are on the sign-up page
+            // Check if we are on the sign-up or user details page
             country_element = document.getElementById("country");
 
             if (country_element !== null) {
@@ -701,6 +847,7 @@ function init() {
  * @description
  * <p>Logs the user out by deleting session variables and reloading page</p>
  * @returns {boolean} True if user wishes to exit the GPI
+ * @see logoutGPI
  */
 function logout() {
 
@@ -757,7 +904,7 @@ function logoutGPI() {
 
 /*
  * ============================================================
- *                 SIGN-UP FORM FUNCTIONALITY
+ *            SIGN-UP/USER DETAILS FORM FUNCTIONALITY
  * ============================================================
  */
 
@@ -810,6 +957,7 @@ function regionSelected() {
 /**
  * @function
  * @name getCountries
+ * @param {boolean} set_details If true, user details are written to form (default = false)
  * @description
  * <p>Calls the API to get a list of countries, which is then written to the countries drop-down box.</p>
  * @see writeCountries
@@ -833,13 +981,27 @@ function getCountries(set_details=false) {
                     // Load countries
 
                     // Set countries to zero array
-                    countries = [];
+                    var countries = [];
 
                     var N = json.length;
 
                     for (var i = 0; i < N; i++) {
 
                         countries[i] = new Country(json[i].ID, json[i].Name);
+
+                        // N.B. Included for future use
+                        if (json[i].RegionName !== null) {
+
+                            countries[i].RegionName = json[i].RegionName;
+
+                        }
+
+                        // N.B. Included for future use
+                        if (json[i].StateName !== null) {
+
+                            countries[i].StateName = json[i].StateName;
+
+                        }
                     }
 
                     // Write to page
@@ -880,6 +1042,7 @@ function getCountries(set_details=false) {
  * @function
  * @name getRegions
  * @param {number} country_id Unique identifier for the country
+ * @param {boolean} set_details If true, user details are written to dropdown box (default = false)
  * @description
  * <p>Calls the API to get a list of regions by country id, which is then written to the regions drop-down box.</p>
  * @see writeRegions
@@ -958,6 +1121,7 @@ function getRegions(country_id, set_details = false) {
  * @function
  * @name getStates
  * @param {number} region_id Unique identifier for the region
+ * @param {boolean} set_details If true, user details are written to dropdown box (default = false)
  * @description
  * <p>Calls the API to get a list of states by region id, which is then written to the states drop-down box.</p>
  * @see writeStates
@@ -1052,7 +1216,7 @@ function writeCountries(countries) {
             textstr += "<option value=\"" + countries[i].ID + "\">" + countries[i].Name + "</option>";
         }
 
-        textstr += "<option value=\"0\">Not listed</option>";
+        textstr += "<option value=\"-1\">Not listed</option>";
 
         // Write string to document
         document.getElementById("country").innerHTML = textstr;
@@ -1095,10 +1259,10 @@ function writeRegions(regions) {
         }
         else {
 
-            regionstr += "<option value=\"0\">Not listed</option>";
+            regionstr += "<option value=\"-1\">Not listed</option>";
 
             // Erase list of states
-            document.getElementById("state").innerHTML = "<option value=\"0\">Not listed</option>";
+            document.getElementById("state").innerHTML = "<option value=\"-1\">Not listed</option>";
 
         }
 
@@ -1135,7 +1299,8 @@ function writeStates(states) {
 
         if (N == 0) {
 
-            statestr += "<option value=\"0\">Not listed</option>";
+            //statestr += "<option value=\"0\">Not listed</option>";
+            statestr += "<option value=\"-1\">Not listed</option>";
 
         }
 
@@ -1149,6 +1314,13 @@ function writeStates(states) {
     }
 }
 
+/**
+ * @function
+ * @name setDetailsToStored
+ * @description <p>Sets the details on the user form to those of the current user profile 
+ * (used for the account details page)</p>
+ * @see userProfile
+ */
 function setDetailsToStored() {
 
     try {
@@ -1171,6 +1343,23 @@ function setDetailsToStored() {
     }
 }
 
+
+function getUserDetails() {
+
+    try {
+
+        // Call API to get user details
+
+        // TEMP
+        writeAccount();
+
+    }
+    catch (err) {
+
+        alert(err.message + " in getUserDetails()");
+    }
+}
+
 /*
  ************* END OF SIGN-UP FORM FUNCTIONALITY  *************
 */
@@ -1184,16 +1373,25 @@ function setDetailsToStored() {
 /**
  * @function
  * @name submitSignUpForm
+ * @param {boolean} sign_up If true, then this is a new user (default = true)
  * @description
- * <p>Processes sign-up form and calls signup API.</p>
+ * <p>Processes sign-up / edit user details form and calls signup / update API.</p>
+ * @see isValidEmail
+ * @see signup
  */
-function submitSignUpForm() {
+function submitSignUpForm(sign_up=true) {
 
     try {
 
-        // Disable submit button
-        document.getElementById("submit_button").disabled = true;
+        // TEMP
+        var state_name = "State/County";
 
+        // Disable submit button
+        if (sign_up) {
+            document.getElementById("submit_button").disabled = true;
+        }
+
+        // Check for errors
         var errors = false;
 
         var error_msg = "There were problems with your submission:";
@@ -1208,7 +1406,16 @@ function submitSignUpForm() {
 
         var last_name = document.getElementById("last_name").value;
 
-        var access_code = document.getElementById("access_code").value;
+        var state_id = document.getElementById("state").value;
+
+        var access_code = "";
+
+        if (sign_up) {
+
+            // This is a new user
+            access_code = document.getElementById("access_code").value;
+
+        }   
 
         if (email == null) {
             errors = true;
@@ -1274,15 +1481,32 @@ function submitSignUpForm() {
             }
         }
 
-        if (access_code == null) {
-            errors = true;
-            error_msg += "\n - Access code required.";
-        }
-        else {
-            
-            if (access_code.length == 0) {
+        if (sign_up) {
+
+            // This is a new user
+            if (access_code == null) {
                 errors = true;
                 error_msg += "\n - Access code required.";
+            }
+            else {
+
+                if (access_code.length == 0) {
+                    errors = true;
+                    error_msg += "\n - Access code required.";
+                }
+            }
+
+        }
+
+        if (state_id == null) {
+            errors = true;
+            error_msg += "\n - " + state_name + " required.";
+        }
+        else {
+
+            if (parseInt(state_id) == 0) {
+                errors = true;
+                error_msg += "\n - " + state_name + " required.";
             }
         }
 
@@ -1290,13 +1514,21 @@ function submitSignUpForm() {
 
             alert(error_msg);
             // Re-enable submit button
-            document.getElementById("submit_button").disabled = false;
+            if (sign_up) {
+
+                document.getElementById("submit_button").disabled = false;
+
+            }
+            
             return;
         }
 
-        // Store user password
+        // Store user password (NOTE: perhaps store all user details here 
+        // or after successful submission?)
         sessionStorage.setItem("GPIStoredPWD", pwd);
 
+        // TODO: Test change of syntax here to initialize by property name
+        /*
         var user_profile = new UserProfile(
             email,
             pwd,
@@ -1305,9 +1537,44 @@ function submitSignUpForm() {
             access_code,
             document.getElementById("gender").value,
             document.getElementById("age_range").value
-        )
+        );
+        */
 
-        signup(user_profile);
+        // Create new user profile
+        var user_profile = new UserProfile(email, pwd);
+
+        // Assign additional properties
+        user_profile.FirstName = first_name;
+        user_profile.LastName = last_name;
+
+        if (signup) {
+            user_profile.AccessCode = access_code;
+        }
+
+        // if 'Not listed', state_id = -1
+        if (state_id > 0) {
+
+            user_profile.StateId = state_id;
+
+        }
+        else {
+
+            // If not listed, set this to null
+            user_profile.StateId = null;
+        }
+        
+        user_profile.GenderId = document.getElementById("gender").value;
+        user_profile.AgeRangeId = document.getElementById("age_range").value;
+
+
+        if (sign_up) {
+            // Sign-up new user
+            signup(user_profile);
+        }
+        else {
+            
+            alert("state: " + state_id);
+        }
 
     }
     catch (err) {
@@ -1321,6 +1588,8 @@ function submitSignUpForm() {
  * @name submitLoginForm
  * @description
  * <p>Processes login form and calls login API.</p>
+ * @see isValidEmail
+ * @see login
  */
 function submitLoginForm() {
 
@@ -1437,17 +1706,18 @@ function isValidEmail(email) {
 /**
  * @function
  * @name signup
- * @description <p>Calls the signup API and then calls the routines to 
+ * @description <p>Calls the signup API and then calls processJSON to
  * deserialize the returned JSON string</p>
  * @param {UserProfile} user_profile Object representing a user/profile
+ * @see processJSON
  */
 function signup(user_profile) {
 
     try {
 
         // URL changed to the live version
-        //var url = "https://localhost:44369/api/user/signup/";
-        var url = "https://gi-api.azurewebsites.net/api/user/signup/";
+        //var url = "https://localhost:44369/api/user/signup/";  // Local testing
+        var url = "https://gi-api.azurewebsites.net/api/user/signup/";  // Live URL
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -1517,17 +1787,18 @@ function signup(user_profile) {
 /**
  * @function
  * @name login
- * @description <p>Calls the login API and then calls the routines to
+ * @description <p>Calls the login API and then calls processJSON to
  * deserialize the returned JSON string</p>
  * @param {UserProfile} user_profile Object representing a user/profile
+ * @see processJSON
  */
 function login(user_profile) {
 
     try {
 
         // URL changed to the live version
-        //var url = "https://localhost:44369/api/user/login/";
-        var url = "https://gi-api.azurewebsites.net/api/user/login/";
+        //var url = "https://localhost:44369/api/user/login/";   // Local testing
+        var url = "https://gi-api.azurewebsites.net/api/user/login/";  // Live URL
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -1613,7 +1884,7 @@ function processJSON(jsontext) {
         // Store JSON string
         sessionStorage.setItem("GPIStoredProfile", jsontext);
 
-        // Get stored password
+        // Get stored password (this was initially stored in either submitSignUpForm or submitLoginForm)
         var pwd = sessionStorage.getItem("GPIStoredPWD");
 
         if (user_profile_json.SurveyCompleted) {
@@ -1623,7 +1894,7 @@ function processJSON(jsontext) {
             // JSON object should have a field 'Report' containing the report data
             if (!getReport(user_profile_json.Report)) throw "Could not load report";
 
-            // If all OK
+            // If all OK (note that user email is stored in json object)
             userProfile = new UserProfile(
                 user_profile_json.Email,
                 pwd
@@ -1642,6 +1913,7 @@ function processJSON(jsontext) {
             }
             else {
 
+                // Store home as current page
                 sessionStorage.setItem("CurrentPage", "home");
 
                 // Go to HOME page
@@ -1670,7 +1942,17 @@ function processJSON(jsontext) {
 
                 // Survey has been started - using stored session variable
                 serverQuestionList = JSON.parse(jsontext);
-                getQuestions();
+
+                if (surveyStarted()) {
+
+                    getQuestions();
+
+                }
+                else {
+
+                    writeInstructions();
+                }
+                
             }
             else {
 
@@ -1693,6 +1975,10 @@ function processJSON(jsontext) {
 }
 
 /*
+ *********** END OF USER SIGN-UP / LOGIN FUNCTIONS ************
+*/
+
+/*
  * ===========================================================
  *                USER SURVEY FUNCTIONS
  * ===========================================================
@@ -1700,7 +1986,7 @@ function processJSON(jsontext) {
 
 /**
  * @function
- * @name updateAnswer
+ * @name updateAnswers
  * @description <p>Calls the API to submit a list of answered questions</p>
  * @param {UserProfile} user_profile User/profile object
  * @param {boolean} continue_survey Signals that the survey should be continued after submitting answers
@@ -1868,11 +2154,14 @@ function writeInstructions() {
     try {
 
         // Create instructions string
-        textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\" onclick=\"logout();\">Exit GPI</a></div>";
+        var textstr = writeMenu(survey = true);
+
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
+
         textstr += "<h1>The GPI Survey</h1>";
+        textstr += "<h2>Instructions</h2>";
         textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
-        textstr += "'real you'.These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
+        textstr += "'real you'. These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
         textstr += "particular circumstances that you face. Hence you are answering it in the context of \"<i>I am the sort of person who...</i>\".</p>";
         textstr += "<p>To generate an accurate profile, this inventory requires that your responses reflect how you prefer to behave rather than how, on some occasions, you may ";
         textstr += "actually behave. Therefore, in responding to each of the questions, please have in mind how you prefer to think and behave in general, independent of the ";
@@ -1890,10 +2179,12 @@ function writeInstructions() {
         }
         else {
 
-            verb = "Take";
+            verb = "Take Survey";
         }
 
-        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"" + verb + " Survey\" onclick=\"getQuestions()\"></div>";
+        textstr += "<div class=\"gpi_surv_button_box\"><input type=\"button\" class=\"gpi_button\" value=\"" + verb + "\" onclick=\"getQuestions()\"></div>";
+
+        textstr += "</div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -1958,8 +2249,9 @@ function writeQuestions() {
 
     try {
 
-        textstr = "";
-        textstr += "<div style=\"float: right\"><a href=\"\" class=\"gpi_link\"  onclick=\"logout();\">Exit GPI</a></div>";
+        var textstr = writeMenu(survey = true);
+
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         textstr += getProgressBar();
 
@@ -1995,11 +2287,13 @@ function writeQuestions() {
         textstr += "</div>"; // End of table
 
         textstr += "<div class=\"gpi_surv_button_box\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Exit\"  onclick=\"saveExit()\">";
-        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Save and Continue\"  onclick=\"saveContinue()\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Exit\"  onclick=\"saveExit()\">";
+        textstr += "<input type=\"button\" class=\"gpi_button\" value=\"Continue\"  onclick=\"saveContinue()\">";
         textstr += "</div>";
 
         textstr += "</form>";
+
+        textstr += "</div>";
 
         // Write string to document
         document.getElementById("GPI_content").innerHTML = textstr;
@@ -2026,7 +2320,7 @@ function getProgressBar() {
 
     try {
 
-        textstr = "";
+        textstr = "<div>&nbsp;</div>";
 
         var N = serverQuestionList.length;
         var n = 0;
@@ -2264,6 +2558,10 @@ function randomQuestions() {
 }
 
 /*
+ ***********     END OF USER SURVEY FUNCTIONS     ************
+*/              
+
+/*
  * ===========================================================
  *                REPORT EXTRACTION FUNCTIONS
  * ===========================================================
@@ -2318,12 +2616,7 @@ function getReport(reportObj) {
         myReport.CareerThemes[2] = new CareerTheme("PRACTICAL", 10.8, "Working towards a practical outcome.");
         myReport.CareerThemes[3] = new CareerTheme("ANALYTICAL", 8.8, "Handling and analysing data.");
 
-        // Set formating for elements (moved to init)
-        // assignFormatting();
-
         return true;
-
-        //writeElement("problem_quad");
 
     }
     catch (err) {
@@ -2522,6 +2815,10 @@ function extractBlue4Model(b4json) {
 }
 
 /*
+ ***********  END OF REPORT EXTRACTION FUNCTIONS  ************
+*/
+
+/*
  * ===========================================================
  *                PAGE GENERATION FUNCTIONS
  * ===========================================================
@@ -2567,7 +2864,8 @@ function writeElement(current_page, push_state=true) {
 
             case "account":
 
-                writeAccount();
+                // Calls writeAccount() after getting user details
+                getUserDetails();
 
                 break;
 
@@ -2630,31 +2928,51 @@ function writeElement(current_page, push_state=true) {
  * @returns {string} HTML string 
  * @description <p>Generates the HTML string for generating the navigation menu</p>
  */
-function writeMenu() {
+function writeMenu(survey=false) {
 
     try {
 
-        // Write menu component
-        textstr = "";
-        textstr += "<div class=\"gpi_menu_bar\">";
-        textstr += "<div class=\"gpi_logo_container\">";
-        textstr += "<a href=\"index.html\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
-        textstr += "</div >";
-        textstr += "<div class=\"gpi_burger_container\">";
-        textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
-        textstr += "</div>";
-        textstr += "</div >";
-        textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
-        textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
-        textstr += "<a onclick=\"writeElement('account');\">Account Details</a><br />";
-        textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
-        textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
-        textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
-        textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
-        textstr += "<a onclick=\"writeElement('career');\">Career Themes</a><br />";
-        textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
-        textstr += "</div>";
+        var textstr = "";
 
+        if (survey) {
+
+            // Write survey menu
+            textstr += "<div class=\"gpi_menu_bar\">";
+            textstr += "<div class=\"gpi_logo_container\">";
+            textstr += "<a href=\"index.html\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
+            textstr += "</div >";
+            textstr += "<div class=\"gpi_burger_container\">";
+            textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
+            textstr += "</div>";
+            textstr += "</div >";
+            textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
+            textstr += "<a href=\"\" onclick=\"saveExit();\">Exit GPI</a><br />";
+            textstr += "</div>";
+
+        }
+        else {
+
+            // Write main menu component
+            textstr += "<div class=\"gpi_menu_bar\">";
+            textstr += "<div class=\"gpi_logo_container\">";
+            textstr += "<a href=\"index.html\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
+            textstr += "</div >";
+            textstr += "<div class=\"gpi_burger_container\">";
+            textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
+            textstr += "</div>";
+            textstr += "</div >";
+            textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
+            textstr += "<a onclick=\"writeElement('home');\">Home</a><br />";
+            textstr += "<a onclick=\"writeElement('account');\">Account Details</a><br />";
+            textstr += "<a onclick=\"writeElement('problem_quad');\">Problem Solving & Implementation Style</a><br />";
+            textstr += "<a onclick=\"writeElement('communication_quad');\">Communication & Interpersonal Style</a><br />";
+            textstr += "<a onclick=\"writeElement('feelings_quad');\">Feelings & Self-Control</a><br />";
+            textstr += "<a onclick=\"writeElement('entrepreneur_quad');\">Creativity & Entrepreneurship</a><br />";
+            textstr += "<a onclick=\"writeElement('career');\">Career Themes</a><br />";
+            textstr += "<a href=\"\" onclick=\"logout();\">Exit GPI</a><br />";
+            textstr += "</div>";
+
+        }
 
         return textstr;
 
@@ -2677,7 +2995,7 @@ function writeHome() {
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div class=\"gpi_content\">";
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         textstr += "<h1 class=\"gpi_h1\">The Global Predisposition Indicator (GPI)</h1>";
 
@@ -2731,13 +3049,18 @@ function writeHome() {
     }
 }
 
+/**
+ * @function
+ * @name writeAccount
+ * @description <p>Generates the HTML string for generating the user account page</p>
+ */
 function writeAccount() {
     try {
 
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div class=\"gpi_content\">";
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         textstr += "<h1 class=\"gpi_h1\">Account Details</h1>";
 
@@ -2857,7 +3180,9 @@ function writeAccount() {
 
         textstr += "<div class=\"form-group\">";
         textstr += "<div class=\"col-md-offset-2 col-md-10\">";
-        textstr += "<input disabled id=\"update_button\" type=\"button\" class=\"btn btn-default\" value=\"Update\" onclick=\"alert('Update')\"/>";
+
+        // Submit button calls submitSignUpForm(sign_up=false) to update details
+        textstr += "<input disabled id=\"update_button\" type=\"button\" class=\"btn btn-default\" value=\"Update\" onclick=\"submitSignUpForm(false)\"/>";
         textstr += "</div>";
         textstr += "</div>";
 
@@ -2881,6 +3206,11 @@ function writeAccount() {
     }
 }
 
+/**
+ * @function
+ * @name formChanged
+ * @description <p>Called when user form is changed on user account page.</p>
+ */
 function formChanged() {
 
     try {
@@ -2896,6 +3226,12 @@ function formChanged() {
     
 }
 
+/**
+ * @function
+ * @name resetDetails
+ * @description <p>Called when user clicks reset button on user account page.</p>
+ * @see setDetailsToStored
+ */
 function resetDetails() {
 
     try {
@@ -2929,6 +3265,8 @@ function resetDetails() {
  * @see quad_height
  * @see sten_width
  * @see sten_height
+ * @see drawQuadrant
+ * @see drawSten
  */
 function writeQuadrant(quadmodel, next, prev) {
 
@@ -2937,7 +3275,7 @@ function writeQuadrant(quadmodel, next, prev) {
         // Write menu
         textstr = writeMenu();
 
-        textstr += "<div class=\"gpi_content\">";
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         // Write Quadrant component
 
@@ -3086,6 +3424,7 @@ function writeQuadrant(quadmodel, next, prev) {
  * @param {string} next String for next element in report
  * @param {string} prev String for previous element in report
  * @description <p>Renders the page for the Career themes model</p>
+ * @see drawCareerThemes
  */
 function writeCareer(next, prev) {
 
@@ -3097,7 +3436,7 @@ function writeCareer(next, prev) {
         // Index for text paragraphs
         var text_id = 0;
 
-        textstr += "<div class=\"gpi_content\">";
+        textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
 
@@ -3192,6 +3531,31 @@ function toggleMenu(menu_id) {
 
 /**
  * @function
+ * @name hideMenu
+ * @param {string} menu_id String specifying the element id for the menu
+ * @description <p>Hides the menu if it is visible (used to hide menu by
+ * clicking on the main content).</p>
+ */
+function hideMenu(menu_id) {
+
+    try {
+
+        var dropdown = document.getElementById(menu_id);
+
+        if (dropdown.style.display === "block") {
+
+            dropdown.style.display = "none";
+        }
+
+    }
+    catch (err) {
+
+        alert(err.message + " in hideMenu(menu_id)");
+    }
+}
+
+/**
+ * @function
  * @name toggleHidden
  * @param {string} show_id String specifying the id of the element to show
  * @param {string} hide_id String specifying the id of the element to hide
@@ -3215,36 +3579,13 @@ function toggleHidden(show_id, hide_id) {
 
 }
 
-/**
- * @function
- * @name writeLeadership
- * @description <p>Writes the leadership model element</p>
- * @see myReport
- * @todo Still needs to be implemented
- */
-function writeLeadership() {
-
-    try {
-
-        // Write contents
-        textstr = "";
-        textstr += "<h2>Leadership Style</h2>";
-        textstr += myReport.LeadershipModel.ScoreText;
-        textstr += "<p>Specimen has bad-day behaviour '" + myReport.LeadershipModel.RiskArea + "' with a " + myReport.LeadershipModel.RiskLevel + " risk level</p>";
-
-        // Write string to document
-        document.getElementById("main").innerHTML = textstr;
-
-    }
-    catch (err) {
-
-        alert(err.message + " in writeLeadership()")
-    }
-}
+/*
+ ***********   END OF PAGE GENERATION FUNCTIONS   ************
+*/
 
 /*
  * ===========================================================
- *                GRAPHICS FUNCTIONS
+ *                   GRAPHICS FUNCTIONS
  * ===========================================================
  */
 
@@ -4096,3 +4437,7 @@ function drawCareerThemes() {
         alert(err.message + " in drawCareerThemes(career_themes)");
     }
 }
+
+/*
+ ***********       END OF GRAPHICS FUNCTIONS      ************
+*/
