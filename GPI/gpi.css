@@ -287,6 +287,10 @@
 	display: inline-block;
 }
 
+
+
+
+
 /* GPI hamburger container */
 .gpi_burger_container {
 	display: inline-block;
@@ -398,6 +402,16 @@ div.gpi_surv_tr:nth-child(odd) {
 /* Survey button box */
 .gpi_surv_button_box {
 	text-align: center;
+}
+
+/* Radio button */
+.gpi_surv_radio {
+}
+
+@media only screen and (max-width: 768px) {
+	.gpi_surv_radio {
+		margin-left: 10pt;
+	}
 }
 
 /* Scale the radio buttons on the survey */

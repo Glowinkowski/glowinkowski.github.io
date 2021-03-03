@@ -2276,11 +2276,11 @@ function writeQuestions() {
 
             textstr += "<div class=\"gpi_surv_tr\">";
             textstr += "<div class=\"gpi_surv_qu\">" + text + "</div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_disagree' name='" + name + "' value='1'><span class=\"gpi_surv_label\">Strongly disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='disagree' name='" + name + "' value='2'><span class=\"gpi_surv_label\">Disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='neither' name='" + name + "' value='3'><span class=\"gpi_surv_label\">Neither agree nor disagree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='agree' name='" + name + "' value='4'><span class=\"gpi_surv_label\">Agree</span></div>";
-            textstr += "<div class=\"gpi_surv_td\"><input type='radio' id='strong_agree' name='" + name + "' value='5'><span class=\"gpi_surv_label\">Strongly agree</span></div>";
+            textstr += "<div class=\"gpi_surv_td\"><input class=\"gpi_surv_radio\" type='radio' id='strong_disagree' name='" + name + "' value='1'><span class=\"gpi_surv_label\">Strongly disagree</span></div>";
+            textstr += "<div class=\"gpi_surv_td\"><input class=\"gpi_surv_radio\" type='radio' id='disagree' name='" + name + "' value='2'><span class=\"gpi_surv_label\">Disagree</span></div>";
+            textstr += "<div class=\"gpi_surv_td\"><input class=\"gpi_surv_radio\" type='radio' id='neither' name='" + name + "' value='3'><span class=\"gpi_surv_label\">Neither agree nor disagree</span></div>";
+            textstr += "<div class=\"gpi_surv_td\"><input class=\"gpi_surv_radio\" type='radio' id='agree' name='" + name + "' value='4'><span class=\"gpi_surv_label\">Agree</span></div>";
+            textstr += "<div class=\"gpi_surv_td\"><input class=\"gpi_surv_radio\" type='radio' id='strong_agree' name='" + name + "' value='5'><span class=\"gpi_surv_label\">Strongly agree</span></div>";
             textstr += "</div>";
         }
 
