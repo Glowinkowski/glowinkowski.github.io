@@ -2158,8 +2158,8 @@ function writeInstructions() {
 
         textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
-        textstr += "<h1>The GPI Survey</h1>";
-        textstr += "<h2>Instructions</h2>";
+        textstr += "<h1 class=\"gpi_h1\">The GPI Survey</h1>";
+        textstr += "<h2 class=\"gpi_h2\">Instructions</h2>";
         textstr += "<p>This questionnaire will provide you with information that enables you to develop a detailed understanding of yourself in terms of your preferred behaviour, or the ";
         textstr += "'real you'. These preferences or natural predispositions should not be confused with your actual behaviour, which may vary according to the situation and the ";
         textstr += "particular circumstances that you face. Hence you are answering it in the context of \"<i>I am the sort of person who...</i>\".</p>";
