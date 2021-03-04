@@ -3333,15 +3333,15 @@ function writeQuadrant(quadmodel, next, prev) {
         less_text_id = "less_" + text_id;
 
         textstr += "<div id=\"" + less_text_id + "\">";
-        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654; Read more...</div></h4>";
         textstr += "</div>";
 
         textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660; Read less</div></h4>";
 
         textstr += quadmodel.QText;
 
-        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+        textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650; Read less</div></h4>";
 
         textstr += "</div>";
 
@@ -3368,15 +3368,15 @@ function writeQuadrant(quadmodel, next, prev) {
             less_text_id = "less_" + text_id;
 
             textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654; Read more...</div></h4>";
             textstr += "</div>";
 
             textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660; Read less</div></h4>";
 
             textstr += quadmodel.xDimension.SubDimensions[i].ScoreText;
 
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650; Read less</div></h4>";
 
             textstr += "<div>&nbsp;</div>";
 
@@ -3407,15 +3407,15 @@ function writeQuadrant(quadmodel, next, prev) {
             less_text_id = "less_" + text_id;
 
             textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654; Read more...</div></h4>";
             textstr += "</div>";
 
             textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660; Read less</div></h4>";
 
             textstr += quadmodel.yDimension.SubDimensions[i].ScoreText;
 
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650; Read less</div></h4>";
 
             textstr += "<div>&nbsp;</div>";
 
@@ -3478,7 +3478,12 @@ function writeCareer(next, prev) {
 
         textstr += "<h1 class=\"gpi_h1\">Career Themes</h1>";
 
-        textstr += "<h4 class=\"gpi_h4\">" + myReport.FirstName + "'s top 4 career themes factors are:</h4>";
+        textstr += "<p>A 'career theme' relates to a variety of different careers and job roles that share in common the styles of thinking, ";
+        textstr += "performing, socialising and relating that most naturally suit them. ";
+        textstr += "These factors are calculated from an individual's GPI profile and ranked in order of relevance.</p>";
+
+
+        textstr += "<h4 class=\"gpi_h4\">" + myReport.FirstName + "'s top 4 career theme factors are:</h4>";
 
         // TEMP
         textstr += "<div align='center'>";
@@ -3498,15 +3503,17 @@ function writeCareer(next, prev) {
             less_text_id = "less_" + text_id;
 
             textstr += "<div id=\"" + less_text_id + "\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654;</div> Read more...</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + more_text_id + "', '" + less_text_id + "')\">&#9654; Read more...</div></h4>";
             textstr += "</div>";
 
             textstr += "<div id=\"" + more_text_id + "\" style=\"display: none\">";
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9660; Read less</div></h4>";
 
+            textstr += "<hr>";
             textstr += myReport.CareerThemes[i].Description;
+            textstr += "<hr>";
 
-            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650;</div> Read less</h4>";
+            textstr += "<h4 class=\"gpi_h4\"><div class=\"plus\" onclick=\"toggleHidden('" + less_text_id + "', '" + more_text_id + "')\">&#9650; Read less</div></h4>";
 
             textstr += "<div>&nbsp;</div>";
 
