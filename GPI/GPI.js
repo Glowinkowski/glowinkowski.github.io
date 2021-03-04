@@ -142,16 +142,23 @@
  */
 class UserProfile {
 
-    constructor(_Email, _Password, _FirstName="", _LastName="", _AccessCode="", _GenderId = 1, _AgeRangeId = 1, _EthnicityId = 1) {
+    /**
+     * Creates a UserProfile objec
+     * @param {string} _Email User email
+     * @param {string} _Password User password
+     */
+    constructor(_Email, _Password) {
 
         this.Email = _Email;
         this.Password = _Password;
-        this.FirstName = _FirstName;
-        this.LastName = _LastName;
-        this.AccessCode = _AccessCode;
-        this.GenderId = _GenderId;
-        this.AgeRangeId = _AgeRangeId;
-        this.EthnicityId = _EthnicityId;
+        this.FirstName = "";
+        this.LastName = "";
+        this.AccessCode = "";
+        this.GenderId = 1;
+        this.AgeRangeId = 1;
+        this.EthnicityId = 1;
+        this.CountryID = 0;
+        this.RegionID = 0;
         this.StateId = 0;
         this.SurveyCompleted = false;
         this.Questions = null; // Used for returning answered questions to server
@@ -175,7 +182,6 @@ class Question {
         this.Text = _Text;
         this.ShortText = "";
         this.Score = 0;
-        //this.Sort = Math.random();
 
     }
 
@@ -1527,19 +1533,6 @@ function submitSignUpForm(sign_up=true) {
         // or after successful submission?)
         sessionStorage.setItem("GPIStoredPWD", pwd);
 
-        // TODO: Test change of syntax here to initialize by property name
-        /*
-        var user_profile = new UserProfile(
-            email,
-            pwd,
-            first_name,
-            last_name,
-            access_code,
-            document.getElementById("gender").value,
-            document.getElementById("age_range").value
-        );
-        */
-
         // Create new user profile
         var user_profile = new UserProfile(email, pwd);
 
@@ -2593,6 +2586,8 @@ function getReport(reportObj) {
         var qmarray = reportObj.QuadrantModels;
         var len = qmarray.length;
 
+        var career_array = null;
+
         if (len < 1) return false;
 
         myReport.QuadrantModels = [];
@@ -2608,14 +2603,29 @@ function getReport(reportObj) {
         quadModel_commInterperStyle = myReport.QuadrantModels.find(x => x.Name === "Communication & Interpersonal Style");
         quadModel_feelSelfControl = myReport.QuadrantModels.find(x => x.Name === "Feelings & Self-Control");
         quadModel_creatEntrepreneur = myReport.QuadrantModels.find(x => x.Name === "Creativity & Entrepreneurship");
+        
+        if ('CareerThemes' in reportObj) {
+            
+            career_array = reportObj.CareerThemes;
 
-        // Career themes
-        // TEMP
-        myReport.CareerThemes[0] = new CareerTheme("ORGANISATIONAL", 11.3, "Being organised and focussed.");
-        myReport.CareerThemes[1] = new CareerTheme("INVESTIGATIVE", 11.1, "Enquiry and evaluation.");
-        myReport.CareerThemes[2] = new CareerTheme("PRACTICAL", 10.8, "Working towards a practical outcome.");
-        myReport.CareerThemes[3] = new CareerTheme("ANALYTICAL", 8.8, "Handling and analysing data.");
+            len = career_array.length;
 
+            for (var i = 0; i < len; i++) {
+
+                myReport.CareerThemes[i] = extractCareerTheme(career_array[i]);
+
+            }    
+
+        }
+        else {
+
+            // TEMP
+            myReport.CareerThemes[0] = new CareerTheme("ORGANISATIONAL", 11.3, "Being organised and focussed.");
+            myReport.CareerThemes[1] = new CareerTheme("INVESTIGATIVE", 11.1, "Enquiry and evaluation.");
+            myReport.CareerThemes[2] = new CareerTheme("PRACTICAL", 10.8, "Working towards a practical outcome.");
+            myReport.CareerThemes[3] = new CareerTheme("ANALYTICAL", 8.8, "Handling and analysing data.");
+        }
+        
         return true;
 
     }
@@ -2774,6 +2784,34 @@ function extractSubDimension(subdimjson) {
     catch (err) {
 
         alert(err.message + " in extractSubDimension(dimjson)");
+    }
+}
+
+/**
+ * @function
+ * @name extractCareerTheme
+ * @description
+ * <p>Utility function for extracting and creating a CareerTheme
+ * object from JSON data.</p>
+ * @param {JSON} ctjson JSON object for career themes factor
+ * @returns CareerTheme object
+ */
+function extractCareerTheme(ctjson) {
+
+    try {
+
+        var career_theme = new CareerTheme(
+            ctjson.Name,
+            ctjson.Score,
+            ctjson.Description
+        );
+
+        return career_theme;
+
+    }
+    catch (err) {
+
+        alert(err.message + " in extractCareerThemes(ctjson)");
     }
 }
 
