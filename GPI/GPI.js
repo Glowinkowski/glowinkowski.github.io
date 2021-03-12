@@ -736,7 +736,7 @@ var quadModel_creatEntrepreneur;
  * Report object
  * @type {Report}
  */
-var myReport;
+var myReport = null;
 
 /**
  * List of countries for sign-up / user details forms
@@ -3159,7 +3159,9 @@ function writeMenu(survey=false) {
             textstr += "</div>";
             textstr += "</div >";
             textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
+            textstr += "<a onclick=\"writeElement('account');\">Account Details</a><br />";
             textstr += "<a onclick=\"writeInstructions();\">Instructions</a><br />";
+            textstr += "<a onclick=\"getQuestions();\">Survey</a><br />";
             textstr += "<a href=\"\" onclick=\"saveExit();\">Exit GPI</a><br />";
             textstr += "</div>";
 
@@ -3272,7 +3274,16 @@ function writeAccount() {
     try {
 
         // Write menu
-        textstr = writeMenu();
+        if (myReport !== null) {
+
+            textstr = writeMenu(survey=false);
+
+        }
+        else {
+
+            textstr = writeMenu(survey = true);
+
+        }
 
         textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
