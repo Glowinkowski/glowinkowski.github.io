@@ -547,7 +547,7 @@ var serverQuestionList;
  * Array of survey questions for each page
  * @type {Question[]}
  */
-var localQuestionList;
+var localQuestionList = [];
 
 /**
  * Number of questions per page
@@ -1037,6 +1037,15 @@ function getCountries(set_details=false) {
 
                         country_id = userProfile.CountryId;
 
+                        var selected = countries.find(x => x.ID == country_id);
+
+                        var region_name = selected.RegionName;
+                        var state_name = selected.StateName;
+
+                        // Write strings to document
+                        document.getElementById("region_name").innerHTML = region_name;
+                        document.getElementById("state_name").innerHTML = state_name;
+
                         document.getElementById("country").value = country_id;
 
                         getRegions(country_id, set_details);
@@ -1249,7 +1258,7 @@ function writeCountries(countries) {
             textstr += "<option value=\"" + countries[i].ID + "\">" + countries[i].Name + "</option>";
         }
 
-        textstr += "<option value=\"-1\">Not listed</option>";
+        //textstr += "<option value=\"-1\">Not listed</option>";
 
         // Write string to document
         document.getElementById("country").innerHTML = textstr;
@@ -2063,14 +2072,6 @@ function processJSON(jsontext) {
             // JSON object should have a field 'Report' containing the report data
             if (!getReport(user_profile_json.Report)) throw "Could not load report";
 
-            // If all OK (note that user email is stored in json object)
-            /*
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                pwd
-            );
-            */
-
             userProfile.SurveyCompleted = true;
 
             // Check for current page
@@ -2097,14 +2098,6 @@ function processJSON(jsontext) {
 
             // Get survey questions
             if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
-
-            // If all OK
-            /*
-            userProfile = new UserProfile(
-                user_profile_json.Email,
-                pwd
-            );
-            */
 
             userProfile.SurveyCompleted = false;
 
@@ -2326,6 +2319,7 @@ function writeInstructions() {
 
     try {
 
+        
         // Create instructions string
         var textstr = writeMenu(survey = true);
 
@@ -2577,49 +2571,50 @@ function saveQuestions(continue_survey=true) {
 
         var myform = document.getElementById("GPI_form");
 
-        // Loop through question list to look up answers
-        for (var i = 0; i < localQuestionList.length; i++) {
+        if (myform !== null) {
 
-            var id = localQuestionList[i].ShortText;
-            var score = getScore(myform, id);
+            // Loop through question list to look up answers
+            for (var i = 0; i < localQuestionList.length; i++) {
 
-            if (score > 0) {
+                var id = localQuestionList[i].ShortText;
+                var score = getScore(myform, id);
 
-                localQuestionList[i].Score = score;
+                if (score > 0) {
 
-            }
-        }
+                    localQuestionList[i].Score = score;
 
-        // Save questions locally to session variable
-        sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
-
-        // Attach question list
-        userProfile.Questions = localQuestionList;
-
-        // Check if any questions have been answered before calling API
-        var total_score = 0;
-        for (var i = 0; i < localQuestionList.length; i++) {
-
-            total_score = total_score + localQuestionList[i].Score;
-        }
-
-        if (total_score > 0) {
-
-            // Call API to update questions
-            updateAnswers(userProfile, continue_survey);
-
-        }
-        else {
-
-            if (!continue_survey) {
-
-                if (logout()) {
-
-                    location.reload();
                 }
+            }
+
+            // Save questions locally to session variable
+            sessionStorage.setItem("GPIStoredQuestions", JSON.stringify(serverQuestionList));
+
+            // Attach question list
+            userProfile.Questions = localQuestionList;
+
+            // Check if any questions have been answered before calling API
+            var total_score = 0;
+            for (var i = 0; i < localQuestionList.length; i++) {
+
+                total_score = total_score + localQuestionList[i].Score;
+            }
+
+            if (total_score > 0) {
+
+                // Call API to update questions
+                updateAnswers(userProfile, continue_survey);
 
             }
-            
+
+        }
+
+        if (!continue_survey) {
+
+            if (logout()) {
+
+                location.reload();
+            }
+
         }
         
         
@@ -3164,6 +3159,7 @@ function writeMenu(survey=false) {
             textstr += "</div>";
             textstr += "</div >";
             textstr += "<div id=\"GPI_dropdown_id\" class=\"gpi_dropdown\" style=\"display:none\">";
+            textstr += "<a onclick=\"writeInstructions();\">Instructions</a><br />";
             textstr += "<a href=\"\" onclick=\"saveExit();\">Exit GPI</a><br />";
             textstr += "</div>";
 
