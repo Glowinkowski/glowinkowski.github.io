@@ -151,6 +151,8 @@ class UserProfile {
 
         this.Email = _Email;
         this.Password = _Password;
+        this.NewEmail = "";
+        this.NewPassword = "";
         this.FirstName = "";
         this.LastName = "";
         this.AccessCode = "";
@@ -736,6 +738,12 @@ var quadModel_creatEntrepreneur;
  */
 var myReport;
 
+/**
+ * List of countries for sign-up / user details forms
+ * @type {Country[]}
+ */
+var countries = [];
+
 /*
  ****************** END OF GLOBAL VARIABLES  ******************
 */
@@ -928,6 +936,15 @@ function countrySelected() {
 
         var country_id = document.getElementById("country").value;
 
+        var selected = countries.find(x => x.ID == country_id);
+
+        var region_name = selected.RegionName;
+        var state_name = selected.StateName;
+
+        // Write strings to document
+        document.getElementById("region_name").innerHTML = region_name;
+        document.getElementById("state_name").innerHTML = state_name;
+
         getRegions(country_id);
 
     }
@@ -972,7 +989,9 @@ function getCountries(set_details=false) {
 
     try {
 
-        var url = "/GPI/countries.json";
+        //var url = "/GPI/countries.json";
+        //var url = "https://localhost:44369/api/countries";  // Local testing
+        var url = "https://gi-api.azurewebsites.net/api/countries";  // Live
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -987,7 +1006,7 @@ function getCountries(set_details=false) {
                     // Load countries
 
                     // Set countries to zero array
-                    var countries = [];
+                    countries = [];
 
                     var N = json.length;
 
@@ -1057,9 +1076,13 @@ function getRegions(country_id, set_details = false) {
 
     try {
 
-        var url = "/GPI/regions.json";
+        //var url = "/GPI/regions.json";
+        //url += "?" + country_id;
 
-        url += "?" + country_id;
+        //var url = "https://localhost:44369/api/regions?country_id=";
+        var url = "https://gi-api.azurewebsites.net/api/regions?country_id=";
+
+        url += country_id;
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -1136,9 +1159,13 @@ function getStates(region_id, set_details=false) {
 
     try {
 
-        var url = "/GPI/states.json";
+        //var url = "/GPI/states.json";
+        //url += "?" + region_id;
 
-        url += "?" + region_id;
+        // var url = "https://localhost:44369/api/states?region_id="; // Local testing
+        var url = "https://gi-api.azurewebsites.net/api/states?region_id=";  // Live
+
+        url += region_id;
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -1552,21 +1579,40 @@ function submitSignUpForm(sign_up=true) {
         }
         else {
 
-            // If not listed, set this to null
-            user_profile.StateId = null;
+            // If not listed, set this to zero
+            user_profile.StateId = 0;
         }
         
         user_profile.GenderId = document.getElementById("gender").value;
         user_profile.AgeRangeId = document.getElementById("age_range").value;
 
-
         if (sign_up) {
-            // Sign-up new user
+            // Sign-up new user 
             signup(user_profile);
         }
         else {
             
-            alert("state: " + state_id);
+            if (userProfile.Email !== user_profile.Email) {
+                // Email changed
+                user_profile.NewEmail = user_profile.Email;
+                user_profile.Email = userProfile.Email;
+            }
+            else {
+                // If not, make sure NewEmail is null
+                user_profile.NewEmail = null;
+            }
+
+            if (userProfile.Password !== user_profile.Password) {
+                // Password changed
+                user_profile.NewPassword = user_profile.Password;
+                user_profile.Password = userProfile.Password;
+            }
+            else {
+                // If not, make sure NewPassword is null
+                user_profile.NewPassword = null;
+            }
+
+            updateProfile(user_profile);
         }
 
     }
@@ -1777,6 +1823,98 @@ function signup(user_profile) {
     }
 }
 
+function updateProfile(user_profile) {
+
+    try {
+
+        // URL changed to the live version
+        //var url = "https://localhost:44369/api/user/updateprofile/";  // Local testing
+        var url = "https://gi-api.azurewebsites.net/api/user/updateprofile/";  // Live URL
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+
+            try {
+
+                // readyState == 4 : The operation is complete.
+                if (this.readyState == 4) {
+
+                    document.body.style.cursor = 'default';
+
+                    if (this.status == 200) {
+
+                        // The text from the API call
+                        var jsontext = this.responseText;
+
+                        // Should be either true or false
+                        var success = JSON.parse(jsontext);
+
+                        if (success == false) {
+
+                            alert('Could not update details');
+                        }
+
+                        if (success == true) {
+
+                            alert('Successfully updated details');
+                            // Login again
+                            if (user_profile.NewEmail !== null) {
+                                user_profile.Email = user_profile.NewEmail;
+                            }
+                            if (user_profile.NewPassword !== null) {
+                                user_profile.Password = user_profile.NewPassword;
+                            }
+                            login(user_profile);
+                        }
+
+                    }
+                    else {
+
+                        switch (this.status) {
+                            case 0:
+                                alert("Could not contact server");
+                                break;
+                            case 401:
+                                // Unauthorized
+                                alert("Authorization error: " + this.responseText);
+                                break;
+                            case 500:
+                                // InternalServerError
+                                alert("A server error occurred");
+                                break;
+                            default:
+                                msg = "Status: " + this.status;
+                                msg = msg + "; Response: " + this.responseText;
+                                alert(msg);
+                        }
+
+                        // Re-enable submit button
+                        document.getElementById("submit_button").disabled = false;
+
+                    }
+
+                }
+
+            }
+            catch (err) {
+
+                alert(err.message + " in xhttp.onreadystatechange()");
+            }
+
+
+        };
+        document.body.style.cursor = 'wait';
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.send(JSON.stringify(user_profile));
+
+    }
+    catch (err) {
+
+        alert(err.message + " in updateProfile(user_profile)");
+    }
+}
+
 /**
  * @function
  * @name login
@@ -1870,6 +2008,7 @@ function processJSON(jsontext) {
 
         var user_profile_json = JSON.parse(jsontext);
 
+
         // Check for correct properties
         if (!('SurveyCompleted' in user_profile_json)) throw "Property 'SurveyCompleted' not found in returned object";
         if (!('Questions' in user_profile_json)) throw "Property 'Questions' not found in returned object";
@@ -1880,6 +2019,43 @@ function processJSON(jsontext) {
         // Get stored password (this was initially stored in either submitSignUpForm or submitLoginForm)
         var pwd = sessionStorage.getItem("GPIStoredPWD");
 
+        userProfile = new UserProfile(
+            user_profile_json.Email,
+            pwd
+        );
+
+        if ('FirstName' in user_profile_json) {
+            userProfile.FirstName = user_profile_json.FirstName;
+        }
+
+        if ('LastName' in user_profile_json) {
+            userProfile.LastName = user_profile_json.LastName;
+        }
+
+        if ('GenderId' in user_profile_json) {
+            userProfile.GenderId = user_profile_json.GenderId;
+        }
+
+        if ('AgeRangeId' in user_profile_json) {
+            userProfile.AgeRangeId = user_profile_json.AgeRangeId;
+        }
+        
+        if ('EthnicityId' in user_profile_json) {
+            userProfile.EthnicityId = user_profile_json.EthnicityId;
+        }
+
+        if ('CountryId' in user_profile_json) {
+            userProfile.CountryId = user_profile_json.CountryId;
+        }
+
+        if ('RegionId' in user_profile_json) {
+            userProfile.RegionId = user_profile_json.RegionId;
+        }
+
+        if ('StateId' in user_profile_json) {
+            userProfile.StateId = user_profile_json.StateId;
+        }
+        
         if (user_profile_json.SurveyCompleted) {
 
             // Get report
@@ -1888,10 +2064,12 @@ function processJSON(jsontext) {
             if (!getReport(user_profile_json.Report)) throw "Could not load report";
 
             // If all OK (note that user email is stored in json object)
+            /*
             userProfile = new UserProfile(
                 user_profile_json.Email,
                 pwd
             );
+            */
 
             userProfile.SurveyCompleted = true;
 
@@ -1921,10 +2099,12 @@ function processJSON(jsontext) {
             if (!loadQuestions(user_profile_json.Questions)) throw "Could not load survey questions";
 
             // If all OK
+            /*
             userProfile = new UserProfile(
                 user_profile_json.Email,
                 pwd
             );
+            */
 
             userProfile.SurveyCompleted = false;
 
@@ -3161,7 +3341,7 @@ function writeAccount() {
         textstr += "</div>";
 
         textstr += "<div class=\"form-group\">";
-        textstr += "<label class=\"col-md-2 control-label\" for=\"region\">Region/Province</label>";
+        textstr += "<label id=\"region_name\" class=\"col-md-2 control-label\" for=\"region\">Region/Province</label>";
         textstr += "<div class=\"col-md-10\">";
         textstr += "<select class=\"form-control\" id=\"region\" onchange=\"regionSelected()\">";
         // To be allocated
@@ -3171,7 +3351,7 @@ function writeAccount() {
         textstr += "</div>";
 
         textstr += "<div class=\"form-group\">";
-        textstr += "<label class=\"col-md-2 control-label\" for=\"state\">State/County</label>";
+        textstr += "<label id=\"state_name\" class=\"col-md-2 control-label\" for=\"state\">State/County</label>";
         textstr += "<div class=\"col-md-10\">";
         textstr += "<select class=\"form-control\" id=\"state\">";
         // To be allocated
