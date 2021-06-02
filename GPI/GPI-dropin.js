@@ -3185,7 +3185,7 @@ function writeMenu(survey=false) {
             // Write survey menu
             textstr += "<div class=\"gpi_menu_bar\">";
             textstr += "<div class=\"gpi_logo_container\">";
-            textstr += "<a href=\"/Index\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
+            textstr += "<a onclick=\"writeElement('home');\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
             textstr += "</div >";
             textstr += "<div class=\"gpi_burger_container\">";
             textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
@@ -3204,7 +3204,7 @@ function writeMenu(survey=false) {
             // Write main menu component
             textstr += "<div class=\"gpi_menu_bar\">";
             textstr += "<div class=\"gpi_logo_container\">";
-            textstr += "<a href=\"index.html\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
+            textstr += "<a onclick=\"writeElement('home');\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
             textstr += "</div >";
             textstr += "<div class=\"gpi_burger_container\">";
             textstr += "<a href=\"javascript:void(0);\" onclick=\"toggleMenu('GPI_dropdown_id')\"><img class=\"gpi_burger\" src=" + burger_src + "/></a>";
@@ -3509,6 +3509,14 @@ function writeLoginForm() {
     try {
         // Write login form
         textstr = "";
+
+        textstr += "<div class=\"gpi_menu_bar\">";
+        textstr += "<div class=\"gpi_logo_container\">";
+        textstr += "<img class=\"gpi_logo\" src=" + logo_src + "/>";
+        textstr += "</div>";
+        textstr += "</div>";
+
+        /*
         textstr += "<div class=\"gpi_menu_bar\">";
         textstr += "<div class=\"gpi_logo_container\">";
         textstr += "<a href=\"/Index\"><img class=\"gpi_logo\" src=" + logo_src + "/></a>";
@@ -3521,6 +3529,7 @@ function writeLoginForm() {
         textstr += "<a href=\"/GPI/GPI\">Login</a><br />";
         textstr += "<a href=\"/GPI/Index\">Sign up</a><br />";
         textstr += "</div>";
+        */
 
         textstr += "<div class=\"gpi_content\">";
 
@@ -3661,6 +3670,8 @@ function writeQuadrant(quadmodel, next, prev) {
         // Write menu
         textstr = writeMenu();
 
+        spacer = "<div>&nbsp;</div>";
+
         textstr += "<div class=\"gpi_content\" onclick=\"hideMenu('GPI_dropdown_id')\">";
 
         // Write Quadrant component
@@ -3693,7 +3704,9 @@ function writeQuadrant(quadmodel, next, prev) {
 
         textstr += "</div>";
 
-        textstr += "<h2 class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";
+        textstr += spacer;
+
+        textstr += "<h2 class=\"gpi_h2\">" + quadmodel.xDimension.LeftBipolarName + " and " + quadmodel.xDimension.RightBipolarName + " subdimensions</h2>";    
 
         for (var i = 0; i < quadmodel.xDimension.SubDimensions.length; i++) {
 
@@ -3729,6 +3742,8 @@ function writeQuadrant(quadmodel, next, prev) {
             textstr += "<div>&nbsp;</div>";
 
             textstr += "</div>";
+
+            textstr += spacer;
 
         }
 
@@ -3769,7 +3784,7 @@ function writeQuadrant(quadmodel, next, prev) {
 
             textstr += "</div>";
 
-
+            textstr += spacer;
         }
 
         // Navigation
