@@ -131,6 +131,28 @@
             margin-bottom: 5px;
             box-sizing: border-box;
         }
+
+        .score-table-container {
+            font-family: Segoe UI;
+            width: 40%;
+            margin-top:40px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .score-table {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            background-color: var(--gmi-statement-col);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .score-table-container {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -161,22 +183,22 @@
         <div class="gmi-question-row">
             <div class="gmi-button-container">
                 <div class="gmi-button-box">
-                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-1">
+                    <input class="gmi-button" type="radio" value="1" name="qu-1" id="qu-1-1">
                 </div>
                 <div class="gmi-button-box">
-                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-2">
+                    <input class="gmi-button" type="radio" value="2" name="qu-1" id="qu-1-2">
                 </div>
                 <div class="gmi-button-box">
-                    <input type="radio" value="" name="qu-1" id="qu-1-3">
+                    <input class="gmi-button" type="radio" value="3" name="qu-1" id="qu-1-3">
                 </div>
                 <div class="gmi-button-box">
-                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-4">
+                    <input class="gmi-button" type="radio" value="4" name="qu-1" id="qu-1-4">
                 </div>
                 <div class="gmi-button-box">
-                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-5">
+                    <input class="gmi-button" type="radio" value="5" name="qu-1" id="qu-1-5">
                 </div>
                 <div class="gmi-button-box">
-                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-6">
+                    <input class="gmi-button" type="radio" value="6" name="qu-1" id="qu-1-6">
                 </div>
             </div>
         </div>
@@ -186,5 +208,107 @@
             </div>
         </div>
     </div>
+
+    <div class="score-table-container">
+
+        <p>Score behind the scenes:</p>
+
+        <table class="score-table">
+          
+            <thead>
+                <tr>
+                    <th>Score</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Form score</td>
+                    <td><div id="form-score">0</div></td>
+                </tr>
+                <tr>
+                    <td>A score</td>
+                    <td><div id="A-score">0</div></td>
+                </tr>
+                <tr>
+                    <td>B score</td>
+                    <td><div id="B-score">0</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        
+        function changeText(value) {
+            try {
+
+                var msg = "<b>Unanswered</b>";
+
+                var score = parseInt(value);
+
+                switch (score) {
+
+                    case 1:
+
+                        msg = "You <b>highly</b> prefer statement <b>A</b>";
+                        break;
+
+                    case 2:
+
+                        msg = "You <b>prefer</b> statement <b>A</b>";
+                        break;
+
+                    case 3:
+
+                        msg = "You <b>just</b> prefer statement <b>A</b>";
+                        break;
+
+                    case 4:
+
+                        msg = "You <b>just</b> prefer statement <b>B</b>";
+                        break;
+
+                    case 5:
+
+                        msg = "You <b>prefer</b> statement <b>B</b>";
+                        break;
+
+                    case 6:
+
+                        msg = "You <b>highly</b> prefer statement <b>B</b>";
+                        break;
+
+                    default:
+
+                        msg = "<b>Unanswered</b>";
+
+                }
+
+                document.getElementById("qu-1-message").innerHTML = msg;
+                document.getElementById("form-score").innerHTML = score;
+                document.getElementById("A-score").innerHTML = 7 - score;
+                document.getElementById("B-score").innerHTML = score;
+
+            }
+            catch (err) {
+
+                console.error(err.message);
+            }
+        }
+        
+
+        try {
+
+            var radios = document.querySelectorAll('input[type=radio][name="qu-1"]');
+            radios.forEach(radio => radio.addEventListener('change', () => changeText(radio.value)));
+        }
+        catch (err) {
+
+            console.error(err.message);
+        }
+        
+    </script>
 </body>
 </html>
