@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMI Test Page</title>
+    <style>
+        :root {
+            --gmi-container-col: #F0F0F0;
+            --gmi-statement-col: #F0F8FF;
+        }
+
+        .gmi-question-container {
+            font-family: Segoe UI;
+            width: 40%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: var(--gmi-container-col);
+            border-radius: 10px;
+            padding: 5px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .gmi-question-container {
+                width: 100%;
+            }
+        }
+
+        .gmi-question-row {
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .gmi-statements-box {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gmi-statement-wrapper {
+            width: 95%;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .gmi-left-statement-label {
+            width: 48%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            margin-left: 0px;
+            box-sizing: border-box;
+            float: left;
+        }
+
+        .gmi-right-statement-label {
+            width: 48%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            margin-right: 0px;
+            box-sizing: border-box;
+            float: right;
+        }
+
+        .gmi-left-statement-container {
+            width: 48%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px;
+            margin-left: 0px;
+            float: left;
+            box-sizing: border-box;
+        }
+
+        .gmi-right-statement-container {
+            width: 48%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px;
+            margin-right: 0px;
+            float: right;
+            box-sizing: border-box;
+        }
+
+        .gmi-button-container {
+            width: 95%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 5px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .gmi-button-box {
+            float: left;
+            width: 16.5%;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .gmi-button {
+        }
+
+        .gmi-message-container {
+            width: 95%;
+            background-color: var(--gmi-statement-col);
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="gmi-question-container">
+        
+        <div class="gmi-question-row">
+
+            <div class="gmi-statement-wrapper">
+                <div class="gmi-left-statement-label">
+                    A
+                </div>
+                <div class="gmi-right-statement-label">
+                    B
+                </div>
+            </div>
+
+        </div>
+        <div class="gmi-question-row">
+            <div class="gmi-statement-wrapper">
+                <div class="gmi-left-statement-container">
+                    Planning and coordinating the activities of others.
+                </div>
+                <div class="gmi-right-statement-container">
+                    Developing innovations which change how things are done.
+                </div>
+            </div>
+        </div>
+        <div class="gmi-question-row">
+            <div class="gmi-button-container">
+                <div class="gmi-button-box">
+                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-1">
+                </div>
+                <div class="gmi-button-box">
+                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-2">
+                </div>
+                <div class="gmi-button-box">
+                    <input type="radio" value="" name="qu-1" id="qu-1-3">
+                </div>
+                <div class="gmi-button-box">
+                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-4">
+                </div>
+                <div class="gmi-button-box">
+                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-5">
+                </div>
+                <div class="gmi-button-box">
+                    <input class="gmi-button" type="radio" value="" name="qu-1" id="qu-1-6">
+                </div>
+            </div>
+        </div>
+        <div class="gmi-question-row">
+            <div class="gmi-message-container" id="qu-1-message">
+                <b>Unanswered</b>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
