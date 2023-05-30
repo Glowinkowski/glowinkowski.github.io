@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="css\CDI_styleSheet.css">
+	<script src="https://kit.fontawesome.com/c15e1c7934.js" crossorigin="anonymous"></script>
+	<title>CDI: Survey</title>
+</head>
+<body>
+
+<!-- Side navigation -->
+<div class="cdi_sidenav">
+	<a href="index.htm"><img class="cdi_menulogo" src="images\cdiLogoWhiteOrange.png" alt="CDI white and orange logo"></a>
+	<a href="CDI_myAccount.htm" class="cdi_menuitem"><i class="fa-solid fa-user"></i> My account</a>
+	<a href="CDI_about.htm"  class="cdi_menuitem"><i class="fa-solid fa-circle-info"></i> About the CDI</a>
+	<a href="CDI_surveyIntro.htm"  class="cdi_menuitem"><i class="fa-solid fa-pen-to-square"></i> The survey</a>
+	<a href="CDI_myProfile.htm"  class="cdi_menuitem"><i class="fa-solid fa-chart-simple"></i> My CDI profile</a>
+	<a href="CDI_myJobs.htm"  class="cdi_menuitem"><i class="fa-solid fa-bullseye"></i> My job matches</a>
+	<img class="cdi_menuarrows" src="images\arrowGreenPink.png" alt="Green and pink arrows">
+	
+	<a href="index.htm"  class="cdi_menuitem"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+	
+</div>
+
+<!-- Page content -->
+<div class="cdi_main">
+
+<h1>The survey - Section A</h1>
+
+<p>For each of the following questions, firstly consider whether statement A or B is your preferred choice and then decide how clearly you feel about that. Is one statement highly preferable, or only just preferable? There are no right or wrong answers here, rather the objective is to help you explore what suits you the most in terms of the world of work and jobs.</p>
+
+<div class="cdi_wrap">
+
+  <form action="">
+    <label class="cdi_statement">Question 1</label>
+    <ul class='cdi_likert'>
+      <li>
+        <input type="radio" name="likert" value="1">
+        <label>Highly preferable</label>
+      </li>
+      <li>
+        <input type="radio" name="likert" value="2">
+        <label>Preferable</label>
+      </li>
+      <li>
+        <input type="radio" name="likert" value="3">
+        <label>Just preferable</label>
+      </li>
+      <li>
+        <input type="radio" name="likert" value="4">
+        <label>Just preferable</label>
+      </li>
+      <li>
+        <input type="radio" name="likert" value="5">
+        <label>Preferable</label>
+      </li>
+	  <li>
+        <input type="radio" name="likert" value="6">
+        <label>Highly preferable</label>
+      </li>
+    </ul>
+    
+    <div class="cdi_buttons">
+      <button class="cdi_clear">Clear</button>
+      <button class="cdi_submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+</div>
+
+<script src="js\CDI_scripts.js"></script>
+
+</body>
+</html>

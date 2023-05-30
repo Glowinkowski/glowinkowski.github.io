@@ -1,0 +1,264 @@
+body {
+  background-color: white;
+  font-family: berlin sans fb;
+}
+
+h1 {
+  color: #fa7921;
+  text-align: left;
+  font-family: berlin sans fb;
+  font-size: 30px;
+}
+
+h2 {
+  color: #2259E3;
+  text-align: left;
+  font-family: Segoe UI Black;
+  font-size: 25px;
+  padding-top: 10px;
+}
+
+p {
+  font-family: Segoe UI;
+  font-size: 15px;
+}
+
+/* Custom ul */
+dd {
+	display: list-item;
+	list-style: none;
+	padding: 0px;
+	font-family: Segoe UI;
+	font-size: 15px;
+	line-height: 200%;
+	position: relative;
+}
+
+/* Custom ul header */
+dt {
+	padding-top: 0px;
+	font-family: Segoe UI Semibold;
+	font-size: 18px;
+	line-height: 200%
+}
+
+/* Custom ul with arrow set as the bullet points */
+dd:before {
+    content: '\27A1';
+    margin: 0 1em;
+	left: -2.1em;
+	position: absolute;
+	font-size:2.5em;
+}
+
+.cdi_defaultbutton a {
+  background-color: #F6559F;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 10px;
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+.cdi_defaultbutton a:hover {
+  background-color: #fa7921;
+}
+
+
+img	{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Logo in the side navigation bar */
+.cdi_menulogo { 
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 45px;
+	width: 70%;
+}
+
+/* Arrow image in the side navigation bar */
+.cdi_menuarrows { 
+	display: block;
+	margin-top: 40px;
+	margin-bottom: 45px;
+	margin-left: 0;
+	width: 90%;
+}
+
+/* Career theme and vocational motives models images */
+.cdi_models {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 45px;
+	width: 80%;
+	padding-top: 20px;
+}
+	
+/* Side navigation bar */
+.cdi_sidenav {
+  height: 100%;
+  width: 260px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #2259E3;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Side navigation page links */
+.cdi_menuitem {
+  padding-top: 10px; 
+  padding-right: 8px; 
+  padding-bottom: 10px;
+  padding-left: 30px;
+  text-decoration: none;
+  font-size: 24px;
+  color: white;
+  display: block;
+}
+
+
+
+/* Side navigation page links on hover */
+.cdi_sidenav a:hover {
+  color: #fa7921;
+}
+
+/* Main content */
+.cdi_main {
+  margin-left: 270px; /* Same as the width of the sidenav plus 10 */
+  font-size: 28px;
+  padding: 0px 10px;
+}
+
+/*
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+} 
+*/
+
+/* The button that is used to open and close the collapsible content */
+.cdi_collapsible {
+  background-color: #18CF61;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-family: Segoe UI Black;
+  font-size: 25px;
+  margin-top: 20px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.cdi_active, .cdi_collapsible:hover {
+  background-color: #2259E3;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.cdi_content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  font-family: Segoe UI;
+  font-size: 15px;
+}
+
+
+
+/* Likert scale */
+
+	
+	
+.cdi_wrap {
+  font-family: Segoe UI;
+  font-size: 12px;
+}
+
+form .cdi_statement {
+  display:block;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 30px 0 0 5px;
+  margin-bottom:10px;
+}
+
+
+form .cdi_likert {
+  list-style:none;
+  width:100%;
+  margin:0;
+  padding:0 0 35px;
+  display:block;
+  border-bottom:2px solid #efefef;
+}
+
+
+form .cdi_likert:last-of-type {border-bottom:0;}
+form .cdi_likert:before {
+  content: '';
+  position:relative;
+  top:11px;
+  left:8%;
+  display:block;
+  background-color:#efefef;
+  height:4px;
+  width:82%;
+}
+form .cdi_likert li {
+  display:inline-block;
+  width:16%;
+  text-align:center;
+  vertical-align: top;
+}
+form .cdi_likert li input[type=radio] {
+  display:block;
+  position:relative;
+  top:0;
+  left:50%;
+  margin-left:-6px;
+
+}
+form .cdi_likert li label {
+	width:100%;
+}
+
+form .cdi_buttons {
+  margin:30px 0;
+  padding:0 4.25%;
+  text-align:right;
+} 
+
+form .cdi_buttons button {
+  padding: 10px 20px;
+  background-color: #67ab49;
+  border: 0;
+  border-radius: 3px;
+  font-family: Segoe UI;
+  font-size: 16px;
+}
+
+form .cdi_buttons .cdi_clear {background-color: #e9e9e9;}
+form .cdi_buttons .cdi_submit {background-color: #18CF61;} 
+form .cdi_buttons .cdi_clear:hover {background-color: #ccc;}
+form .cdi_buttons .cdi_submit:hover {background-color: #FA7921;}
+}
+
+
+</style>
