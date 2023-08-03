@@ -35,55 +35,13 @@
 <a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
   <h2>Overview</h2>
 </a>
-
-<a href="#admin-application" id="admin-application" style="color: inherit; text-decoration: none;">
-  <h3>Admin application</h3>
-</a>
-<p>This is the client-side application for admin use.</p>
-<p>On page load, the application calls the initialisation routine <strong>init()</strong>, 
-which sets up the API endpoints to call for application and round-specific data. These are:</p>
 <ul>
-<li>/api/AppData</li>
-<li>/api/roundapi/<round_id></li>
+<li><a href="https://glowinkowski.github.io/myTeamRadar/MTRClient/modules/Admin_app.html">Admin-app</a> provides the entry points for the application. </li>
+<li><a href="https://glowinkowski.github.io/myTeamRadar/MTRClient/modules/Core.html">Core</a> Provides core functionality (not MTR specific).</li>
+<li><a href="https://glowinkowski.github.io/myTeamRadar/MTRClient/modules/MTR_Core.html">MTR-Core</a> Provides MTR-specific functionality.</li>
+<li><a href="https://glowinkowski.github.io/myTeamRadar/MTRClient/modules/MTR_Drawing.html">MTR-Drawing</a> Provides various graphics functions.</li>
+<li><a href="https://glowinkowski.github.io/myTeamRadar/MTRClient/modules/MTR_Pages.html">MTR-Pages</a> Provides specific page functionality.</li>
 </ul>
-<p>(the <round_id> is provided by the page).</p>
-<p>An <strong>Application</strong> object <em>MyApp</em> is created and two <strong>Page</strong> objects
-called <em>Home</em> and <em>Team</em> are added to it. The <em>Start</em> method of the 
-<em>Application</em> object is invoked and the <em>/api/AppData</em> endpoint passed
-to it, which initialises the application data.</p>
-<p>Internally, the Application object calls the Page.Write
-method of the &#39;Home&#39; page, which is initialised via the <em>/api/roundapi/ + <round_id></em>
-endpoint. </p>
-<p>The rendering function <strong>renderClientHome</strong> passed to the
-<em>Home</em> <strong>Page</strong> object performs the following tasks:</p>
-<ul>
-<li>Sets up a new <strong>CategoryList</strong> from the <strong>Page</strong> object&#39;s <strong>PageData</strong>. </li>
-<li>Filters the sample lists for each team and calculates the scores.</li>
-<li>Sets up a new <strong>GraphicArea</strong> and adds an event handler to call the <em>Team</em> page
-when the user clicks on the associated <strong>TeamGraphic</strong> element.</li>
-<li>Sets up a <strong>TeamsLayout</strong> object, passing the <strong>CategoryList</strong>.
-and <strong>GraphicArea</strong> to it.</li>
-<li>Calls the <strong>TeamsLayout.SetGraphics</strong> method of the <strong>TeamsLayout</strong> object,
-which associates a <strong>TeamGraphic</strong> element with each team.</li>
-</ul>
-
-<a href="#api-endpoints" id="api-endpoints" style="color: inherit; text-decoration: none;">
-  <h3>API endpoints</h3>
-</a>
-
-<a href="#apiappdata" id="apiappdata" style="color: inherit; text-decoration: none;">
-  <h4>/api/AppData</h4>
-</a>
-<p>The &#39;/api/AppData&#39; endpoint provides the following general application data:</p>
-<pre><code class="language-JSON"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;ClimateText&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;clarity&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;challenge&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;flexibility&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;autonomy&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;recognition&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">&quot;involvement&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><br/><span class="hl-1">   },</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;BehaviourText&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;WellbeingText&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;array-of-text-statements&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;HistoricData&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      {</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;clarity&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;challenge&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;flexibility&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;autonomy&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;recognition&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;involvement&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">      </span><span class="hl-5">...</span><br/><span class="hl-1">   ]</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#apiroundapi" id="apiroundapi" style="color: inherit; text-decoration: none;">
-  <h4>/api/roundapi/<round_id></h4>
-</a>
-<p>The <em>roundapi</em> endpoint provides round-specific data:</p>
-<pre><code class="language-JSON"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;RoundID&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;ClientCategoryList&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      {</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;ClientCategoryID&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;CategoryName&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;CategoryName</span><span class="hl-6">1</span><span class="hl-5">&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;Options&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">            {</span><br/><span class="hl-1">               </span><span class="hl-4">&quot;CategoryOptionID&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">               </span><span class="hl-4">&quot;CategoryOptionName&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;string&gt;</span><br/><span class="hl-1">            },</span><br/><span class="hl-1">            </span><span class="hl-5">...</span><br/><span class="hl-1">         ]</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">      </span><span class="hl-5">...</span><br/><span class="hl-1">   ],</span><br/><span class="hl-1">   </span><span class="hl-4">&quot;UserData&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      {</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;id&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;string&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;&lt;CategoryName1&gt;&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;CategoryOptionID&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-5">...</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;clarity&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;challenge&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;flexibility&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;autonomy&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;recognition&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;involvement&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;domineering&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;detached&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;easygoing&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-4">&quot;teamwork&quot;</span><span class="hl-1">: </span><span class="hl-5">&lt;number&gt;</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">      </span><span class="hl-5">...</span><br/><span class="hl-1">   ]</span><br/><span class="hl-1">}</span>
-</code></pre>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
